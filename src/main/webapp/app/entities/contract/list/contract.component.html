@@ -1,0 +1,147 @@
+<div>
+  <h2 id="page-heading" data-cy="ContractHeading">
+    <span jhiTranslate="controTxApp.contract.home.title">Contracts</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="controTxApp.contract.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-contract"
+        [routerLink]="['/contract/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="controTxApp.contract.home.createLabel"> Crear nuevo Contract </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <jhi-filter [filters]="filters"></jhi-filter>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="contracts?.length === 0">
+    <span jhiTranslate="controTxApp.contract.home.notFound">Ningún Contracts encontrado</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="contracts && contracts.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.contract.id">Id</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="reference">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.contract.reference">Reference</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="type">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.contract.type">Type</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="numberInterfaceBoard">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.contract.numberInterfaceBoard">Number Interface Board</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="startTime">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.contract.startTime">Start Time</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="finishTime">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.contract.finishTime">Finish Time</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="operator.name">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.contract.operator">Operator</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let contract of contracts; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/contract', contract.id, 'view']">{{ contract.id }}</a>
+          </td>
+          <td>{{ contract.reference }}</td>
+          <td jhiTranslate="{{ 'controTxApp.ContractType.' + contract.type }}">{{ contract.type }}</td>
+          <td>{{ contract.numberInterfaceBoard }}</td>
+          <td>{{ contract.startTime | formatMediumDatetime }}</td>
+          <td>{{ contract.finishTime | formatMediumDatetime }}</td>
+          <td>
+            <div *ngIf="contract.operator">
+              <a [routerLink]="['/operator', contract.operator.id, 'view']">{{ contract.operator.name }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/contract', contract.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/contract', contract.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+              </button>
+
+              <button type="submit" (click)="delete(contract)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="contracts && contracts.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

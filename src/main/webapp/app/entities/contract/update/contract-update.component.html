@@ -1,0 +1,159 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-contract-heading" data-cy="ContractCreateUpdateHeading" jhiTranslate="controTxApp.contract.home.createOrEditLabel">
+        Crear o editar Contract
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" jhiTranslate="controTxApp.contract.id" for="field_id">Id</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.contract.reference" for="field_reference">Reference</label>
+          <input type="text" class="form-control" name="reference" id="field_reference" data-cy="reference" formControlName="reference" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.contract.type" for="field_type">Type</label>
+          <select class="form-control" name="type" formControlName="type" id="field_type" data-cy="type">
+            <option [ngValue]="null">{{ 'controTxApp.ContractType.null' | translate }}</option>
+            <option *ngFor="let contractType of contractTypeValues" [value]="contractType">
+              {{ 'controTxApp.ContractType.' + contractType | translate }}
+            </option>
+          </select>
+          <div *ngIf="editForm.get('type')!.invalid && (editForm.get('type')!.dirty || editForm.get('type')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('type')?.errors?.required" jhiTranslate="entity.validation.required">
+              Este campo es obligatorio.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.contract.numberInterfaceBoard" for="field_numberInterfaceBoard"
+            >Number Interface Board</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="numberInterfaceBoard"
+            id="field_numberInterfaceBoard"
+            data-cy="numberInterfaceBoard"
+            formControlName="numberInterfaceBoard"
+          />
+          <div
+            *ngIf="
+              editForm.get('numberInterfaceBoard')!.invalid &&
+              (editForm.get('numberInterfaceBoard')!.dirty || editForm.get('numberInterfaceBoard')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('numberInterfaceBoard')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('numberInterfaceBoard')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              Este campo debe ser un número.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.contract.startTime" for="field_startTime">Start Time</label>
+          <div class="d-flex">
+            <input
+              id="field_startTime"
+              data-cy="startTime"
+              type="datetime-local"
+              class="form-control"
+              name="startTime"
+              formControlName="startTime"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          <div *ngIf="editForm.get('startTime')!.invalid && (editForm.get('startTime')!.dirty || editForm.get('startTime')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('startTime')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('startTime')?.errors?.datetimelocal"
+              jhiTranslate="entity.validation.datetimelocal"
+            >
+              Este campo debe ser una fecha y hora.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.contract.finishTime" for="field_finishTime">Finish Time</label>
+          <div class="d-flex">
+            <input
+              id="field_finishTime"
+              data-cy="finishTime"
+              type="datetime-local"
+              class="form-control"
+              name="finishTime"
+              formControlName="finishTime"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.contract.operator" for="field_operator">Operator</label>
+          <select
+            class="form-control"
+            id="field_operator"
+            data-cy="operator"
+            name="operator"
+            formControlName="operator"
+            [compareWith]="compareOperator"
+          >
+            <option *ngIf="!editForm.get('operator')!.value" [ngValue]="null" selected></option>
+            <option [ngValue]="operatorOption" *ngFor="let operatorOption of operatorsSharedCollection">{{ operatorOption.name }}</option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['operator'])!.invalid && (editForm.get(['operator'])!.dirty || editForm.get(['operator'])!.touched)">
+          <small
+            class="form-text text-danger"
+            *ngIf="editForm.get(['operator'])?.errors?.required"
+            jhiTranslate="entity.validation.required"
+          >
+            Este campo es obligatorio.
+          </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

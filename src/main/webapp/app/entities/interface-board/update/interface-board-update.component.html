@@ -1,0 +1,91 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-interface-board-heading"
+        data-cy="InterfaceBoardCreateUpdateHeading"
+        jhiTranslate="controTxApp.interfaceBoard.home.createOrEditLabel"
+      >
+        Crear o editar Interface Board
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" jhiTranslate="controTxApp.interfaceBoard.id" for="field_id">Id</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.interfaceBoard.ipAddress" for="field_ipAddress">Ip Address</label>
+          <input type="text" class="form-control" name="ipAddress" id="field_ipAddress" data-cy="ipAddress" formControlName="ipAddress" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.interfaceBoard.hash" for="field_hash">Hash</label>
+          <input type="text" class="form-control" name="hash" id="field_hash" data-cy="hash" formControlName="hash" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.interfaceBoard.mac" for="field_mac">Mac</label>
+          <input type="text" class="form-control" name="mac" id="field_mac" data-cy="mac" formControlName="mac" />
+          <div *ngIf="editForm.get('mac')!.invalid && (editForm.get('mac')!.dirty || editForm.get('mac')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('mac')?.errors?.required" jhiTranslate="entity.validation.required">
+              Este campo es obligatorio.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.interfaceBoard.dataSheetInterface" for="field_dataSheetInterface"
+            >Data Sheet Interface</label
+          >
+          <select
+            class="form-control"
+            id="field_dataSheetInterface"
+            data-cy="dataSheetInterface"
+            name="dataSheetInterface"
+            formControlName="dataSheetInterface"
+            [compareWith]="compareDataSheetInterface"
+          >
+            <option *ngIf="!editForm.get('dataSheetInterface')!.value" [ngValue]="null" selected></option>
+            <option [ngValue]="dataSheetInterfaceOption" *ngFor="let dataSheetInterfaceOption of dataSheetInterfacesSharedCollection">
+              {{ dataSheetInterfaceOption.id }}
+            </option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['dataSheetInterface'])!.invalid &&
+            (editForm.get(['dataSheetInterface'])!.dirty || editForm.get(['dataSheetInterface'])!.touched)
+          "
+        >
+          <small
+            class="form-text text-danger"
+            *ngIf="editForm.get(['dataSheetInterface'])?.errors?.required"
+            jhiTranslate="entity.validation.required"
+          >
+            Este campo es obligatorio.
+          </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

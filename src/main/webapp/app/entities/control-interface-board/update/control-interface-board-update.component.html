@@ -1,0 +1,166 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-control-interface-board-heading"
+        data-cy="ControlInterfaceBoardCreateUpdateHeading"
+        jhiTranslate="controTxApp.controlInterfaceBoard.home.createOrEditLabel"
+      >
+        Crear o editar Control Interface Board
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" jhiTranslate="controTxApp.controlInterfaceBoard.id" for="field_id">Id</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.controlInterfaceBoard.location" for="field_location">Location</label>
+          <select class="form-control" name="location" formControlName="location" id="field_location" data-cy="location">
+            <option [ngValue]="null">{{ 'controTxApp.Location.null' | translate }}</option>
+            <option *ngFor="let location of locationValues" [value]="location">{{ 'controTxApp.Location.' + location | translate }}</option>
+          </select>
+          <div *ngIf="editForm.get('location')!.invalid && (editForm.get('location')!.dirty || editForm.get('location')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('location')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.controlInterfaceBoard.state" for="field_state">State</label>
+          <select class="form-control" name="state" formControlName="state" id="field_state" data-cy="state">
+            <option [ngValue]="null">{{ 'controTxApp.StatusInterfaceBoard.null' | translate }}</option>
+            <option *ngFor="let statusInterfaceBoard of statusInterfaceBoardValues" [value]="statusInterfaceBoard">
+              {{ 'controTxApp.StatusInterfaceBoard.' + statusInterfaceBoard | translate }}
+            </option>
+          </select>
+          <div *ngIf="editForm.get('state')!.invalid && (editForm.get('state')!.dirty || editForm.get('state')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('state')?.errors?.required" jhiTranslate="entity.validation.required">
+              Este campo es obligatorio.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.controlInterfaceBoard.startTime" for="field_startTime">Start Time</label>
+          <div class="d-flex">
+            <input
+              id="field_startTime"
+              data-cy="startTime"
+              type="datetime-local"
+              class="form-control"
+              name="startTime"
+              formControlName="startTime"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          <div *ngIf="editForm.get('startTime')!.invalid && (editForm.get('startTime')!.dirty || editForm.get('startTime')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('startTime')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('startTime')?.errors?.datetimelocal"
+              jhiTranslate="entity.validation.datetimelocal"
+            >
+              Este campo debe ser una fecha y hora.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.controlInterfaceBoard.finishTime" for="field_finishTime">Finish Time</label>
+          <div class="d-flex">
+            <input
+              id="field_finishTime"
+              data-cy="finishTime"
+              type="datetime-local"
+              class="form-control"
+              name="finishTime"
+              formControlName="finishTime"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.controlInterfaceBoard.contract" for="field_contract">Contract</label>
+          <select
+            class="form-control"
+            id="field_contract"
+            data-cy="contract"
+            name="contract"
+            formControlName="contract"
+            [compareWith]="compareContract"
+          >
+            <option [ngValue]="null"></option>
+            <option [ngValue]="contractOption" *ngFor="let contractOption of contractsSharedCollection">
+              {{ contractOption.reference }}
+            </option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.controlInterfaceBoard.interfaceBoard" for="field_interfaceBoard"
+            >Interface Board</label
+          >
+          <select
+            class="form-control"
+            id="field_interfaceBoard"
+            data-cy="interfaceBoard"
+            name="interfaceBoard"
+            formControlName="interfaceBoard"
+            [compareWith]="compareInterfaceBoard"
+          >
+            <option *ngIf="!editForm.get('interfaceBoard')!.value" [ngValue]="null" selected></option>
+            <option [ngValue]="interfaceBoardOption" *ngFor="let interfaceBoardOption of interfaceBoardsSharedCollection">
+              {{ interfaceBoardOption.mac }}
+            </option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['interfaceBoard'])!.invalid &&
+            (editForm.get(['interfaceBoard'])!.dirty || editForm.get(['interfaceBoard'])!.touched)
+          "
+        >
+          <small
+            class="form-text text-danger"
+            *ngIf="editForm.get(['interfaceBoard'])?.errors?.required"
+            jhiTranslate="entity.validation.required"
+          >
+            Este campo es obligatorio.
+          </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

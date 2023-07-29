@@ -1,0 +1,40 @@
+{
+  "applications": ["controTx"],
+  "changelogDate": "20210927194820",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "interface_board",
+  "fields": [
+    {
+      "fieldName": "id",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "ipAddress",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "hash",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "mac",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "InterfaceBoard",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "dataSheetInterface",
+      "relationshipName": "dataSheetInterface",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "service": "serviceImpl"
+}

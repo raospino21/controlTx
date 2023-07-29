@@ -1,0 +1,24 @@
+{
+  "applications": ["controTx"],
+  "changelogDate": "20210927194520",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "brand",
+  "fields": [
+    {
+      "fieldName": "id",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "Brand",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceImpl"
+}

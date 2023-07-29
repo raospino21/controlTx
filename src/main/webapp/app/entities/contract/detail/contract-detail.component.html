@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="contract">
+      <h2 data-cy="contractDetailsHeading"><span jhiTranslate="controTxApp.contract.detail.title">Contract</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="controTxApp.contract.id">Id</span></dt>
+        <dd>
+          <span>{{ contract.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.contract.reference">Reference</span></dt>
+        <dd>
+          <span>{{ contract.reference }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.contract.type">Type</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'controTxApp.ContractType.' + contract.type }}">{{ contract.type }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.contract.numberInterfaceBoard">Number Interface Board</span></dt>
+        <dd>
+          <span>{{ contract.numberInterfaceBoard }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.contract.startTime">Start Time</span></dt>
+        <dd>
+          <span>{{ contract.startTime | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.contract.finishTime">Finish Time</span></dt>
+        <dd>
+          <span>{{ contract.finishTime | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.contract.operator">Operator</span></dt>
+        <dd>
+          <div *ngIf="contract.operator">
+            <a [routerLink]="['/operator', contract.operator.id, 'view']">{{ contract.operator.name }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+      </button>
+
+      <button type="button" [routerLink]="['/contract', contract.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="controlInterfaceBoard">
+      <h2 data-cy="controlInterfaceBoardDetailsHeading">
+        <span jhiTranslate="controTxApp.controlInterfaceBoard.detail.title">Control Interface Board</span>
+      </h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="controTxApp.controlInterfaceBoard.id">Id</span></dt>
+        <dd>
+          <span>{{ controlInterfaceBoard.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.controlInterfaceBoard.location">Location</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'controTxApp.Location.' + controlInterfaceBoard.location }}">{{ controlInterfaceBoard.location }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.controlInterfaceBoard.state">State</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'controTxApp.StatusInterfaceBoard.' + controlInterfaceBoard.state }}">{{
+            controlInterfaceBoard.state
+          }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.controlInterfaceBoard.startTime">Start Time</span></dt>
+        <dd>
+          <span>{{ controlInterfaceBoard.startTime | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.controlInterfaceBoard.finishTime">Finish Time</span></dt>
+        <dd>
+          <span>{{ controlInterfaceBoard.finishTime | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.controlInterfaceBoard.contract">Contract</span></dt>
+        <dd>
+          <div *ngIf="controlInterfaceBoard.contract">
+            <a [routerLink]="['/contract', controlInterfaceBoard.contract.id, 'view']">{{ controlInterfaceBoard.contract.reference }}</a>
+          </div>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.controlInterfaceBoard.interfaceBoard">Interface Board</span></dt>
+        <dd>
+          <div *ngIf="controlInterfaceBoard.interfaceBoard">
+            <a [routerLink]="['/interface-board', controlInterfaceBoard.interfaceBoard.id, 'view']">{{
+              controlInterfaceBoard.interfaceBoard.mac
+            }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+      </button>
+
+      <button type="button" [routerLink]="['/control-interface-board', controlInterfaceBoard.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

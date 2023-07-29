@@ -1,0 +1,27 @@
+{
+  "controTxApp": {
+    "interfaceBoard": {
+      "home": {
+        "title": "Interface Boards",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Interface Board",
+        "createOrEditLabel": "Create or edit a Interface Board",
+        "notFound": "No Interface Boards found"
+      },
+      "created": "A new Interface Board is created with identifier {{ param }}",
+      "updated": "A Interface Board is updated with identifier {{ param }}",
+      "deleted": "A Interface Board is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Interface Board {{ id }}?"
+      },
+      "detail": {
+        "title": "Interface Board"
+      },
+      "id": "Id",
+      "ipAddress": "Ip Address",
+      "hash": "Hash",
+      "mac": "Mac",
+      "dataSheetInterface": "Data Sheet Interface"
+    }
+  }
+}

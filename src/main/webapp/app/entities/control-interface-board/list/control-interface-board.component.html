@@ -1,0 +1,153 @@
+<div>
+  <h2 id="page-heading" data-cy="ControlInterfaceBoardHeading">
+    <span jhiTranslate="controTxApp.controlInterfaceBoard.home.title">Control Interface Boards</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="controTxApp.controlInterfaceBoard.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-control-interface-board"
+        [routerLink]="['/control-interface-board/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="controTxApp.controlInterfaceBoard.home.createLabel"> Crear nuevo Control Interface Board </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <jhi-filter [filters]="filters"></jhi-filter>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="controlInterfaceBoards?.length === 0">
+    <span jhiTranslate="controTxApp.controlInterfaceBoard.home.notFound">Ningún Control Interface Boards encontrado</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="controlInterfaceBoards && controlInterfaceBoards.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.controlInterfaceBoard.id">Id</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="location">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.controlInterfaceBoard.location">Location</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="state">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.controlInterfaceBoard.state">State</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="startTime">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.controlInterfaceBoard.startTime">Start Time</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="finishTime">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.controlInterfaceBoard.finishTime">Finish Time</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="contract.reference">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.controlInterfaceBoard.contract">Contract</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="interfaceBoard.mac">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.controlInterfaceBoard.interfaceBoard">Interface Board</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let controlInterfaceBoard of controlInterfaceBoards; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/control-interface-board', controlInterfaceBoard.id, 'view']">{{ controlInterfaceBoard.id }}</a>
+          </td>
+          <td jhiTranslate="{{ 'controTxApp.Location.' + controlInterfaceBoard.location }}">{{ controlInterfaceBoard.location }}</td>
+          <td jhiTranslate="{{ 'controTxApp.StatusInterfaceBoard.' + controlInterfaceBoard.state }}">{{ controlInterfaceBoard.state }}</td>
+          <td>{{ controlInterfaceBoard.startTime | formatMediumDatetime }}</td>
+          <td>{{ controlInterfaceBoard.finishTime | formatMediumDatetime }}</td>
+          <td>
+            <div *ngIf="controlInterfaceBoard.contract">
+              <a [routerLink]="['/contract', controlInterfaceBoard.contract.id, 'view']">{{ controlInterfaceBoard.contract.reference }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="controlInterfaceBoard.interfaceBoard">
+              <a [routerLink]="['/interface-board', controlInterfaceBoard.interfaceBoard.id, 'view']">{{
+                controlInterfaceBoard.interfaceBoard.mac
+              }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/control-interface-board', controlInterfaceBoard.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/control-interface-board', controlInterfaceBoard.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+              </button>
+
+              <button type="submit" (click)="delete(controlInterfaceBoard)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="controlInterfaceBoards && controlInterfaceBoards.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

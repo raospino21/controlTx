@@ -1,0 +1,48 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="interfaceBoard">
+      <h2 data-cy="interfaceBoardDetailsHeading"><span jhiTranslate="controTxApp.interfaceBoard.detail.title">Interface Board</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="controTxApp.interfaceBoard.id">Id</span></dt>
+        <dd>
+          <span>{{ interfaceBoard.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.interfaceBoard.ipAddress">Ip Address</span></dt>
+        <dd>
+          <span>{{ interfaceBoard.ipAddress }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.interfaceBoard.hash">Hash</span></dt>
+        <dd>
+          <span>{{ interfaceBoard.hash }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.interfaceBoard.mac">Mac</span></dt>
+        <dd>
+          <span>{{ interfaceBoard.mac }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.interfaceBoard.dataSheetInterface">Data Sheet Interface</span></dt>
+        <dd>
+          <div *ngIf="interfaceBoard.dataSheetInterface">
+            <a [routerLink]="['/data-sheet-interface', interfaceBoard.dataSheetInterface.id, 'view']">{{
+              interfaceBoard.dataSheetInterface.id
+            }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+      </button>
+
+      <button type="button" [routerLink]="['/interface-board', interfaceBoard.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

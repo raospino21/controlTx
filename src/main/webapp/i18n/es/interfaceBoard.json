@@ -1,0 +1,27 @@
+{
+  "controTxApp": {
+    "interfaceBoard": {
+      "home": {
+        "title": "Interface Boards",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Interface Board",
+        "createOrEditLabel": "Crear o editar Interface Board",
+        "notFound": "Ningún Interface Boards encontrado"
+      },
+      "created": "Un nuevo Interface Board ha sido creado con el identificador {{ param }}",
+      "updated": "Un Interface Board ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Interface Board ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Interface Board {{ id }}?"
+      },
+      "detail": {
+        "title": "Interface Board"
+      },
+      "id": "Id",
+      "ipAddress": "Ip Address",
+      "hash": "Hash",
+      "mac": "Mac",
+      "dataSheetInterface": "Data Sheet Interface"
+    }
+  }
+}

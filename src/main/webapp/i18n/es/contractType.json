@@ -1,0 +1,10 @@
+{
+  "controTxApp": {
+    "ContractType": {
+      "null": "",
+      "SALE": "SALE",
+      "RENT": "RENT",
+      "LOAD": "LOAD"
+    }
+  }
+}

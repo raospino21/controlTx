@@ -1,0 +1,29 @@
+{
+  "controTxApp": {
+    "dataSheetInterface": {
+      "home": {
+        "title": "Data Sheet Interfaces",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Data Sheet Interface",
+        "createOrEditLabel": "Create or edit a Data Sheet Interface",
+        "notFound": "No Data Sheet Interfaces found"
+      },
+      "created": "A new Data Sheet Interface is created with identifier {{ param }}",
+      "updated": "A Data Sheet Interface is updated with identifier {{ param }}",
+      "deleted": "A Data Sheet Interface is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Data Sheet Interface {{ id }}?"
+      },
+      "detail": {
+        "title": "Data Sheet Interface"
+      },
+      "id": "Id",
+      "colcircuitosLotNumber": "Colcircuitos Lot Number",
+      "orderAmount": "Order Amount",
+      "amountReceived": "Amount Received",
+      "remission": "Remission",
+      "entryDate": "Entry Date",
+      "iesOrderNumber": "Ies Order Number"
+    }
+  }
+}

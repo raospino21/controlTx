@@ -1,0 +1,29 @@
+{
+  "controTxApp": {
+    "controlInterfaceBoard": {
+      "home": {
+        "title": "Control Interface Boards",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Control Interface Board",
+        "createOrEditLabel": "Create or edit a Control Interface Board",
+        "notFound": "No Control Interface Boards found"
+      },
+      "created": "A new Control Interface Board is created with identifier {{ param }}",
+      "updated": "A Control Interface Board is updated with identifier {{ param }}",
+      "deleted": "A Control Interface Board is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Control Interface Board {{ id }}?"
+      },
+      "detail": {
+        "title": "Control Interface Board"
+      },
+      "id": "Id",
+      "location": "Location",
+      "state": "State",
+      "startTime": "Start Time",
+      "finishTime": "Finish Time",
+      "contract": "Contract",
+      "interfaceBoard": "Interface Board"
+    }
+  }
+}

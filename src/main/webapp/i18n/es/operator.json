@@ -1,0 +1,26 @@
+{
+  "controTxApp": {
+    "operator": {
+      "home": {
+        "title": "Operators",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Operator",
+        "createOrEditLabel": "Crear o editar Operator",
+        "notFound": "Ningún Operators encontrado"
+      },
+      "created": "Un nuevo Operator ha sido creado con el identificador {{ param }}",
+      "updated": "Un Operator ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Operator ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Operator {{ id }}?"
+      },
+      "detail": {
+        "title": "Operator"
+      },
+      "id": "Id",
+      "name": "Name",
+      "nit": "Nit",
+      "brand": "Brand"
+    }
+  }
+}

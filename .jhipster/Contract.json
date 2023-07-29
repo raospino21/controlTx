@@ -1,0 +1,52 @@
+{
+  "applications": ["controTx"],
+  "changelogDate": "20210927194720",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "contract",
+  "fields": [
+    {
+      "fieldName": "id",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "reference",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "ContractType",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "SALE,RENT,LOAD"
+    },
+    {
+      "fieldName": "numberInterfaceBoard",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "startTime",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "finishTime",
+      "fieldType": "ZonedDateTime"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "Contract",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "operator",
+      "relationshipName": "operator",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "service": "serviceImpl"
+}
