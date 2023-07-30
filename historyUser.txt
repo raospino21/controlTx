@@ -1,0 +1,34 @@
+history user
+
+- marcas
+  - operedores 
+    - contratos van asociados a los operadores
+  - los traslados deben ser en base a la marca
+
+entity marca {
+  name: "Oceano"
+}
+
+entity operador {
+  name: "diverWeb"
+  marca: "Oceano"
+} 
+
+entity operador {
+  name: "zour"
+  marca: "Oceano"
+} 
+
+entity contrato {
+  refence: "1234"
+  operdor: "diverWeb"
+  nMaq: 5
+  type:  rent
+} 
+
+entity contrato {
+  refence: "1234"
+  operdor: "zour"
+  nMaq: 5
+  type:  rent
+} 
