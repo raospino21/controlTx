@@ -53,7 +53,12 @@ public class ControlTxServiceImpl implements ControlTxService {
             InterfaceBoardDTO interfaceBoardDTO = createInterfaceBoard(mac, dataSheetInterfaceDTO);
             interfaceBoardDTO = interfaceBoardService.save(interfaceBoardDTO);
 
-            ControlInterfaceBoardDTO controlInterfaceBoardDTO = createControlInterfaceBoard(interfaceBoardDTO);
+            ControlInterfaceBoardDTO controlInterfaceBoardDTO = createControlInterfaceBoard(
+                Location.IES,
+                StatusInterfaceBoard.STOCK,
+                interfaceBoardDTO,
+                null
+            );
             controlInterfaceBoardDTO = controlInterfaceBoardService.save(controlInterfaceBoardDTO);
 
             log.info(
@@ -85,10 +90,15 @@ public class ControlTxServiceImpl implements ControlTxService {
         return interfaceBoardDTO;
     }
 
-    protected ControlInterfaceBoardDTO createControlInterfaceBoard(InterfaceBoardDTO interfaceBoardDTO) {
+    protected ControlInterfaceBoardDTO createControlInterfaceBoard(
+        Location location,
+        StatusInterfaceBoard status,
+        InterfaceBoardDTO interfaceBoardDTO,
+        ContractDTO contract
+    ) {
         ControlInterfaceBoardDTO controlInterfaceBoardDTO = new ControlInterfaceBoardDTO();
-        controlInterfaceBoardDTO.setLocation(Location.IES);
-        controlInterfaceBoardDTO.setState(StatusInterfaceBoard.STOCK);
+        controlInterfaceBoardDTO.setLocation(location);
+        controlInterfaceBoardDTO.setState(status);
         controlInterfaceBoardDTO.setStartTime(ZonedDateTime.now());
         controlInterfaceBoardDTO.setInterfaceBoard(interfaceBoardDTO);
 
@@ -113,18 +123,12 @@ public class ControlTxServiceImpl implements ControlTxService {
         controlInterfaceBoardDTO.setFinishTime(ZonedDateTime.now());
         controlInterfaceBoardService.save(controlInterfaceBoardDTO);
 
-        ControlInterfaceBoardDTO controlInterfaceBoardNewDTO = buildControlInterfaceBoardDTO(interfaceBoardDTO, contract);
+        ControlInterfaceBoardDTO controlInterfaceBoardNewDTO = createControlInterfaceBoard(
+            Location.CLIENT,
+            StatusInterfaceBoard.OPERATION,
+            interfaceBoardDTO,
+            contract
+        );
         controlInterfaceBoardService.save(controlInterfaceBoardNewDTO);
-    }
-
-    protected ControlInterfaceBoardDTO buildControlInterfaceBoardDTO(InterfaceBoardDTO interfaceBoardDTO, ContractDTO contract) {
-        ControlInterfaceBoardDTO controlInterfaceBoardDTO = new ControlInterfaceBoardDTO();
-        controlInterfaceBoardDTO.setLocation(Location.CLIENT);
-        controlInterfaceBoardDTO.setState(StatusInterfaceBoard.OPERATION);
-        controlInterfaceBoardDTO.setStartTime(ZonedDateTime.now());
-        controlInterfaceBoardDTO.setInterfaceBoard(interfaceBoardDTO);
-        controlInterfaceBoardDTO.setContract(contract);
-
-        return controlInterfaceBoardDTO;
     }
 }
