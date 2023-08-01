@@ -81,4 +81,14 @@ public class InterfaceBoardServiceImpl implements InterfaceBoardService {
         log.debug("Request to delete InterfaceBoard : {}", id);
         interfaceBoardRepository.deleteById(id);
     }
+
+    @Override
+    public InterfaceBoardDTO getInterfaceBoardByMac(String mac) {
+        return interfaceBoardMapper.toDto(interfaceBoardRepository.getInterfaceBoardByMac(mac));
+    }
+
+    @Override
+    public InterfaceBoard toEntity(InterfaceBoardDTO interfaceBoardDTO) {
+        return interfaceBoardMapper.toEntity(interfaceBoardDTO);
+    }
 }

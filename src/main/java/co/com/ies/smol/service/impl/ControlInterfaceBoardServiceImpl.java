@@ -1,9 +1,11 @@
 package co.com.ies.smol.service.impl;
 
 import co.com.ies.smol.domain.ControlInterfaceBoard;
+import co.com.ies.smol.domain.InterfaceBoard;
 import co.com.ies.smol.repository.ControlInterfaceBoardRepository;
 import co.com.ies.smol.service.ControlInterfaceBoardService;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
+import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.mapper.ControlInterfaceBoardMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -87,5 +89,10 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
     public void delete(Long id) {
         log.debug("Request to delete ControlInterfaceBoard : {}", id);
         controlInterfaceBoardRepository.deleteById(id);
+    }
+
+    @Override
+    public ControlInterfaceBoardDTO getControlInterfaceBoardByInterfaceBoard(InterfaceBoard interfaceBoard) {
+        return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getControlInterfaceBoardByInterfaceBoard(interfaceBoard));
     }
 }

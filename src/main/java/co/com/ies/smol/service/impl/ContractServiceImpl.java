@@ -85,4 +85,9 @@ public class ContractServiceImpl implements ContractService {
         log.debug("Request to delete Contract : {}", id);
         contractRepository.deleteById(id);
     }
+
+    @Override
+    public ContractDTO getContractByReference(String reference) {
+        return contractMapper.toDto(contractRepository.getContractByReference(reference));
+    }
 }

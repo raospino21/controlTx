@@ -1,6 +1,7 @@
 package co.com.ies.smol.web.rest.core;
 
 import co.com.ies.smol.service.core.ControlTxService;
+import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import java.net.URISyntaxException;
 import org.slf4j.Logger;
@@ -24,11 +25,20 @@ public class ControlTxController {
     }
 
     @PostMapping("/board/register")
-    public ResponseEntity<String> createDTO(@RequestBody BoardRegisterDTO boardRegisterDTO) throws URISyntaxException {
+    public ResponseEntity<String> createBoardRegister(@RequestBody BoardRegisterDTO boardRegisterDTO) throws URISyntaxException {
         log.debug("REST request to save BoardRegisterDTO : {}", boardRegisterDTO);
 
         controlTxService.createBoardRegister(boardRegisterDTO);
 
         return ResponseEntity.ok("ok process succesfully!!");
+    }
+
+    @PostMapping("/assign/board")
+    public ResponseEntity<String> assignInterfaceBoard(@RequestBody AssignBoardDTO assignBoardDTO) throws URISyntaxException {
+        log.debug("REST request to save assignInterfaceBoard : {}", assignBoardDTO);
+
+        controlTxService.assignInterfaceBoard(assignBoardDTO);
+
+        return ResponseEntity.ok("ok process assignInterfaceBoard succesfully!!");
     }
 }

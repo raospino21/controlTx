@@ -1,6 +1,8 @@
 package co.com.ies.smol.repository;
 
 import co.com.ies.smol.domain.ControlInterfaceBoard;
+import co.com.ies.smol.domain.InterfaceBoard;
+import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -42,4 +44,6 @@ public interface ControlInterfaceBoardRepository
         "select controlInterfaceBoard from ControlInterfaceBoard controlInterfaceBoard left join fetch controlInterfaceBoard.contract left join fetch controlInterfaceBoard.interfaceBoard where controlInterfaceBoard.id =:id"
     )
     Optional<ControlInterfaceBoard> findOneWithToOneRelationships(@Param("id") Long id);
+
+    ControlInterfaceBoard getControlInterfaceBoardByInterfaceBoard(InterfaceBoard interfaceBoard);
 }

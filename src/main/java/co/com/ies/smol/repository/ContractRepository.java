@@ -37,4 +37,6 @@ public interface ContractRepository extends JpaRepository<Contract, Long>, JpaSp
 
     @Query("select contract from Contract contract left join fetch contract.operator where contract.id =:id")
     Optional<Contract> findOneWithToOneRelationships(@Param("id") Long id);
+
+    Contract getContractByReference(String reference);
 }

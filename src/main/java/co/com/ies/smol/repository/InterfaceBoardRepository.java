@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface InterfaceBoardRepository extends JpaRepository<InterfaceBoard, Long>, JpaSpecificationExecutor<InterfaceBoard> {}
+public interface InterfaceBoardRepository extends JpaRepository<InterfaceBoard, Long>, JpaSpecificationExecutor<InterfaceBoard> {
+    InterfaceBoard getInterfaceBoardByMac(String mac);
+}

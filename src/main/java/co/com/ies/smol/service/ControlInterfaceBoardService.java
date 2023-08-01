@@ -1,6 +1,8 @@
 package co.com.ies.smol.service;
 
+import co.com.ies.smol.domain.InterfaceBoard;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
+import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -63,4 +65,6 @@ public interface ControlInterfaceBoardService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    ControlInterfaceBoardDTO getControlInterfaceBoardByInterfaceBoard(InterfaceBoard interfaceBoard);
 }

@@ -1,5 +1,6 @@
 package co.com.ies.smol.service;
 
+import co.com.ies.smol.domain.InterfaceBoard;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -55,4 +56,8 @@ public interface InterfaceBoardService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    InterfaceBoardDTO getInterfaceBoardByMac(String mac);
+
+    InterfaceBoard toEntity(InterfaceBoardDTO interfaceBoardDTO);
 }
