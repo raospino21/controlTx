@@ -66,5 +66,5 @@ public interface ControlInterfaceBoardService {
      */
     void delete(Long id);
 
-    ControlInterfaceBoardDTO getControlInterfaceBoardByInterfaceBoard(InterfaceBoard interfaceBoard);
+    Optional<ControlInterfaceBoardDTO> getControlInterfaceBoardByInterfaceBoard(InterfaceBoard interfaceBoard);
 }

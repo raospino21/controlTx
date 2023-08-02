@@ -45,5 +45,5 @@ public interface ControlInterfaceBoardRepository
     )
     Optional<ControlInterfaceBoard> findOneWithToOneRelationships(@Param("id") Long id);
 
-    ControlInterfaceBoard getControlInterfaceBoardByInterfaceBoard(InterfaceBoard interfaceBoard);
+    Optional<ControlInterfaceBoard> getControlInterfaceBoardByInterfaceBoard(InterfaceBoard interfaceBoard);
 }

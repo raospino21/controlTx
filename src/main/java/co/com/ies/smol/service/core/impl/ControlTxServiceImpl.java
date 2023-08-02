@@ -1,6 +1,8 @@
 package co.com.ies.smol.service.core.impl;
 
 import co.com.ies.smol.domain.InterfaceBoard;
+import co.com.ies.smol.domain.core.ControlTxDomainImpl;
+import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.domain.enumeration.Location;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.service.ContractService;
@@ -17,12 +19,13 @@ import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import co.com.ies.smol.web.rest.core.ControlTxController;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ControlTxServiceImpl implements ControlTxService {
+public class ControlTxServiceImpl extends ControlTxDomainImpl implements ControlTxService {
 
     private final Logger log = LoggerFactory.getLogger(ControlTxController.class);
 
@@ -106,7 +109,7 @@ public class ControlTxServiceImpl implements ControlTxService {
     }
 
     @Override
-    public void assignInterfaceBoard(AssignBoardDTO assignBoardDTO) {
+    public void assignInterfaceBoard(AssignBoardDTO assignBoardDTO) throws ControlTxException {
         String mac = assignBoardDTO.getMac();
         String reference = assignBoardDTO.getReference();
 
@@ -114,11 +117,12 @@ public class ControlTxServiceImpl implements ControlTxService {
 
         InterfaceBoard interfaceBoard = interfaceBoardService.toEntity(interfaceBoardDTO);
 
-        ContractDTO contract = contractService.getContractByReference(reference);
-
-        ControlInterfaceBoardDTO controlInterfaceBoardDTO = controlInterfaceBoardService.getControlInterfaceBoardByInterfaceBoard(
+        Optional<ControlInterfaceBoardDTO> oControlInterfaceBoardDTO = controlInterfaceBoardService.getControlInterfaceBoardByInterfaceBoard(
             interfaceBoard
         );
+        ControlInterfaceBoardDTO controlInterfaceBoardDTO = validateExistingBoardControl(oControlInterfaceBoardDTO);
+
+        ContractDTO contract = contractService.getContractByReference(reference);
 
         controlInterfaceBoardDTO.setFinishTime(ZonedDateTime.now());
         controlInterfaceBoardService.save(controlInterfaceBoardDTO);

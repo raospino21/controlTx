@@ -1,8 +1,10 @@
 package co.com.ies.smol.web.rest.core;
 
+import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.service.core.ControlTxService;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
+import co.com.ies.smol.web.rest.errors.BadRequestAlertException;
 import java.net.URISyntaxException;
 import java.util.Objects;
 import javax.validation.Valid;
@@ -47,7 +49,7 @@ public class ControlTxController {
 
     @PostMapping("/assign/board")
     public ResponseEntity<String> assignInterfaceBoard(@Valid @RequestBody AssignBoardDTO assignBoardDTO, Errors errors)
-        throws URISyntaxException {
+        throws ControlTxException {
         log.debug("REST request to save assignInterfaceBoard : {}", assignBoardDTO);
 
         FieldError fieldError = errors.getFieldError();

@@ -92,7 +92,9 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
     }
 
     @Override
-    public ControlInterfaceBoardDTO getControlInterfaceBoardByInterfaceBoard(InterfaceBoard interfaceBoard) {
-        return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getControlInterfaceBoardByInterfaceBoard(interfaceBoard));
+    public Optional<ControlInterfaceBoardDTO> getControlInterfaceBoardByInterfaceBoard(InterfaceBoard interfaceBoard) {
+        return controlInterfaceBoardRepository
+            .getControlInterfaceBoardByInterfaceBoard(interfaceBoard)
+            .map(controlInterfaceBoardMapper::toDto);
     }
 }
