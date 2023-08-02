@@ -83,8 +83,8 @@ public class InterfaceBoardServiceImpl implements InterfaceBoardService {
     }
 
     @Override
-    public InterfaceBoardDTO getInterfaceBoardByMac(String mac) {
-        return interfaceBoardMapper.toDto(interfaceBoardRepository.getInterfaceBoardByMac(mac));
+    public Optional<InterfaceBoardDTO> getInterfaceBoardByMac(String mac) {
+        return interfaceBoardRepository.getInterfaceBoardByMac(mac).map(interfaceBoardMapper::toDto);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package co.com.ies.smol.repository;
 
 import co.com.ies.smol.domain.InterfaceBoard;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +11,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface InterfaceBoardRepository extends JpaRepository<InterfaceBoard, Long>, JpaSpecificationExecutor<InterfaceBoard> {
-    InterfaceBoard getInterfaceBoardByMac(String mac);
+    Optional<InterfaceBoard> getInterfaceBoardByMac(String mac);
 }

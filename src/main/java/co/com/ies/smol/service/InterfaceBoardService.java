@@ -57,7 +57,7 @@ public interface InterfaceBoardService {
      */
     void delete(Long id);
 
-    InterfaceBoardDTO getInterfaceBoardByMac(String mac);
+    Optional<InterfaceBoardDTO> getInterfaceBoardByMac(String mac);
 
     InterfaceBoard toEntity(InterfaceBoardDTO interfaceBoardDTO);
 }

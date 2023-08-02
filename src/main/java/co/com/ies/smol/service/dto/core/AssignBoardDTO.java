@@ -1,12 +1,14 @@
 package co.com.ies.smol.service.dto.core;
 
 import java.io.Serializable;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class AssignBoardDTO implements Serializable {
 
     @NotNull
+    @NotBlank
     private String mac;
 
     @NotNull

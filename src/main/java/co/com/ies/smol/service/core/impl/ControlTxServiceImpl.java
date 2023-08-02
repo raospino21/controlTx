@@ -113,13 +113,15 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         String mac = assignBoardDTO.getMac();
         String reference = assignBoardDTO.getReference();
 
-        InterfaceBoardDTO interfaceBoardDTO = interfaceBoardService.getInterfaceBoardByMac(mac);
+        Optional<InterfaceBoardDTO> oInterfaceBoardDTO = interfaceBoardService.getInterfaceBoardByMac(mac);
 
+        InterfaceBoardDTO interfaceBoardDTO = validateExistingInterfaceBoard(oInterfaceBoardDTO);
         InterfaceBoard interfaceBoard = interfaceBoardService.toEntity(interfaceBoardDTO);
 
         Optional<ControlInterfaceBoardDTO> oControlInterfaceBoardDTO = controlInterfaceBoardService.getControlInterfaceBoardByInterfaceBoard(
             interfaceBoard
         );
+
         ControlInterfaceBoardDTO controlInterfaceBoardDTO = validateExistingBoardControl(oControlInterfaceBoardDTO);
 
         ContractDTO contract = contractService.getContractByReference(reference);
