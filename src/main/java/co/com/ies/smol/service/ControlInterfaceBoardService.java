@@ -3,6 +3,7 @@ package co.com.ies.smol.service;
 import co.com.ies.smol.domain.InterfaceBoard;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,4 +68,6 @@ public interface ControlInterfaceBoardService {
     void delete(Long id);
 
     Optional<ControlInterfaceBoardDTO> getControlInterfaceBoardByInterfaceBoard(InterfaceBoard interfaceBoard);
+
+    List<ControlInterfaceBoardDTO> getControlInterfaceBoardByContractIds(List<Long> contractIds);
 }

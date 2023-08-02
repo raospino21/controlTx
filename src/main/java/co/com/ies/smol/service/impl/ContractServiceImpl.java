@@ -1,10 +1,13 @@
 package co.com.ies.smol.service.impl;
 
 import co.com.ies.smol.domain.Contract;
+import co.com.ies.smol.domain.Operator;
 import co.com.ies.smol.repository.ContractRepository;
 import co.com.ies.smol.service.ContractService;
 import co.com.ies.smol.service.dto.ContractDTO;
+import co.com.ies.smol.service.dto.OperatorDTO;
 import co.com.ies.smol.service.mapper.ContractMapper;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,5 +92,10 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public ContractDTO getContractByReference(String reference) {
         return contractMapper.toDto(contractRepository.getContractByReference(reference));
+    }
+
+    @Override
+    public List<ContractDTO> findAllContractByOpeatorIn(List<Operator> operators) {
+        return contractMapper.toDto(contractRepository.findAllByOperatorIn(operators));
     }
 }

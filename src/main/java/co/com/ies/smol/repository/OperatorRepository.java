@@ -37,4 +37,7 @@ public interface OperatorRepository extends JpaRepository<Operator, Long>, JpaSp
 
     @Query("select operator from Operator operator left join fetch operator.brand where operator.id =:id")
     Optional<Operator> findOneWithToOneRelationships(@Param("id") Long id);
+
+    @Query("select distinct operator from Operator operator left join fetch operator.brand where operator.brand.name  = :brandName ")
+    List<Operator> findAllByBrandName(String brandName);
 }

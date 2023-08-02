@@ -1,6 +1,7 @@
 package co.com.ies.smol.service.core.impl;
 
 import co.com.ies.smol.domain.InterfaceBoard;
+import co.com.ies.smol.domain.Operator;
 import co.com.ies.smol.domain.core.ControlTxDomainImpl;
 import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.domain.enumeration.Location;
@@ -9,17 +10,20 @@ import co.com.ies.smol.service.ContractService;
 import co.com.ies.smol.service.ControlInterfaceBoardService;
 import co.com.ies.smol.service.DataSheetInterfaceService;
 import co.com.ies.smol.service.InterfaceBoardService;
+import co.com.ies.smol.service.OperatorService;
 import co.com.ies.smol.service.core.ControlTxService;
 import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.DataSheetInterfaceDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
+import co.com.ies.smol.service.dto.OperatorDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import co.com.ies.smol.web.rest.core.ControlTxController;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,17 +37,20 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     private final InterfaceBoardService interfaceBoardService;
     private final ControlInterfaceBoardService controlInterfaceBoardService;
     private final ContractService contractService;
+    private final OperatorService operatorService;
 
     public ControlTxServiceImpl(
         DataSheetInterfaceService dataSheetInterfaceService,
-        ControlInterfaceBoardService controlInterfaceBoardService,
         InterfaceBoardService interfaceBoardService,
-        ContractService contractService
+        ControlInterfaceBoardService controlInterfaceBoardService,
+        ContractService contractService,
+        OperatorService operatorService
     ) {
         this.dataSheetInterfaceService = dataSheetInterfaceService;
-        this.controlInterfaceBoardService = controlInterfaceBoardService;
         this.interfaceBoardService = interfaceBoardService;
+        this.controlInterfaceBoardService = controlInterfaceBoardService;
         this.contractService = contractService;
+        this.operatorService = operatorService;
     }
 
     @Override
@@ -104,6 +111,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         controlInterfaceBoardDTO.setState(status);
         controlInterfaceBoardDTO.setStartTime(ZonedDateTime.now());
         controlInterfaceBoardDTO.setInterfaceBoard(interfaceBoardDTO);
+        controlInterfaceBoardDTO.setContract(contract);
 
         return controlInterfaceBoardDTO;
     }
@@ -136,5 +144,28 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
             contract
         );
         controlInterfaceBoardService.save(controlInterfaceBoardNewDTO);
+    }
+
+    @Override
+    public List<InterfaceBoardDTO> getInterfaceBoardByBrand(String brandName) {
+        List<Operator> operators = operatorService.findAllOperatorsByBrandName(brandName);
+        log.info("---------- operators {}", operators);
+        List<ContractDTO> contractList = contractService.findAllContractByOpeatorIn(operators);
+        List<Long> contractIds = contractList.stream().map(ContractDTO::getId).toList();
+        log.info("---------- totalNumberOfBoardContracted {}", contractIds);
+
+        List<ControlInterfaceBoardDTO> controlInterfaceBoardList = controlInterfaceBoardService.getControlInterfaceBoardByContractIds(
+            contractIds
+        );
+
+        return controlInterfaceBoardList.stream().map(ControlInterfaceBoardDTO::getInterfaceBoard).toList();
+    }
+
+    @Override
+    public Long getCountInterfaceBoardByBrand(String brandName) {
+        List<Operator> operators = operatorService.findAllOperatorsByBrandName(brandName);
+        List<ContractDTO> contractList = contractService.findAllContractByOpeatorIn(operators);
+
+        return contractList.stream().mapToLong(ContractDTO::getNumberInterfaceBoard).sum();
     }
 }

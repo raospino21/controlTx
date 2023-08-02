@@ -1,6 +1,8 @@
 package co.com.ies.smol.service;
 
+import co.com.ies.smol.domain.Operator;
 import co.com.ies.smol.service.dto.OperatorDTO;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -63,4 +65,6 @@ public interface OperatorService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    List<Operator> findAllOperatorsByBrandName(String brandName);
 }

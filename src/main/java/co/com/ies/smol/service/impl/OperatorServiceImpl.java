@@ -5,7 +5,9 @@ import co.com.ies.smol.repository.OperatorRepository;
 import co.com.ies.smol.service.OperatorService;
 import co.com.ies.smol.service.dto.OperatorDTO;
 import co.com.ies.smol.service.mapper.OperatorMapper;
+import java.util.List;
 import java.util.Optional;
+import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -84,5 +86,10 @@ public class OperatorServiceImpl implements OperatorService {
     public void delete(Long id) {
         log.debug("Request to delete Operator : {}", id);
         operatorRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Operator> findAllOperatorsByBrandName(String brandName) {
+        return operatorRepository.findAllByBrandName(brandName);
     }
 }

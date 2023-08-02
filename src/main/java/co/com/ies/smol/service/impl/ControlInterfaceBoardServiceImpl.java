@@ -7,6 +7,7 @@ import co.com.ies.smol.service.ControlInterfaceBoardService;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.mapper.ControlInterfaceBoardMapper;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,5 +97,10 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
         return controlInterfaceBoardRepository
             .getControlInterfaceBoardByInterfaceBoardAndFinishTimeIsNull(interfaceBoard)
             .map(controlInterfaceBoardMapper::toDto);
+    }
+
+    @Override
+    public List<ControlInterfaceBoardDTO> getControlInterfaceBoardByContractIds(List<Long> contractIds) {
+        return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getControlInterfaceBoardByContractIds(contractIds));
     }
 }

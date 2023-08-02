@@ -1,6 +1,8 @@
 package co.com.ies.smol.repository;
 
 import co.com.ies.smol.domain.Contract;
+import co.com.ies.smol.domain.Operator;
+import co.com.ies.smol.service.dto.OperatorDTO;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -39,4 +41,6 @@ public interface ContractRepository extends JpaRepository<Contract, Long>, JpaSp
     Optional<Contract> findOneWithToOneRelationships(@Param("id") Long id);
 
     Contract getContractByReference(String reference);
+
+    List<Contract> findAllByOperatorIn(List<Operator> operators);
 }

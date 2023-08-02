@@ -2,10 +2,11 @@ package co.com.ies.smol.web.rest.core;
 
 import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.service.core.ControlTxService;
+import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
-import co.com.ies.smol.web.rest.errors.BadRequestAlertException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Objects;
 import javax.validation.Valid;
 import org.slf4j.Logger;
@@ -13,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,5 +65,19 @@ public class ControlTxController {
         controlTxService.assignInterfaceBoard(assignBoardDTO);
 
         return ResponseEntity.ok("ok process assignInterfaceBoard succesfully!!");
+    }
+
+    @GetMapping("/interface-boards/by-brand/{brandName}")
+    public ResponseEntity<List<InterfaceBoardDTO>> getInterfaceBoardByBrand(@PathVariable String brandName) throws ControlTxException {
+        log.debug("REST request getInterfaceBoardByBrand brandName : {}", brandName);
+
+        return ResponseEntity.ok(controlTxService.getInterfaceBoardByBrand(brandName));
+    }
+
+    @GetMapping("/count/interface-boards/by-brand/{brandName}")
+    public ResponseEntity<Long> getCountInterfaceBoardByBrand(@PathVariable String brandName) {
+        log.debug("REST request getInterfaceBoardByBrand brandName : {}", brandName);
+
+        return ResponseEntity.ok(controlTxService.getCountInterfaceBoardByBrand(brandName));
     }
 }
