@@ -123,14 +123,20 @@ public class InterfaceBoard implements Serializable {
         return getClass().hashCode();
     }
 
-    // prettier-ignore
     @Override
     public String toString() {
-        return "InterfaceBoard{" +
-            "id=" + getId() +
-            ", ipAddress='" + getIpAddress() + "'" +
-            ", hash='" + getHash() + "'" +
-            ", mac='" + getMac() + "'" +
-            "}";
+        return (
+            "InterfaceBoard [id=" +
+            id +
+            ", ipAddress=" +
+            ipAddress +
+            ", hash=" +
+            hash +
+            ", mac=" +
+            mac +
+            ", dataSheetInterface=" +
+            dataSheetInterface +
+            "]"
+        );
     }
 }

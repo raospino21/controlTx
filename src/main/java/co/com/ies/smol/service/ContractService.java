@@ -2,7 +2,6 @@ package co.com.ies.smol.service;
 
 import co.com.ies.smol.domain.Operator;
 import co.com.ies.smol.service.dto.ContractDTO;
-import co.com.ies.smol.service.dto.OperatorDTO;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -67,7 +66,9 @@ public interface ContractService {
      */
     void delete(Long id);
 
-    ContractDTO getContractByReference(String reference);
+    List<ContractDTO> getContractByReference(String reference);
 
     List<ContractDTO> findAllContractByOpeatorIn(List<Operator> operators);
+
+    Optional<ContractDTO> findContractByOperator(Operator operator);
 }

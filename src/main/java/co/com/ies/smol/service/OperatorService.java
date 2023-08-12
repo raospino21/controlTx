@@ -67,4 +67,6 @@ public interface OperatorService {
     void delete(Long id);
 
     List<Operator> findAllOperatorsByBrandName(String brandName);
+
+    Optional<Operator> findOperatorByName(String operatorName);
 }

@@ -52,4 +52,9 @@ public interface ControlInterfaceBoardRepository
         value = "SELECT * FROM CONTROL_INTERFACE_BOARD WHERE id IN (SELECT max(id) FROM CONTROL_INTERFACE_BOARD WHERE CONTRACT_ID is not null and CONTRACT_ID in (?1) GROUP BY CONTRACT_ID)"
     )
     List<ControlInterfaceBoard> getControlInterfaceBoardByContractIds(List<Long> contractIds);
+
+    @Query(
+        "select controlInterfaceBoard from ControlInterfaceBoard controlInterfaceBoard left join fetch controlInterfaceBoard.contract left join fetch controlInterfaceBoard.interfaceBoard where controlInterfaceBoard.contract.reference =:reference and controlInterfaceBoard.finishTime is null "
+    )
+    List<ControlInterfaceBoard> getControlInterfaceBoardByReference(String reference);
 }

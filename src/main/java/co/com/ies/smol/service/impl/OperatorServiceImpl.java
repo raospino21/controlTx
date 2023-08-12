@@ -92,4 +92,9 @@ public class OperatorServiceImpl implements OperatorService {
     public List<Operator> findAllOperatorsByBrandName(String brandName) {
         return operatorRepository.findAllByBrandName(brandName);
     }
+
+    @Override
+    public Optional<Operator> findOperatorByName(String operatorName) {
+        return operatorRepository.findByName(operatorName);
+    }
 }

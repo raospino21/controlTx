@@ -14,4 +14,8 @@ public interface ControlTxService {
     List<InterfaceBoardDTO> getInterfaceBoardByBrand(String brandName);
 
     Long getCountInterfaceBoardByBrand(String brandName);
+
+    List<InterfaceBoardDTO> getInterfaceBoardAssignedByContract(String reference) throws ControlTxException;
+
+    Long getCountInterfaceBoardByContracted(String reference) throws ControlTxException;
 }

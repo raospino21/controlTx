@@ -165,15 +165,24 @@ public class ControlInterfaceBoard implements Serializable {
         return getClass().hashCode();
     }
 
-    // prettier-ignore
     @Override
     public String toString() {
-        return "ControlInterfaceBoard{" +
-            "id=" + getId() +
-            ", location='" + getLocation() + "'" +
-            ", state='" + getState() + "'" +
-            ", startTime='" + getStartTime() + "'" +
-            ", finishTime='" + getFinishTime() + "'" +
-            "}";
+        return (
+            "ControlInterfaceBoard [id=" +
+            id +
+            ", location=" +
+            location +
+            ", state=" +
+            state +
+            ", startTime=" +
+            startTime +
+            ", finishTime=" +
+            finishTime +
+            ", contract=" +
+            contract +
+            ", interfaceBoard=" +
+            interfaceBoard +
+            "]"
+        );
     }
 }

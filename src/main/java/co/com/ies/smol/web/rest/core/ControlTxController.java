@@ -67,17 +67,45 @@ public class ControlTxController {
         return ResponseEntity.ok("ok process assignInterfaceBoard succesfully!!");
     }
 
-    @GetMapping("/interface-boards/by-brand/{brandName}")
+    /**
+     *
+     */
+    @GetMapping("/interface-boards/assigned-operator-by-brand/{brandName}")
     public ResponseEntity<List<InterfaceBoardDTO>> getInterfaceBoardByBrand(@PathVariable String brandName) throws ControlTxException {
         log.debug("REST request getInterfaceBoardByBrand brandName : {}", brandName);
 
         return ResponseEntity.ok(controlTxService.getInterfaceBoardByBrand(brandName));
     }
 
-    @GetMapping("/count/interface-boards/by-brand/{brandName}")
+    /**
+     * Entrega la cantidad de tarjetas que fueron contratadas de todos los operadores asociados a la marca
+     * tener en cuenta que solo para contratos vigentes
+     */
+    @GetMapping("/count/interface-boards/by-brand-contrated/{brandName}")
     public ResponseEntity<Long> getCountInterfaceBoardByBrand(@PathVariable String brandName) {
         log.debug("REST request getInterfaceBoardByBrand brandName : {}", brandName);
 
         return ResponseEntity.ok(controlTxService.getCountInterfaceBoardByBrand(brandName));
+    }
+
+    /**
+     * Entrega las tarjetas que está asociadas al contrato del operador
+     */
+    @GetMapping("/interface-boards/assigned-by-operator/{reference}")
+    public ResponseEntity<List<InterfaceBoardDTO>> getInterfaceBoardContratedByOperator(@PathVariable String reference)
+        throws ControlTxException {
+        log.debug("REST request getInterfaceBoardByOperator reference : {}", reference);
+
+        return ResponseEntity.ok(controlTxService.getInterfaceBoardAssignedByContract(reference));
+    }
+
+    /**
+     * Entrega la cantdad de tarjetas que fueron contratadas
+     */
+    @GetMapping("/count/interface-boards/contracted/{reference}")
+    public ResponseEntity<Long> getCountInterfaceBoardByContracted(@PathVariable String reference) throws ControlTxException {
+        log.debug("REST request getCountInterfaceBoardByContract reference : {}", reference);
+
+        return ResponseEntity.ok(controlTxService.getCountInterfaceBoardByContracted(reference));
     }
 }

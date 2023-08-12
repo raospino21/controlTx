@@ -90,12 +90,17 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public ContractDTO getContractByReference(String reference) {
+    public List<ContractDTO> getContractByReference(String reference) {
         return contractMapper.toDto(contractRepository.getContractByReference(reference));
     }
 
     @Override
     public List<ContractDTO> findAllContractByOpeatorIn(List<Operator> operators) {
-        return contractMapper.toDto(contractRepository.findAllByOperatorIn(operators));
+        return contractMapper.toDto(contractRepository.findAllByOperatorInAndFinishTimeIsNull(operators));
+    }
+
+    @Override
+    public Optional<ContractDTO> findContractByOperator(Operator operator) {
+        return contractRepository.findByOperator(operator).map(contractMapper::toDto);
     }
 }
