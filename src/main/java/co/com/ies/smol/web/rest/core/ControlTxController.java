@@ -71,7 +71,7 @@ public class ControlTxController {
      * Entrega las tarjetas que fueron contratadas de todos los operadores asociados a la marca
      * tener en cuenta que solo para contratos vigentes
      */
-    @GetMapping("/interface-boards/assigned /{brandName}")
+    @GetMapping("/interface-boards/assigned-operator-by-brand/{brandName}")
     public ResponseEntity<List<InterfaceBoardDTO>> getInterfaceBoardByBrand(@PathVariable String brandName) throws ControlTxException {
         log.debug("REST request getInterfaceBoardByBrand brandName : {}", brandName);
 
