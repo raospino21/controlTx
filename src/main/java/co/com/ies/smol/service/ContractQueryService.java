@@ -96,9 +96,9 @@ public class ContractQueryService extends QueryService<Contract> {
             if (criteria.getType() != null) {
                 specification = specification.and(buildSpecification(criteria.getType(), Contract_.type));
             }
-            if (criteria.getNumberInterfaceBoard() != null) {
+            if (criteria.getAmountInterfaceBoard() != null) {
                 specification =
-                    specification.and(buildRangeSpecification(criteria.getNumberInterfaceBoard(), Contract_.numberInterfaceBoard));
+                    specification.and(buildRangeSpecification(criteria.getAmountInterfaceBoard(), Contract_.amountInterfaceBoard));
             }
             if (criteria.getStartTime() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getStartTime(), Contract_.startTime));

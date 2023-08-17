@@ -38,32 +38,32 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="controTxApp.interfaceBoard.dataSheetInterface" for="field_dataSheetInterface"
-            >Data Sheet Interface</label
+          <label class="form-label" jhiTranslate="controTxApp.interfaceBoard.receptionOrder" for="field_receptionOrder"
+            >Reception Order</label
           >
           <select
             class="form-control"
-            id="field_dataSheetInterface"
-            data-cy="dataSheetInterface"
-            name="dataSheetInterface"
-            formControlName="dataSheetInterface"
-            [compareWith]="compareDataSheetInterface"
+            id="field_receptionOrder"
+            data-cy="receptionOrder"
+            name="receptionOrder"
+            formControlName="receptionOrder"
+            [compareWith]="compareReceptionOrder"
           >
-            <option *ngIf="!editForm.get('dataSheetInterface')!.value" [ngValue]="null" selected></option>
-            <option [ngValue]="dataSheetInterfaceOption" *ngFor="let dataSheetInterfaceOption of dataSheetInterfacesSharedCollection">
-              {{ dataSheetInterfaceOption.id }}
+            <option *ngIf="!editForm.get('receptionOrder')!.value" [ngValue]="null" selected></option>
+            <option [ngValue]="receptionOrderOption" *ngFor="let receptionOrderOption of receptionOrdersSharedCollection">
+              {{ receptionOrderOption.providerLotNumber }}
             </option>
           </select>
         </div>
         <div
           *ngIf="
-            editForm.get(['dataSheetInterface'])!.invalid &&
-            (editForm.get(['dataSheetInterface'])!.dirty || editForm.get(['dataSheetInterface'])!.touched)
+            editForm.get(['receptionOrder'])!.invalid &&
+            (editForm.get(['receptionOrder'])!.dirty || editForm.get(['receptionOrder'])!.touched)
           "
         >
           <small
             class="form-text text-danger"
-            *ngIf="editForm.get(['dataSheetInterface'])?.errors?.required"
+            *ngIf="editForm.get(['receptionOrder'])?.errors?.required"
             jhiTranslate="entity.validation.required"
           >
             Este campo es obligatorio.

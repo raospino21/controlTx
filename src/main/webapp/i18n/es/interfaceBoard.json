@@ -21,7 +21,7 @@
       "ipAddress": "Ip Address",
       "hash": "Hash",
       "mac": "Mac",
-      "dataSheetInterface": "Data Sheet Interface"
+      "receptionOrder": "Reception Order"
     }
   }
 }

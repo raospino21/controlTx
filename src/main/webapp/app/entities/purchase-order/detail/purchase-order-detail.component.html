@@ -1,0 +1,40 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="purchaseOrder">
+      <h2 data-cy="purchaseOrderDetailsHeading"><span jhiTranslate="controTxApp.purchaseOrder.detail.title">Purchase Order</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="controTxApp.purchaseOrder.id">Id</span></dt>
+        <dd>
+          <span>{{ purchaseOrder.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.purchaseOrder.orderAmount">Order Amount</span></dt>
+        <dd>
+          <span>{{ purchaseOrder.orderAmount }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.purchaseOrder.createAt">Create At</span></dt>
+        <dd>
+          <span>{{ purchaseOrder.createAt | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.purchaseOrder.iesOrderNumber">Ies Order Number</span></dt>
+        <dd>
+          <span>{{ purchaseOrder.iesOrderNumber }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+      </button>
+
+      <button type="button" [routerLink]="['/purchase-order', purchaseOrder.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

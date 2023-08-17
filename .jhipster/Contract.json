@@ -17,10 +17,10 @@
       "fieldName": "type",
       "fieldType": "ContractType",
       "fieldValidateRules": ["required"],
-      "fieldValues": "SALE,RENT,LOAD"
+      "fieldValues": "SALE,RENT,LOAN"
     },
     {
-      "fieldName": "numberInterfaceBoard",
+      "fieldName": "amountInterfaceBoard",
       "fieldType": "Long",
       "fieldValidateRules": ["required"]
     },

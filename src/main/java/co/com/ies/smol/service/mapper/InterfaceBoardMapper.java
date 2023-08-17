@@ -1,9 +1,9 @@
 package co.com.ies.smol.service.mapper;
 
-import co.com.ies.smol.domain.DataSheetInterface;
 import co.com.ies.smol.domain.InterfaceBoard;
-import co.com.ies.smol.service.dto.DataSheetInterfaceDTO;
+import co.com.ies.smol.domain.ReceptionOrder;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
+import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import org.mapstruct.*;
 
 /**
@@ -11,11 +11,12 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface InterfaceBoardMapper extends EntityMapper<InterfaceBoardDTO, InterfaceBoard> {
-    @Mapping(target = "dataSheetInterface", source = "dataSheetInterface", qualifiedByName = "dataSheetInterfaceId")
+    @Mapping(target = "receptionOrder", source = "receptionOrder", qualifiedByName = "receptionOrderProviderLotNumber")
     InterfaceBoardDTO toDto(InterfaceBoard s);
 
-    @Named("dataSheetInterfaceId")
+    @Named("receptionOrderProviderLotNumber")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    DataSheetInterfaceDTO toDtoDataSheetInterfaceId(DataSheetInterface dataSheetInterface);
+    @Mapping(target = "providerLotNumber", source = "providerLotNumber")
+    ReceptionOrderDTO toDtoReceptionOrderProviderLotNumber(ReceptionOrder receptionOrder);
 }

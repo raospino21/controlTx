@@ -43,7 +43,6 @@
   ],
   "fluentMethods": true,
   "jpaMetamodelFiltering": true,
-  "name": "DataSheetInterface",
   "pagination": "pagination",
   "readOnly": false,
   "relationships": [],

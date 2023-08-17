@@ -58,9 +58,9 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="dataSheetInterface.id">
+          <th scope="col" jhiSortBy="receptionOrder.providerLotNumber">
             <div class="d-flex">
-              <span jhiTranslate="controTxApp.interfaceBoard.dataSheetInterface">Data Sheet Interface</span>
+              <span jhiTranslate="controTxApp.interfaceBoard.receptionOrder">Reception Order</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
@@ -76,9 +76,9 @@
           <td>{{ interfaceBoard.hash }}</td>
           <td>{{ interfaceBoard.mac }}</td>
           <td>
-            <div *ngIf="interfaceBoard.dataSheetInterface">
-              <a [routerLink]="['/data-sheet-interface', interfaceBoard.dataSheetInterface.id, 'view']">{{
-                interfaceBoard.dataSheetInterface.id
+            <div *ngIf="interfaceBoard.receptionOrder">
+              <a [routerLink]="['/reception-order', interfaceBoard.receptionOrder.id, 'view']">{{
+                interfaceBoard.receptionOrder.providerLotNumber
               }}</a>
             </div>
           </td>

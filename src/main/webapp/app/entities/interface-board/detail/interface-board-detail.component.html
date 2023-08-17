@@ -26,11 +26,11 @@
         <dd>
           <span>{{ interfaceBoard.mac }}</span>
         </dd>
-        <dt><span jhiTranslate="controTxApp.interfaceBoard.dataSheetInterface">Data Sheet Interface</span></dt>
+        <dt><span jhiTranslate="controTxApp.interfaceBoard.receptionOrder">Reception Order</span></dt>
         <dd>
-          <div *ngIf="interfaceBoard.dataSheetInterface">
-            <a [routerLink]="['/data-sheet-interface', interfaceBoard.dataSheetInterface.id, 'view']">{{
-              interfaceBoard.dataSheetInterface.id
+          <div *ngIf="interfaceBoard.receptionOrder">
+            <a [routerLink]="['/reception-order', interfaceBoard.receptionOrder.id, 'view']">{{
+              interfaceBoard.receptionOrder.providerLotNumber
             }}</a>
           </div>
         </dd>

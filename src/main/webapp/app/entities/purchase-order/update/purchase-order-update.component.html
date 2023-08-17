@@ -1,0 +1,131 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-purchase-order-heading"
+        data-cy="PurchaseOrderCreateUpdateHeading"
+        jhiTranslate="controTxApp.purchaseOrder.home.createOrEditLabel"
+      >
+        Crear o editar Purchase Order
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" jhiTranslate="controTxApp.purchaseOrder.id" for="field_id">Id</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.purchaseOrder.orderAmount" for="field_orderAmount">Order Amount</label>
+          <input
+            type="number"
+            class="form-control"
+            name="orderAmount"
+            id="field_orderAmount"
+            data-cy="orderAmount"
+            formControlName="orderAmount"
+          />
+          <div *ngIf="editForm.get('orderAmount')!.invalid && (editForm.get('orderAmount')!.dirty || editForm.get('orderAmount')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('orderAmount')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('orderAmount')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              Este campo debe ser un número.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.purchaseOrder.createAt" for="field_createAt">Create At</label>
+          <div class="d-flex">
+            <input
+              id="field_createAt"
+              data-cy="createAt"
+              type="datetime-local"
+              class="form-control"
+              name="createAt"
+              formControlName="createAt"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          <div *ngIf="editForm.get('createAt')!.invalid && (editForm.get('createAt')!.dirty || editForm.get('createAt')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('createAt')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('createAt')?.errors?.datetimelocal"
+              jhiTranslate="entity.validation.datetimelocal"
+            >
+              Este campo debe ser una fecha y hora.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.purchaseOrder.iesOrderNumber" for="field_iesOrderNumber"
+            >Ies Order Number</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="iesOrderNumber"
+            id="field_iesOrderNumber"
+            data-cy="iesOrderNumber"
+            formControlName="iesOrderNumber"
+          />
+          <div
+            *ngIf="
+              editForm.get('iesOrderNumber')!.invalid && (editForm.get('iesOrderNumber')!.dirty || editForm.get('iesOrderNumber')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('iesOrderNumber')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('iesOrderNumber')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              Este campo debe ser un número.
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

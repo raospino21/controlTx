@@ -8,10 +8,10 @@
     -->
     <changeSet id="20210927194820-2" author="jhipster">
 
-        <addForeignKeyConstraint baseColumnNames="data_sheet_interface_id"
+        <addForeignKeyConstraint baseColumnNames="reception_order_id"
                                  baseTableName="interface_board"
-                                 constraintName="fk_interface_board__data_sheet_interface_id"
+                                 constraintName="fk_interface_board__reception_order_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="data_sheet_interface"/>
+                                 referencedTableName="reception_order"/>
     </changeSet>
 </databaseChangeLog>

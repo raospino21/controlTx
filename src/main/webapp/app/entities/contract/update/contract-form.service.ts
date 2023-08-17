@@ -34,7 +34,7 @@ type ContractFormGroupContent = {
   id: FormControl<ContractFormRawValue['id'] | NewContract['id']>;
   reference: FormControl<ContractFormRawValue['reference']>;
   type: FormControl<ContractFormRawValue['type']>;
-  numberInterfaceBoard: FormControl<ContractFormRawValue['numberInterfaceBoard']>;
+  amountInterfaceBoard: FormControl<ContractFormRawValue['amountInterfaceBoard']>;
   startTime: FormControl<ContractFormRawValue['startTime']>;
   finishTime: FormControl<ContractFormRawValue['finishTime']>;
   operator: FormControl<ContractFormRawValue['operator']>;
@@ -61,7 +61,7 @@ export class ContractFormService {
       type: new FormControl(contractRawValue.type, {
         validators: [Validators.required],
       }),
-      numberInterfaceBoard: new FormControl(contractRawValue.numberInterfaceBoard, {
+      amountInterfaceBoard: new FormControl(contractRawValue.amountInterfaceBoard, {
         validators: [Validators.required],
       }),
       startTime: new FormControl(contractRawValue.startTime, {

@@ -20,7 +20,7 @@
       "id": "Id",
       "reference": "Reference",
       "type": "Type",
-      "numberInterfaceBoard": "Number Interface Board",
+      "amountInterfaceBoard": "Amount Interface Board",
       "startTime": "Start Time",
       "finishTime": "Finish Time",
       "operator": "Operator"

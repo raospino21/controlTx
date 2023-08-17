@@ -6,5 +6,5 @@ package co.com.ies.smol.domain.enumeration;
 public enum ContractType {
     SALE,
     RENT,
-    LOAD,
+    LOAN,
 }

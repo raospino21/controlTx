@@ -30,9 +30,14 @@ import { RouterModule } from '@angular/router';
         loadChildren: () => import('./control-interface-board/control-interface-board.module').then(m => m.ControlInterfaceBoardModule),
       },
       {
-        path: 'data-sheet-interface',
-        data: { pageTitle: 'controTxApp.dataSheetInterface.home.title' },
-        loadChildren: () => import('./data-sheet-interface/data-sheet-interface.module').then(m => m.DataSheetInterfaceModule),
+        path: 'purchase-order',
+        data: { pageTitle: 'controTxApp.purchaseOrder.home.title' },
+        loadChildren: () => import('./purchase-order/purchase-order.module').then(m => m.PurchaseOrderModule),
+      },
+      {
+        path: 'reception-order',
+        data: { pageTitle: 'controTxApp.receptionOrder.home.title' },
+        loadChildren: () => import('./reception-order/reception-order.module').then(m => m.ReceptionOrderModule),
       },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),

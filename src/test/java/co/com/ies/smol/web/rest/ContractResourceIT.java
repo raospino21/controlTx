@@ -55,9 +55,9 @@ class ContractResourceIT {
     private static final ContractType DEFAULT_TYPE = ContractType.SALE;
     private static final ContractType UPDATED_TYPE = ContractType.RENT;
 
-    private static final Long DEFAULT_NUMBER_INTERFACE_BOARD = 1L;
-    private static final Long UPDATED_NUMBER_INTERFACE_BOARD = 2L;
-    private static final Long SMALLER_NUMBER_INTERFACE_BOARD = 1L - 1L;
+    private static final Long DEFAULT_AMOUNT_INTERFACE_BOARD = 1L;
+    private static final Long UPDATED_AMOUNT_INTERFACE_BOARD = 2L;
+    private static final Long SMALLER_AMOUNT_INTERFACE_BOARD = 1L - 1L;
 
     private static final ZonedDateTime DEFAULT_START_TIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_START_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
@@ -103,7 +103,7 @@ class ContractResourceIT {
         Contract contract = new Contract()
             .reference(DEFAULT_REFERENCE)
             .type(DEFAULT_TYPE)
-            .numberInterfaceBoard(DEFAULT_NUMBER_INTERFACE_BOARD)
+            .amountInterfaceBoard(DEFAULT_AMOUNT_INTERFACE_BOARD)
             .startTime(DEFAULT_START_TIME)
             .finishTime(DEFAULT_FINISH_TIME);
         // Add required entity
@@ -129,7 +129,7 @@ class ContractResourceIT {
         Contract contract = new Contract()
             .reference(UPDATED_REFERENCE)
             .type(UPDATED_TYPE)
-            .numberInterfaceBoard(UPDATED_NUMBER_INTERFACE_BOARD)
+            .amountInterfaceBoard(UPDATED_AMOUNT_INTERFACE_BOARD)
             .startTime(UPDATED_START_TIME)
             .finishTime(UPDATED_FINISH_TIME);
         // Add required entity
@@ -166,7 +166,7 @@ class ContractResourceIT {
         Contract testContract = contractList.get(contractList.size() - 1);
         assertThat(testContract.getReference()).isEqualTo(DEFAULT_REFERENCE);
         assertThat(testContract.getType()).isEqualTo(DEFAULT_TYPE);
-        assertThat(testContract.getNumberInterfaceBoard()).isEqualTo(DEFAULT_NUMBER_INTERFACE_BOARD);
+        assertThat(testContract.getAmountInterfaceBoard()).isEqualTo(DEFAULT_AMOUNT_INTERFACE_BOARD);
         assertThat(testContract.getStartTime()).isEqualTo(DEFAULT_START_TIME);
         assertThat(testContract.getFinishTime()).isEqualTo(DEFAULT_FINISH_TIME);
     }
@@ -210,10 +210,10 @@ class ContractResourceIT {
 
     @Test
     @Transactional
-    void checkNumberInterfaceBoardIsRequired() throws Exception {
+    void checkAmountInterfaceBoardIsRequired() throws Exception {
         int databaseSizeBeforeTest = contractRepository.findAll().size();
         // set the field null
-        contract.setNumberInterfaceBoard(null);
+        contract.setAmountInterfaceBoard(null);
 
         // Create the Contract, which fails.
         ContractDTO contractDTO = contractMapper.toDto(contract);
@@ -258,7 +258,7 @@ class ContractResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(contract.getId().intValue())))
             .andExpect(jsonPath("$.[*].reference").value(hasItem(DEFAULT_REFERENCE)))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].numberInterfaceBoard").value(hasItem(DEFAULT_NUMBER_INTERFACE_BOARD.intValue())))
+            .andExpect(jsonPath("$.[*].amountInterfaceBoard").value(hasItem(DEFAULT_AMOUNT_INTERFACE_BOARD.intValue())))
             .andExpect(jsonPath("$.[*].startTime").value(hasItem(sameInstant(DEFAULT_START_TIME))))
             .andExpect(jsonPath("$.[*].finishTime").value(hasItem(sameInstant(DEFAULT_FINISH_TIME))));
     }
@@ -294,7 +294,7 @@ class ContractResourceIT {
             .andExpect(jsonPath("$.id").value(contract.getId().intValue()))
             .andExpect(jsonPath("$.reference").value(DEFAULT_REFERENCE))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
-            .andExpect(jsonPath("$.numberInterfaceBoard").value(DEFAULT_NUMBER_INTERFACE_BOARD.intValue()))
+            .andExpect(jsonPath("$.amountInterfaceBoard").value(DEFAULT_AMOUNT_INTERFACE_BOARD.intValue()))
             .andExpect(jsonPath("$.startTime").value(sameInstant(DEFAULT_START_TIME)))
             .andExpect(jsonPath("$.finishTime").value(sameInstant(DEFAULT_FINISH_TIME)));
     }
@@ -423,93 +423,93 @@ class ContractResourceIT {
 
     @Test
     @Transactional
-    void getAllContractsByNumberInterfaceBoardIsEqualToSomething() throws Exception {
+    void getAllContractsByAmountInterfaceBoardIsEqualToSomething() throws Exception {
         // Initialize the database
         contractRepository.saveAndFlush(contract);
 
-        // Get all the contractList where numberInterfaceBoard equals to DEFAULT_NUMBER_INTERFACE_BOARD
-        defaultContractShouldBeFound("numberInterfaceBoard.equals=" + DEFAULT_NUMBER_INTERFACE_BOARD);
+        // Get all the contractList where amountInterfaceBoard equals to DEFAULT_AMOUNT_INTERFACE_BOARD
+        defaultContractShouldBeFound("amountInterfaceBoard.equals=" + DEFAULT_AMOUNT_INTERFACE_BOARD);
 
-        // Get all the contractList where numberInterfaceBoard equals to UPDATED_NUMBER_INTERFACE_BOARD
-        defaultContractShouldNotBeFound("numberInterfaceBoard.equals=" + UPDATED_NUMBER_INTERFACE_BOARD);
+        // Get all the contractList where amountInterfaceBoard equals to UPDATED_AMOUNT_INTERFACE_BOARD
+        defaultContractShouldNotBeFound("amountInterfaceBoard.equals=" + UPDATED_AMOUNT_INTERFACE_BOARD);
     }
 
     @Test
     @Transactional
-    void getAllContractsByNumberInterfaceBoardIsInShouldWork() throws Exception {
+    void getAllContractsByAmountInterfaceBoardIsInShouldWork() throws Exception {
         // Initialize the database
         contractRepository.saveAndFlush(contract);
 
-        // Get all the contractList where numberInterfaceBoard in DEFAULT_NUMBER_INTERFACE_BOARD or UPDATED_NUMBER_INTERFACE_BOARD
-        defaultContractShouldBeFound("numberInterfaceBoard.in=" + DEFAULT_NUMBER_INTERFACE_BOARD + "," + UPDATED_NUMBER_INTERFACE_BOARD);
+        // Get all the contractList where amountInterfaceBoard in DEFAULT_AMOUNT_INTERFACE_BOARD or UPDATED_AMOUNT_INTERFACE_BOARD
+        defaultContractShouldBeFound("amountInterfaceBoard.in=" + DEFAULT_AMOUNT_INTERFACE_BOARD + "," + UPDATED_AMOUNT_INTERFACE_BOARD);
 
-        // Get all the contractList where numberInterfaceBoard equals to UPDATED_NUMBER_INTERFACE_BOARD
-        defaultContractShouldNotBeFound("numberInterfaceBoard.in=" + UPDATED_NUMBER_INTERFACE_BOARD);
+        // Get all the contractList where amountInterfaceBoard equals to UPDATED_AMOUNT_INTERFACE_BOARD
+        defaultContractShouldNotBeFound("amountInterfaceBoard.in=" + UPDATED_AMOUNT_INTERFACE_BOARD);
     }
 
     @Test
     @Transactional
-    void getAllContractsByNumberInterfaceBoardIsNullOrNotNull() throws Exception {
+    void getAllContractsByAmountInterfaceBoardIsNullOrNotNull() throws Exception {
         // Initialize the database
         contractRepository.saveAndFlush(contract);
 
-        // Get all the contractList where numberInterfaceBoard is not null
-        defaultContractShouldBeFound("numberInterfaceBoard.specified=true");
+        // Get all the contractList where amountInterfaceBoard is not null
+        defaultContractShouldBeFound("amountInterfaceBoard.specified=true");
 
-        // Get all the contractList where numberInterfaceBoard is null
-        defaultContractShouldNotBeFound("numberInterfaceBoard.specified=false");
+        // Get all the contractList where amountInterfaceBoard is null
+        defaultContractShouldNotBeFound("amountInterfaceBoard.specified=false");
     }
 
     @Test
     @Transactional
-    void getAllContractsByNumberInterfaceBoardIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllContractsByAmountInterfaceBoardIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         contractRepository.saveAndFlush(contract);
 
-        // Get all the contractList where numberInterfaceBoard is greater than or equal to DEFAULT_NUMBER_INTERFACE_BOARD
-        defaultContractShouldBeFound("numberInterfaceBoard.greaterThanOrEqual=" + DEFAULT_NUMBER_INTERFACE_BOARD);
+        // Get all the contractList where amountInterfaceBoard is greater than or equal to DEFAULT_AMOUNT_INTERFACE_BOARD
+        defaultContractShouldBeFound("amountInterfaceBoard.greaterThanOrEqual=" + DEFAULT_AMOUNT_INTERFACE_BOARD);
 
-        // Get all the contractList where numberInterfaceBoard is greater than or equal to UPDATED_NUMBER_INTERFACE_BOARD
-        defaultContractShouldNotBeFound("numberInterfaceBoard.greaterThanOrEqual=" + UPDATED_NUMBER_INTERFACE_BOARD);
+        // Get all the contractList where amountInterfaceBoard is greater than or equal to UPDATED_AMOUNT_INTERFACE_BOARD
+        defaultContractShouldNotBeFound("amountInterfaceBoard.greaterThanOrEqual=" + UPDATED_AMOUNT_INTERFACE_BOARD);
     }
 
     @Test
     @Transactional
-    void getAllContractsByNumberInterfaceBoardIsLessThanOrEqualToSomething() throws Exception {
+    void getAllContractsByAmountInterfaceBoardIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         contractRepository.saveAndFlush(contract);
 
-        // Get all the contractList where numberInterfaceBoard is less than or equal to DEFAULT_NUMBER_INTERFACE_BOARD
-        defaultContractShouldBeFound("numberInterfaceBoard.lessThanOrEqual=" + DEFAULT_NUMBER_INTERFACE_BOARD);
+        // Get all the contractList where amountInterfaceBoard is less than or equal to DEFAULT_AMOUNT_INTERFACE_BOARD
+        defaultContractShouldBeFound("amountInterfaceBoard.lessThanOrEqual=" + DEFAULT_AMOUNT_INTERFACE_BOARD);
 
-        // Get all the contractList where numberInterfaceBoard is less than or equal to SMALLER_NUMBER_INTERFACE_BOARD
-        defaultContractShouldNotBeFound("numberInterfaceBoard.lessThanOrEqual=" + SMALLER_NUMBER_INTERFACE_BOARD);
+        // Get all the contractList where amountInterfaceBoard is less than or equal to SMALLER_AMOUNT_INTERFACE_BOARD
+        defaultContractShouldNotBeFound("amountInterfaceBoard.lessThanOrEqual=" + SMALLER_AMOUNT_INTERFACE_BOARD);
     }
 
     @Test
     @Transactional
-    void getAllContractsByNumberInterfaceBoardIsLessThanSomething() throws Exception {
+    void getAllContractsByAmountInterfaceBoardIsLessThanSomething() throws Exception {
         // Initialize the database
         contractRepository.saveAndFlush(contract);
 
-        // Get all the contractList where numberInterfaceBoard is less than DEFAULT_NUMBER_INTERFACE_BOARD
-        defaultContractShouldNotBeFound("numberInterfaceBoard.lessThan=" + DEFAULT_NUMBER_INTERFACE_BOARD);
+        // Get all the contractList where amountInterfaceBoard is less than DEFAULT_AMOUNT_INTERFACE_BOARD
+        defaultContractShouldNotBeFound("amountInterfaceBoard.lessThan=" + DEFAULT_AMOUNT_INTERFACE_BOARD);
 
-        // Get all the contractList where numberInterfaceBoard is less than UPDATED_NUMBER_INTERFACE_BOARD
-        defaultContractShouldBeFound("numberInterfaceBoard.lessThan=" + UPDATED_NUMBER_INTERFACE_BOARD);
+        // Get all the contractList where amountInterfaceBoard is less than UPDATED_AMOUNT_INTERFACE_BOARD
+        defaultContractShouldBeFound("amountInterfaceBoard.lessThan=" + UPDATED_AMOUNT_INTERFACE_BOARD);
     }
 
     @Test
     @Transactional
-    void getAllContractsByNumberInterfaceBoardIsGreaterThanSomething() throws Exception {
+    void getAllContractsByAmountInterfaceBoardIsGreaterThanSomething() throws Exception {
         // Initialize the database
         contractRepository.saveAndFlush(contract);
 
-        // Get all the contractList where numberInterfaceBoard is greater than DEFAULT_NUMBER_INTERFACE_BOARD
-        defaultContractShouldNotBeFound("numberInterfaceBoard.greaterThan=" + DEFAULT_NUMBER_INTERFACE_BOARD);
+        // Get all the contractList where amountInterfaceBoard is greater than DEFAULT_AMOUNT_INTERFACE_BOARD
+        defaultContractShouldNotBeFound("amountInterfaceBoard.greaterThan=" + DEFAULT_AMOUNT_INTERFACE_BOARD);
 
-        // Get all the contractList where numberInterfaceBoard is greater than SMALLER_NUMBER_INTERFACE_BOARD
-        defaultContractShouldBeFound("numberInterfaceBoard.greaterThan=" + SMALLER_NUMBER_INTERFACE_BOARD);
+        // Get all the contractList where amountInterfaceBoard is greater than SMALLER_AMOUNT_INTERFACE_BOARD
+        defaultContractShouldBeFound("amountInterfaceBoard.greaterThan=" + SMALLER_AMOUNT_INTERFACE_BOARD);
     }
 
     @Test
@@ -728,7 +728,7 @@ class ContractResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(contract.getId().intValue())))
             .andExpect(jsonPath("$.[*].reference").value(hasItem(DEFAULT_REFERENCE)))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].numberInterfaceBoard").value(hasItem(DEFAULT_NUMBER_INTERFACE_BOARD.intValue())))
+            .andExpect(jsonPath("$.[*].amountInterfaceBoard").value(hasItem(DEFAULT_AMOUNT_INTERFACE_BOARD.intValue())))
             .andExpect(jsonPath("$.[*].startTime").value(hasItem(sameInstant(DEFAULT_START_TIME))))
             .andExpect(jsonPath("$.[*].finishTime").value(hasItem(sameInstant(DEFAULT_FINISH_TIME))));
 
@@ -781,7 +781,7 @@ class ContractResourceIT {
         updatedContract
             .reference(UPDATED_REFERENCE)
             .type(UPDATED_TYPE)
-            .numberInterfaceBoard(UPDATED_NUMBER_INTERFACE_BOARD)
+            .amountInterfaceBoard(UPDATED_AMOUNT_INTERFACE_BOARD)
             .startTime(UPDATED_START_TIME)
             .finishTime(UPDATED_FINISH_TIME);
         ContractDTO contractDTO = contractMapper.toDto(updatedContract);
@@ -800,7 +800,7 @@ class ContractResourceIT {
         Contract testContract = contractList.get(contractList.size() - 1);
         assertThat(testContract.getReference()).isEqualTo(UPDATED_REFERENCE);
         assertThat(testContract.getType()).isEqualTo(UPDATED_TYPE);
-        assertThat(testContract.getNumberInterfaceBoard()).isEqualTo(UPDATED_NUMBER_INTERFACE_BOARD);
+        assertThat(testContract.getAmountInterfaceBoard()).isEqualTo(UPDATED_AMOUNT_INTERFACE_BOARD);
         assertThat(testContract.getStartTime()).isEqualTo(UPDATED_START_TIME);
         assertThat(testContract.getFinishTime()).isEqualTo(UPDATED_FINISH_TIME);
     }
@@ -882,7 +882,7 @@ class ContractResourceIT {
         Contract partialUpdatedContract = new Contract();
         partialUpdatedContract.setId(contract.getId());
 
-        partialUpdatedContract.type(UPDATED_TYPE).numberInterfaceBoard(UPDATED_NUMBER_INTERFACE_BOARD);
+        partialUpdatedContract.type(UPDATED_TYPE).amountInterfaceBoard(UPDATED_AMOUNT_INTERFACE_BOARD);
 
         restContractMockMvc
             .perform(
@@ -898,7 +898,7 @@ class ContractResourceIT {
         Contract testContract = contractList.get(contractList.size() - 1);
         assertThat(testContract.getReference()).isEqualTo(DEFAULT_REFERENCE);
         assertThat(testContract.getType()).isEqualTo(UPDATED_TYPE);
-        assertThat(testContract.getNumberInterfaceBoard()).isEqualTo(UPDATED_NUMBER_INTERFACE_BOARD);
+        assertThat(testContract.getAmountInterfaceBoard()).isEqualTo(UPDATED_AMOUNT_INTERFACE_BOARD);
         assertThat(testContract.getStartTime()).isEqualTo(DEFAULT_START_TIME);
         assertThat(testContract.getFinishTime()).isEqualTo(DEFAULT_FINISH_TIME);
     }
@@ -918,7 +918,7 @@ class ContractResourceIT {
         partialUpdatedContract
             .reference(UPDATED_REFERENCE)
             .type(UPDATED_TYPE)
-            .numberInterfaceBoard(UPDATED_NUMBER_INTERFACE_BOARD)
+            .amountInterfaceBoard(UPDATED_AMOUNT_INTERFACE_BOARD)
             .startTime(UPDATED_START_TIME)
             .finishTime(UPDATED_FINISH_TIME);
 
@@ -936,7 +936,7 @@ class ContractResourceIT {
         Contract testContract = contractList.get(contractList.size() - 1);
         assertThat(testContract.getReference()).isEqualTo(UPDATED_REFERENCE);
         assertThat(testContract.getType()).isEqualTo(UPDATED_TYPE);
-        assertThat(testContract.getNumberInterfaceBoard()).isEqualTo(UPDATED_NUMBER_INTERFACE_BOARD);
+        assertThat(testContract.getAmountInterfaceBoard()).isEqualTo(UPDATED_AMOUNT_INTERFACE_BOARD);
         assertThat(testContract.getStartTime()).isEqualTo(UPDATED_START_TIME);
         assertThat(testContract.getFinishTime()).isEqualTo(UPDATED_FINISH_TIME);
     }

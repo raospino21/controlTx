@@ -50,7 +50,7 @@ public class ControlInterfaceBoard implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = { "dataSheetInterface" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "receptionOrder" }, allowSetters = true)
     private InterfaceBoard interfaceBoard;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -165,24 +165,15 @@ public class ControlInterfaceBoard implements Serializable {
         return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
-        return (
-            "ControlInterfaceBoard [id=" +
-            id +
-            ", location=" +
-            location +
-            ", state=" +
-            state +
-            ", startTime=" +
-            startTime +
-            ", finishTime=" +
-            finishTime +
-            ", contract=" +
-            contract +
-            ", interfaceBoard=" +
-            interfaceBoard +
-            "]"
-        );
+        return "ControlInterfaceBoard{" +
+            "id=" + getId() +
+            ", location='" + getLocation() + "'" +
+            ", state='" + getState() + "'" +
+            ", startTime='" + getStartTime() + "'" +
+            ", finishTime='" + getFinishTime() + "'" +
+            "}";
     }
 }

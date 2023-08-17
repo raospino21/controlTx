@@ -30,8 +30,9 @@
   "readOnly": false,
   "relationships": [
     {
-      "otherEntityName": "dataSheetInterface",
-      "relationshipName": "dataSheetInterface",
+      "otherEntityField": "providerLotNumber",
+      "otherEntityName": "receptionOrder",
+      "relationshipName": "receptionOrder",
       "relationshipType": "many-to-one",
       "relationshipValidateRules": "required"
     }

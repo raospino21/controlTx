@@ -1,0 +1,56 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="receptionOrder">
+      <h2 data-cy="receptionOrderDetailsHeading"><span jhiTranslate="controTxApp.receptionOrder.detail.title">Reception Order</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="controTxApp.receptionOrder.id">Id</span></dt>
+        <dd>
+          <span>{{ receptionOrder.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.receptionOrder.providerLotNumber">Provider Lot Number</span></dt>
+        <dd>
+          <span>{{ receptionOrder.providerLotNumber }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.receptionOrder.amountReceived">Amount Received</span></dt>
+        <dd>
+          <span>{{ receptionOrder.amountReceived }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.receptionOrder.remission">Remission</span></dt>
+        <dd>
+          <span>{{ receptionOrder.remission }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.receptionOrder.entryDate">Entry Date</span></dt>
+        <dd>
+          <span>{{ receptionOrder.entryDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.receptionOrder.warrantyDate">Warranty Date</span></dt>
+        <dd>
+          <span>{{ receptionOrder.warrantyDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="controTxApp.receptionOrder.purchaseOrder">Purchase Order</span></dt>
+        <dd>
+          <div *ngIf="receptionOrder.purchaseOrder">
+            <a [routerLink]="['/purchase-order', receptionOrder.purchaseOrder.id, 'view']">{{
+              receptionOrder.purchaseOrder.iesOrderNumber
+            }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+      </button>
+
+      <button type="button" [routerLink]="['/reception-order', receptionOrder.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

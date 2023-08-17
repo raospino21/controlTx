@@ -9,5 +9,5 @@ export enum StatusInterfaceBoard {
 
   WARRANTY = 'WARRANTY',
 
-  LOW = 'LOW',
+  DISCHARGED = 'DISCHARGED',
 }

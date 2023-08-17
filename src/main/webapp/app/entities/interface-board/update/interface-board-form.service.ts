@@ -21,7 +21,7 @@ type InterfaceBoardFormGroupContent = {
   ipAddress: FormControl<IInterfaceBoard['ipAddress']>;
   hash: FormControl<IInterfaceBoard['hash']>;
   mac: FormControl<IInterfaceBoard['mac']>;
-  dataSheetInterface: FormControl<IInterfaceBoard['dataSheetInterface']>;
+  receptionOrder: FormControl<IInterfaceBoard['receptionOrder']>;
 };
 
 export type InterfaceBoardFormGroup = FormGroup<InterfaceBoardFormGroupContent>;
@@ -46,7 +46,7 @@ export class InterfaceBoardFormService {
       mac: new FormControl(interfaceBoardRawValue.mac, {
         validators: [Validators.required],
       }),
-      dataSheetInterface: new FormControl(interfaceBoardRawValue.dataSheetInterface, {
+      receptionOrder: new FormControl(interfaceBoardRawValue.receptionOrder, {
         validators: [Validators.required],
       }),
     });

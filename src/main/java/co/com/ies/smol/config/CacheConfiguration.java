@@ -53,7 +53,8 @@ public class CacheConfiguration {
             createCache(cm, co.com.ies.smol.domain.Contract.class.getName());
             createCache(cm, co.com.ies.smol.domain.InterfaceBoard.class.getName());
             createCache(cm, co.com.ies.smol.domain.ControlInterfaceBoard.class.getName());
-            createCache(cm, co.com.ies.smol.domain.DataSheetInterface.class.getName());
+            createCache(cm, co.com.ies.smol.domain.PurchaseOrder.class.getName());
+            createCache(cm, co.com.ies.smol.domain.ReceptionOrder.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

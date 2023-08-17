@@ -3,5 +3,5 @@ export enum ContractType {
 
   RENT = 'RENT',
 
-  LOAD = 'LOAD',
+  LOAN = 'LOAN',
 }

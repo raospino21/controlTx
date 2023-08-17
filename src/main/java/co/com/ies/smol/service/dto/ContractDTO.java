@@ -20,7 +20,7 @@ public class ContractDTO implements Serializable {
     private ContractType type;
 
     @NotNull
-    private Long numberInterfaceBoard;
+    private Long amountInterfaceBoard;
 
     @NotNull
     private ZonedDateTime startTime;
@@ -53,12 +53,12 @@ public class ContractDTO implements Serializable {
         this.type = type;
     }
 
-    public Long getNumberInterfaceBoard() {
-        return numberInterfaceBoard;
+    public Long getAmountInterfaceBoard() {
+        return amountInterfaceBoard;
     }
 
-    public void setNumberInterfaceBoard(Long numberInterfaceBoard) {
-        this.numberInterfaceBoard = numberInterfaceBoard;
+    public void setAmountInterfaceBoard(Long amountInterfaceBoard) {
+        this.amountInterfaceBoard = amountInterfaceBoard;
     }
 
     public ZonedDateTime getStartTime() {
@@ -113,7 +113,7 @@ public class ContractDTO implements Serializable {
             "id=" + getId() +
             ", reference='" + getReference() + "'" +
             ", type='" + getType() + "'" +
-            ", numberInterfaceBoard=" + getNumberInterfaceBoard() +
+            ", amountInterfaceBoard=" + getAmountInterfaceBoard() +
             ", startTime='" + getStartTime() + "'" +
             ", finishTime='" + getFinishTime() + "'" +
             ", operator=" + getOperator() +

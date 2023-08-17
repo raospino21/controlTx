@@ -35,8 +35,8 @@ public class Contract implements Serializable {
     private ContractType type;
 
     @NotNull
-    @Column(name = "number_interface_board", nullable = false)
-    private Long numberInterfaceBoard;
+    @Column(name = "amount_interface_board", nullable = false)
+    private Long amountInterfaceBoard;
 
     @NotNull
     @Column(name = "start_time", nullable = false)
@@ -91,17 +91,17 @@ public class Contract implements Serializable {
         this.type = type;
     }
 
-    public Long getNumberInterfaceBoard() {
-        return this.numberInterfaceBoard;
+    public Long getAmountInterfaceBoard() {
+        return this.amountInterfaceBoard;
     }
 
-    public Contract numberInterfaceBoard(Long numberInterfaceBoard) {
-        this.setNumberInterfaceBoard(numberInterfaceBoard);
+    public Contract amountInterfaceBoard(Long amountInterfaceBoard) {
+        this.setAmountInterfaceBoard(amountInterfaceBoard);
         return this;
     }
 
-    public void setNumberInterfaceBoard(Long numberInterfaceBoard) {
-        this.numberInterfaceBoard = numberInterfaceBoard;
+    public void setAmountInterfaceBoard(Long amountInterfaceBoard) {
+        this.amountInterfaceBoard = amountInterfaceBoard;
     }
 
     public ZonedDateTime getStartTime() {
@@ -169,7 +169,7 @@ public class Contract implements Serializable {
             "id=" + getId() +
             ", reference='" + getReference() + "'" +
             ", type='" + getType() + "'" +
-            ", numberInterfaceBoard=" + getNumberInterfaceBoard() +
+            ", amountInterfaceBoard=" + getAmountInterfaceBoard() +
             ", startTime='" + getStartTime() + "'" +
             ", finishTime='" + getFinishTime() + "'" +
             "}";

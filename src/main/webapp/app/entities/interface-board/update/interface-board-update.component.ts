@@ -7,8 +7,8 @@ import { finalize, map } from 'rxjs/operators';
 import { InterfaceBoardFormService, InterfaceBoardFormGroup } from './interface-board-form.service';
 import { IInterfaceBoard } from '../interface-board.model';
 import { InterfaceBoardService } from '../service/interface-board.service';
-import { IDataSheetInterface } from 'app/entities/data-sheet-interface/data-sheet-interface.model';
-import { DataSheetInterfaceService } from 'app/entities/data-sheet-interface/service/data-sheet-interface.service';
+import { IReceptionOrder } from 'app/entities/reception-order/reception-order.model';
+import { ReceptionOrderService } from 'app/entities/reception-order/service/reception-order.service';
 
 @Component({
   selector: 'jhi-interface-board-update',
@@ -18,19 +18,19 @@ export class InterfaceBoardUpdateComponent implements OnInit {
   isSaving = false;
   interfaceBoard: IInterfaceBoard | null = null;
 
-  dataSheetInterfacesSharedCollection: IDataSheetInterface[] = [];
+  receptionOrdersSharedCollection: IReceptionOrder[] = [];
 
   editForm: InterfaceBoardFormGroup = this.interfaceBoardFormService.createInterfaceBoardFormGroup();
 
   constructor(
     protected interfaceBoardService: InterfaceBoardService,
     protected interfaceBoardFormService: InterfaceBoardFormService,
-    protected dataSheetInterfaceService: DataSheetInterfaceService,
+    protected receptionOrderService: ReceptionOrderService,
     protected activatedRoute: ActivatedRoute
   ) {}
 
-  compareDataSheetInterface = (o1: IDataSheetInterface | null, o2: IDataSheetInterface | null): boolean =>
-    this.dataSheetInterfaceService.compareDataSheetInterface(o1, o2);
+  compareReceptionOrder = (o1: IReceptionOrder | null, o2: IReceptionOrder | null): boolean =>
+    this.receptionOrderService.compareReceptionOrder(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ interfaceBoard }) => {
@@ -80,25 +80,24 @@ export class InterfaceBoardUpdateComponent implements OnInit {
     this.interfaceBoard = interfaceBoard;
     this.interfaceBoardFormService.resetForm(this.editForm, interfaceBoard);
 
-    this.dataSheetInterfacesSharedCollection =
-      this.dataSheetInterfaceService.addDataSheetInterfaceToCollectionIfMissing<IDataSheetInterface>(
-        this.dataSheetInterfacesSharedCollection,
-        interfaceBoard.dataSheetInterface
-      );
+    this.receptionOrdersSharedCollection = this.receptionOrderService.addReceptionOrderToCollectionIfMissing<IReceptionOrder>(
+      this.receptionOrdersSharedCollection,
+      interfaceBoard.receptionOrder
+    );
   }
 
   protected loadRelationshipsOptions(): void {
-    this.dataSheetInterfaceService
+    this.receptionOrderService
       .query()
-      .pipe(map((res: HttpResponse<IDataSheetInterface[]>) => res.body ?? []))
+      .pipe(map((res: HttpResponse<IReceptionOrder[]>) => res.body ?? []))
       .pipe(
-        map((dataSheetInterfaces: IDataSheetInterface[]) =>
-          this.dataSheetInterfaceService.addDataSheetInterfaceToCollectionIfMissing<IDataSheetInterface>(
-            dataSheetInterfaces,
-            this.interfaceBoard?.dataSheetInterface
+        map((receptionOrders: IReceptionOrder[]) =>
+          this.receptionOrderService.addReceptionOrderToCollectionIfMissing<IReceptionOrder>(
+            receptionOrders,
+            this.interfaceBoard?.receptionOrder
           )
         )
       )
-      .subscribe((dataSheetInterfaces: IDataSheetInterface[]) => (this.dataSheetInterfacesSharedCollection = dataSheetInterfaces));
+      .subscribe((receptionOrders: IReceptionOrder[]) => (this.receptionOrdersSharedCollection = receptionOrders));
   }
 }

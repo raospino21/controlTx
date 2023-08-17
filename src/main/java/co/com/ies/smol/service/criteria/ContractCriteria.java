@@ -45,7 +45,7 @@ public class ContractCriteria implements Serializable, Criteria {
 
     private ContractTypeFilter type;
 
-    private LongFilter numberInterfaceBoard;
+    private LongFilter amountInterfaceBoard;
 
     private ZonedDateTimeFilter startTime;
 
@@ -61,7 +61,7 @@ public class ContractCriteria implements Serializable, Criteria {
         this.id = other.id == null ? null : other.id.copy();
         this.reference = other.reference == null ? null : other.reference.copy();
         this.type = other.type == null ? null : other.type.copy();
-        this.numberInterfaceBoard = other.numberInterfaceBoard == null ? null : other.numberInterfaceBoard.copy();
+        this.amountInterfaceBoard = other.amountInterfaceBoard == null ? null : other.amountInterfaceBoard.copy();
         this.startTime = other.startTime == null ? null : other.startTime.copy();
         this.finishTime = other.finishTime == null ? null : other.finishTime.copy();
         this.operatorId = other.operatorId == null ? null : other.operatorId.copy();
@@ -118,19 +118,19 @@ public class ContractCriteria implements Serializable, Criteria {
         this.type = type;
     }
 
-    public LongFilter getNumberInterfaceBoard() {
-        return numberInterfaceBoard;
+    public LongFilter getAmountInterfaceBoard() {
+        return amountInterfaceBoard;
     }
 
-    public LongFilter numberInterfaceBoard() {
-        if (numberInterfaceBoard == null) {
-            numberInterfaceBoard = new LongFilter();
+    public LongFilter amountInterfaceBoard() {
+        if (amountInterfaceBoard == null) {
+            amountInterfaceBoard = new LongFilter();
         }
-        return numberInterfaceBoard;
+        return amountInterfaceBoard;
     }
 
-    public void setNumberInterfaceBoard(LongFilter numberInterfaceBoard) {
-        this.numberInterfaceBoard = numberInterfaceBoard;
+    public void setAmountInterfaceBoard(LongFilter amountInterfaceBoard) {
+        this.amountInterfaceBoard = amountInterfaceBoard;
     }
 
     public ZonedDateTimeFilter getStartTime() {
@@ -199,7 +199,7 @@ public class ContractCriteria implements Serializable, Criteria {
             Objects.equals(id, that.id) &&
             Objects.equals(reference, that.reference) &&
             Objects.equals(type, that.type) &&
-            Objects.equals(numberInterfaceBoard, that.numberInterfaceBoard) &&
+            Objects.equals(amountInterfaceBoard, that.amountInterfaceBoard) &&
             Objects.equals(startTime, that.startTime) &&
             Objects.equals(finishTime, that.finishTime) &&
             Objects.equals(operatorId, that.operatorId) &&
@@ -209,7 +209,7 @@ public class ContractCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, reference, type, numberInterfaceBoard, startTime, finishTime, operatorId, distinct);
+        return Objects.hash(id, reference, type, amountInterfaceBoard, startTime, finishTime, operatorId, distinct);
     }
 
     // prettier-ignore
@@ -219,7 +219,7 @@ public class ContractCriteria implements Serializable, Criteria {
             (id != null ? "id=" + id + ", " : "") +
             (reference != null ? "reference=" + reference + ", " : "") +
             (type != null ? "type=" + type + ", " : "") +
-            (numberInterfaceBoard != null ? "numberInterfaceBoard=" + numberInterfaceBoard + ", " : "") +
+            (amountInterfaceBoard != null ? "amountInterfaceBoard=" + amountInterfaceBoard + ", " : "") +
             (startTime != null ? "startTime=" + startTime + ", " : "") +
             (finishTime != null ? "finishTime=" + finishTime + ", " : "") +
             (operatorId != null ? "operatorId=" + operatorId + ", " : "") +

@@ -23,7 +23,7 @@ describe('InterfaceBoard Form Service', () => {
             ipAddress: expect.any(Object),
             hash: expect.any(Object),
             mac: expect.any(Object),
-            dataSheetInterface: expect.any(Object),
+            receptionOrder: expect.any(Object),
           })
         );
       });
@@ -37,7 +37,7 @@ describe('InterfaceBoard Form Service', () => {
             ipAddress: expect.any(Object),
             hash: expect.any(Object),
             mac: expect.any(Object),
-            dataSheetInterface: expect.any(Object),
+            receptionOrder: expect.any(Object),
           })
         );
       });

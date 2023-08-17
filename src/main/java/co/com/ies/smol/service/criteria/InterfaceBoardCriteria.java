@@ -29,7 +29,7 @@ public class InterfaceBoardCriteria implements Serializable, Criteria {
 
     private StringFilter mac;
 
-    private LongFilter dataSheetInterfaceId;
+    private LongFilter receptionOrderId;
 
     private Boolean distinct;
 
@@ -40,7 +40,7 @@ public class InterfaceBoardCriteria implements Serializable, Criteria {
         this.ipAddress = other.ipAddress == null ? null : other.ipAddress.copy();
         this.hash = other.hash == null ? null : other.hash.copy();
         this.mac = other.mac == null ? null : other.mac.copy();
-        this.dataSheetInterfaceId = other.dataSheetInterfaceId == null ? null : other.dataSheetInterfaceId.copy();
+        this.receptionOrderId = other.receptionOrderId == null ? null : other.receptionOrderId.copy();
         this.distinct = other.distinct;
     }
 
@@ -109,19 +109,19 @@ public class InterfaceBoardCriteria implements Serializable, Criteria {
         this.mac = mac;
     }
 
-    public LongFilter getDataSheetInterfaceId() {
-        return dataSheetInterfaceId;
+    public LongFilter getReceptionOrderId() {
+        return receptionOrderId;
     }
 
-    public LongFilter dataSheetInterfaceId() {
-        if (dataSheetInterfaceId == null) {
-            dataSheetInterfaceId = new LongFilter();
+    public LongFilter receptionOrderId() {
+        if (receptionOrderId == null) {
+            receptionOrderId = new LongFilter();
         }
-        return dataSheetInterfaceId;
+        return receptionOrderId;
     }
 
-    public void setDataSheetInterfaceId(LongFilter dataSheetInterfaceId) {
-        this.dataSheetInterfaceId = dataSheetInterfaceId;
+    public void setReceptionOrderId(LongFilter receptionOrderId) {
+        this.receptionOrderId = receptionOrderId;
     }
 
     public Boolean getDistinct() {
@@ -146,14 +146,14 @@ public class InterfaceBoardCriteria implements Serializable, Criteria {
             Objects.equals(ipAddress, that.ipAddress) &&
             Objects.equals(hash, that.hash) &&
             Objects.equals(mac, that.mac) &&
-            Objects.equals(dataSheetInterfaceId, that.dataSheetInterfaceId) &&
+            Objects.equals(receptionOrderId, that.receptionOrderId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ipAddress, hash, mac, dataSheetInterfaceId, distinct);
+        return Objects.hash(id, ipAddress, hash, mac, receptionOrderId, distinct);
     }
 
     // prettier-ignore
@@ -164,7 +164,7 @@ public class InterfaceBoardCriteria implements Serializable, Criteria {
             (ipAddress != null ? "ipAddress=" + ipAddress + ", " : "") +
             (hash != null ? "hash=" + hash + ", " : "") +
             (mac != null ? "mac=" + mac + ", " : "") +
-            (dataSheetInterfaceId != null ? "dataSheetInterfaceId=" + dataSheetInterfaceId + ", " : "") +
+            (receptionOrderId != null ? "receptionOrderId=" + receptionOrderId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

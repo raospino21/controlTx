@@ -73,7 +73,7 @@ class ContractGatlingTest extends Simulation {
             .body(StringBody("""{
                 "reference":"SAMPLE_TEXT"
                 , "type":"SALE"
-                , "numberInterfaceBoard":"0"
+                , "amountInterfaceBoard":"0"
                 , "startTime":"2020-01-01T00:00:00.000Z"
                 , "finishTime":"2020-01-01T00:00:00.000Z"
                 }""")).asJson

@@ -52,9 +52,9 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="numberInterfaceBoard">
+          <th scope="col" jhiSortBy="amountInterfaceBoard">
             <div class="d-flex">
-              <span jhiTranslate="controTxApp.contract.numberInterfaceBoard">Number Interface Board</span>
+              <span jhiTranslate="controTxApp.contract.amountInterfaceBoard">Amount Interface Board</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
@@ -86,7 +86,7 @@
           </td>
           <td>{{ contract.reference }}</td>
           <td jhiTranslate="{{ 'controTxApp.ContractType.' + contract.type }}">{{ contract.type }}</td>
-          <td>{{ contract.numberInterfaceBoard }}</td>
+          <td>{{ contract.amountInterfaceBoard }}</td>
           <td>{{ contract.startTime | formatMediumDatetime }}</td>
           <td>{{ contract.finishTime | formatMediumDatetime }}</td>
           <td>

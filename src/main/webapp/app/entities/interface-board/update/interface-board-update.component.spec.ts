@@ -9,8 +9,8 @@ import { of, Subject, from } from 'rxjs';
 import { InterfaceBoardFormService } from './interface-board-form.service';
 import { InterfaceBoardService } from '../service/interface-board.service';
 import { IInterfaceBoard } from '../interface-board.model';
-import { IDataSheetInterface } from 'app/entities/data-sheet-interface/data-sheet-interface.model';
-import { DataSheetInterfaceService } from 'app/entities/data-sheet-interface/service/data-sheet-interface.service';
+import { IReceptionOrder } from 'app/entities/reception-order/reception-order.model';
+import { ReceptionOrderService } from 'app/entities/reception-order/service/reception-order.service';
 
 import { InterfaceBoardUpdateComponent } from './interface-board-update.component';
 
@@ -20,7 +20,7 @@ describe('InterfaceBoard Management Update Component', () => {
   let activatedRoute: ActivatedRoute;
   let interfaceBoardFormService: InterfaceBoardFormService;
   let interfaceBoardService: InterfaceBoardService;
-  let dataSheetInterfaceService: DataSheetInterfaceService;
+  let receptionOrderService: ReceptionOrderService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -43,43 +43,43 @@ describe('InterfaceBoard Management Update Component', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
     interfaceBoardFormService = TestBed.inject(InterfaceBoardFormService);
     interfaceBoardService = TestBed.inject(InterfaceBoardService);
-    dataSheetInterfaceService = TestBed.inject(DataSheetInterfaceService);
+    receptionOrderService = TestBed.inject(ReceptionOrderService);
 
     comp = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
-    it('Should call DataSheetInterface query and add missing value', () => {
+    it('Should call ReceptionOrder query and add missing value', () => {
       const interfaceBoard: IInterfaceBoard = { id: 456 };
-      const dataSheetInterface: IDataSheetInterface = { id: 52293 };
-      interfaceBoard.dataSheetInterface = dataSheetInterface;
+      const receptionOrder: IReceptionOrder = { id: 54734 };
+      interfaceBoard.receptionOrder = receptionOrder;
 
-      const dataSheetInterfaceCollection: IDataSheetInterface[] = [{ id: 54552 }];
-      jest.spyOn(dataSheetInterfaceService, 'query').mockReturnValue(of(new HttpResponse({ body: dataSheetInterfaceCollection })));
-      const additionalDataSheetInterfaces = [dataSheetInterface];
-      const expectedCollection: IDataSheetInterface[] = [...additionalDataSheetInterfaces, ...dataSheetInterfaceCollection];
-      jest.spyOn(dataSheetInterfaceService, 'addDataSheetInterfaceToCollectionIfMissing').mockReturnValue(expectedCollection);
+      const receptionOrderCollection: IReceptionOrder[] = [{ id: 7994 }];
+      jest.spyOn(receptionOrderService, 'query').mockReturnValue(of(new HttpResponse({ body: receptionOrderCollection })));
+      const additionalReceptionOrders = [receptionOrder];
+      const expectedCollection: IReceptionOrder[] = [...additionalReceptionOrders, ...receptionOrderCollection];
+      jest.spyOn(receptionOrderService, 'addReceptionOrderToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ interfaceBoard });
       comp.ngOnInit();
 
-      expect(dataSheetInterfaceService.query).toHaveBeenCalled();
-      expect(dataSheetInterfaceService.addDataSheetInterfaceToCollectionIfMissing).toHaveBeenCalledWith(
-        dataSheetInterfaceCollection,
-        ...additionalDataSheetInterfaces.map(expect.objectContaining)
+      expect(receptionOrderService.query).toHaveBeenCalled();
+      expect(receptionOrderService.addReceptionOrderToCollectionIfMissing).toHaveBeenCalledWith(
+        receptionOrderCollection,
+        ...additionalReceptionOrders.map(expect.objectContaining)
       );
-      expect(comp.dataSheetInterfacesSharedCollection).toEqual(expectedCollection);
+      expect(comp.receptionOrdersSharedCollection).toEqual(expectedCollection);
     });
 
     it('Should update editForm', () => {
       const interfaceBoard: IInterfaceBoard = { id: 456 };
-      const dataSheetInterface: IDataSheetInterface = { id: 44630 };
-      interfaceBoard.dataSheetInterface = dataSheetInterface;
+      const receptionOrder: IReceptionOrder = { id: 34141 };
+      interfaceBoard.receptionOrder = receptionOrder;
 
       activatedRoute.data = of({ interfaceBoard });
       comp.ngOnInit();
 
-      expect(comp.dataSheetInterfacesSharedCollection).toContain(dataSheetInterface);
+      expect(comp.receptionOrdersSharedCollection).toContain(receptionOrder);
       expect(comp.interfaceBoard).toEqual(interfaceBoard);
     });
   });
@@ -153,13 +153,13 @@ describe('InterfaceBoard Management Update Component', () => {
   });
 
   describe('Compare relationships', () => {
-    describe('compareDataSheetInterface', () => {
-      it('Should forward to dataSheetInterfaceService', () => {
+    describe('compareReceptionOrder', () => {
+      it('Should forward to receptionOrderService', () => {
         const entity = { id: 123 };
         const entity2 = { id: 456 };
-        jest.spyOn(dataSheetInterfaceService, 'compareDataSheetInterface');
-        comp.compareDataSheetInterface(entity, entity2);
-        expect(dataSheetInterfaceService.compareDataSheetInterface).toHaveBeenCalledWith(entity, entity2);
+        jest.spyOn(receptionOrderService, 'compareReceptionOrder');
+        comp.compareReceptionOrder(entity, entity2);
+        expect(receptionOrderService.compareReceptionOrder).toHaveBeenCalledWith(entity, entity2);
       });
     });
   });

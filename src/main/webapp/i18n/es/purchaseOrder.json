@@ -1,0 +1,26 @@
+{
+  "controTxApp": {
+    "purchaseOrder": {
+      "home": {
+        "title": "Purchase Orders",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Purchase Order",
+        "createOrEditLabel": "Crear o editar Purchase Order",
+        "notFound": "Ningún Purchase Orders encontrado"
+      },
+      "created": "Un nuevo Purchase Order ha sido creado con el identificador {{ param }}",
+      "updated": "Un Purchase Order ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Purchase Order ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Purchase Order {{ id }}?"
+      },
+      "detail": {
+        "title": "Purchase Order"
+      },
+      "id": "Id",
+      "orderAmount": "Order Amount",
+      "createAt": "Create At",
+      "iesOrderNumber": "Ies Order Number"
+    }
+  }
+}

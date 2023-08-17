@@ -1,0 +1,223 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-reception-order-heading"
+        data-cy="ReceptionOrderCreateUpdateHeading"
+        jhiTranslate="controTxApp.receptionOrder.home.createOrEditLabel"
+      >
+        Crear o editar Reception Order
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" jhiTranslate="controTxApp.receptionOrder.id" for="field_id">Id</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.receptionOrder.providerLotNumber" for="field_providerLotNumber"
+            >Provider Lot Number</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="providerLotNumber"
+            id="field_providerLotNumber"
+            data-cy="providerLotNumber"
+            formControlName="providerLotNumber"
+          />
+          <div
+            *ngIf="
+              editForm.get('providerLotNumber')!.invalid &&
+              (editForm.get('providerLotNumber')!.dirty || editForm.get('providerLotNumber')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('providerLotNumber')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('providerLotNumber')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              Este campo debe ser un número.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.receptionOrder.amountReceived" for="field_amountReceived"
+            >Amount Received</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="amountReceived"
+            id="field_amountReceived"
+            data-cy="amountReceived"
+            formControlName="amountReceived"
+          />
+          <div
+            *ngIf="
+              editForm.get('amountReceived')!.invalid && (editForm.get('amountReceived')!.dirty || editForm.get('amountReceived')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('amountReceived')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('amountReceived')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              Este campo debe ser un número.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.receptionOrder.remission" for="field_remission">Remission</label>
+          <input type="text" class="form-control" name="remission" id="field_remission" data-cy="remission" formControlName="remission" />
+          <div *ngIf="editForm.get('remission')!.invalid && (editForm.get('remission')!.dirty || editForm.get('remission')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('remission')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('remission')?.errors?.maxlength"
+              jhiTranslate="entity.validation.maxlength"
+              [translateValues]="{ max: 30 }"
+            >
+              Este campo no puede superar más de 30 caracteres.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.receptionOrder.entryDate" for="field_entryDate">Entry Date</label>
+          <div class="d-flex">
+            <input
+              id="field_entryDate"
+              data-cy="entryDate"
+              type="datetime-local"
+              class="form-control"
+              name="entryDate"
+              formControlName="entryDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          <div *ngIf="editForm.get('entryDate')!.invalid && (editForm.get('entryDate')!.dirty || editForm.get('entryDate')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('entryDate')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('entryDate')?.errors?.datetimelocal"
+              jhiTranslate="entity.validation.datetimelocal"
+            >
+              Este campo debe ser una fecha y hora.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.receptionOrder.warrantyDate" for="field_warrantyDate">Warranty Date</label>
+          <div class="d-flex">
+            <input
+              id="field_warrantyDate"
+              data-cy="warrantyDate"
+              type="datetime-local"
+              class="form-control"
+              name="warrantyDate"
+              formControlName="warrantyDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          <div
+            *ngIf="editForm.get('warrantyDate')!.invalid && (editForm.get('warrantyDate')!.dirty || editForm.get('warrantyDate')!.touched)"
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('warrantyDate')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('warrantyDate')?.errors?.datetimelocal"
+              jhiTranslate="entity.validation.datetimelocal"
+            >
+              Este campo debe ser una fecha y hora.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.receptionOrder.purchaseOrder" for="field_purchaseOrder">Purchase Order</label>
+          <select
+            class="form-control"
+            id="field_purchaseOrder"
+            data-cy="purchaseOrder"
+            name="purchaseOrder"
+            formControlName="purchaseOrder"
+            [compareWith]="comparePurchaseOrder"
+          >
+            <option *ngIf="!editForm.get('purchaseOrder')!.value" [ngValue]="null" selected></option>
+            <option [ngValue]="purchaseOrderOption" *ngFor="let purchaseOrderOption of purchaseOrdersSharedCollection">
+              {{ purchaseOrderOption.iesOrderNumber }}
+            </option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['purchaseOrder'])!.invalid && (editForm.get(['purchaseOrder'])!.dirty || editForm.get(['purchaseOrder'])!.touched)
+          "
+        >
+          <small
+            class="form-text text-danger"
+            *ngIf="editForm.get(['purchaseOrder'])?.errors?.required"
+            jhiTranslate="entity.validation.required"
+          >
+            Este campo es obligatorio.
+          </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -9,5 +9,5 @@ public enum StatusInterfaceBoard {
     IN_TRANSFER,
     REPAIR,
     WARRANTY,
-    LOW,
+    DISCHARGED,
 }

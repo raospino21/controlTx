@@ -1,0 +1,29 @@
+{
+  "controTxApp": {
+    "receptionOrder": {
+      "home": {
+        "title": "Reception Orders",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Reception Order",
+        "createOrEditLabel": "Crear o editar Reception Order",
+        "notFound": "Ningún Reception Orders encontrado"
+      },
+      "created": "Un nuevo Reception Order ha sido creado con el identificador {{ param }}",
+      "updated": "Un Reception Order ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Reception Order ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Reception Order {{ id }}?"
+      },
+      "detail": {
+        "title": "Reception Order"
+      },
+      "id": "Id",
+      "providerLotNumber": "Provider Lot Number",
+      "amountReceived": "Amount Received",
+      "remission": "Remission",
+      "entryDate": "Entry Date",
+      "warrantyDate": "Warranty Date",
+      "purchaseOrder": "Purchase Order"
+    }
+  }
+}

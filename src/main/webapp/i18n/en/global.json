@@ -12,7 +12,8 @@
         "contract": "Contract",
         "interfaceBoard": "Interface Board",
         "controlInterfaceBoard": "Control Interface Board",
-        "dataSheetInterface": "Data Sheet Interface",
+        "purchaseOrder": "Purchase Order",
+        "receptionOrder": "Reception Order",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

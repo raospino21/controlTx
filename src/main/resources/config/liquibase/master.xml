@@ -22,12 +22,14 @@
     <include file="config/liquibase/changelog/20210927194720_added_entity_Contract.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210927194820_added_entity_InterfaceBoard.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210927194920_added_entity_ControlInterfaceBoard.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20210927195020_added_entity_DataSheetInterface.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20230817165445_added_entity_PurchaseOrder.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20230817165446_added_entity_ReceptionOrder.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20210927194620_added_entity_constraints_Operator.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210927194720_added_entity_constraints_Contract.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210927194820_added_entity_constraints_InterfaceBoard.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210927194920_added_entity_constraints_ControlInterfaceBoard.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20230817165446_added_entity_constraints_ReceptionOrder.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

@@ -8,14 +8,15 @@ import co.com.ies.smol.domain.enumeration.Location;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.service.ContractService;
 import co.com.ies.smol.service.ControlInterfaceBoardService;
-import co.com.ies.smol.service.DataSheetInterfaceService;
 import co.com.ies.smol.service.InterfaceBoardService;
 import co.com.ies.smol.service.OperatorService;
+import co.com.ies.smol.service.ReceptionOrderService;
 import co.com.ies.smol.service.core.ControlTxService;
 import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
-import co.com.ies.smol.service.dto.DataSheetInterfaceDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
+import co.com.ies.smol.service.dto.ReceptionOrderDTO;
+import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import co.com.ies.smol.web.rest.core.ControlTxController;
@@ -33,22 +34,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class ControlTxServiceImpl extends ControlTxDomainImpl implements ControlTxService {
 
-    private final Logger log = LoggerFactory.getLogger(ControlTxController.class);
+    private final Logger log = LoggerFactory.getLogger(ControlTxServiceImpl.class);
 
-    private final DataSheetInterfaceService dataSheetInterfaceService;
+    private final ReceptionOrderService receptionOrderService;
     private final InterfaceBoardService interfaceBoardService;
     private final ControlInterfaceBoardService controlInterfaceBoardService;
     private final ContractService contractService;
     private final OperatorService operatorService;
 
     public ControlTxServiceImpl(
-        DataSheetInterfaceService dataSheetInterfaceService,
+        ReceptionOrderService receptionOrderService,
         InterfaceBoardService interfaceBoardService,
         ControlInterfaceBoardService controlInterfaceBoardService,
         ContractService contractService,
         OperatorService operatorService
     ) {
-        this.dataSheetInterfaceService = dataSheetInterfaceService;
+        this.receptionOrderService = receptionOrderService;
         this.interfaceBoardService = interfaceBoardService;
         this.controlInterfaceBoardService = controlInterfaceBoardService;
         this.contractService = contractService;
@@ -58,11 +59,11 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     @Override
     public void createBoardRegister(BoardRegisterDTO boardRegisterDTO) {
         List<String> macs = boardRegisterDTO.getMacs();
-        DataSheetInterfaceDTO dataSheetInterfaceDTO = createDataSheetInterface(boardRegisterDTO);
-        dataSheetInterfaceDTO = dataSheetInterfaceService.save(dataSheetInterfaceDTO);
+        ReceptionOrderDTO receptionOrderDTO = createDataSheetInterface(boardRegisterDTO);
+        receptionOrderDTO = receptionOrderService.save(receptionOrderDTO);
 
         for (String mac : macs) {
-            InterfaceBoardDTO interfaceBoardDTO = createInterfaceBoard(mac, dataSheetInterfaceDTO);
+            InterfaceBoardDTO interfaceBoardDTO = createInterfaceBoard(mac, receptionOrderDTO);
             interfaceBoardDTO = interfaceBoardService.save(interfaceBoardDTO);
 
             ControlInterfaceBoardDTO controlInterfaceBoardDTO = createControlInterfaceBoard(
@@ -74,30 +75,32 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
             controlInterfaceBoardDTO = controlInterfaceBoardService.save(controlInterfaceBoardDTO);
 
             log.info(
-                "dataSheetInterfaceDTO ID {}  - interfaceBoardDTO ID {} - controlInterfaceBoardDTO ID {} ",
-                dataSheetInterfaceDTO.getId(),
+                "receptionOrderDTO ID {}  - interfaceBoardDTO ID {} - controlInterfaceBoardDTO ID {} ",
+                receptionOrderDTO.getId(),
                 interfaceBoardDTO.getId(),
                 controlInterfaceBoardDTO.getId()
             );
         }
     }
 
-    protected DataSheetInterfaceDTO createDataSheetInterface(BoardRegisterDTO boardRegisterDTO) {
-        DataSheetInterfaceDTO dataSheetInterfaceDTO = new DataSheetInterfaceDTO();
-        dataSheetInterfaceDTO.setColcircuitosLotNumber(boardRegisterDTO.getColcircuitosLotNumber());
-        dataSheetInterfaceDTO.setOrderAmount(boardRegisterDTO.getOrderAmount());
-        dataSheetInterfaceDTO.setAmountReceived(boardRegisterDTO.getAmountReceived());
-        dataSheetInterfaceDTO.setRemission(boardRegisterDTO.getRemission());
-        dataSheetInterfaceDTO.setEntryDate(ZonedDateTime.now());
-        dataSheetInterfaceDTO.setIesOrderNumber(boardRegisterDTO.getIesOrderNumber());
+    //FIXME: cambio el objeto
+    protected ReceptionOrderDTO createDataSheetInterface(BoardRegisterDTO boardRegisterDTO) {
+        ReceptionOrderDTO receptionOrderDTO = new ReceptionOrderDTO();
+        receptionOrderDTO.setProviderLotNumber(boardRegisterDTO.getColcircuitosLotNumber());
+        receptionOrderDTO.setAmountReceived(boardRegisterDTO.getAmountReceived());
+        receptionOrderDTO.setRemission(boardRegisterDTO.getRemission());
+        receptionOrderDTO.setEntryDate(ZonedDateTime.now());
+        //receptionOrderDTO.setIesOrderNumber(boardRegisterDTO.getIesOrderNumber());
 
-        return dataSheetInterfaceDTO;
+        return receptionOrderDTO;
     }
 
-    protected InterfaceBoardDTO createInterfaceBoard(String mac, DataSheetInterfaceDTO dataSheetInterfaceDTO) {
+    //FIXME: cambio el objeto
+
+    protected InterfaceBoardDTO createInterfaceBoard(String mac, ReceptionOrderDTO receptionOrderDTO) {
         InterfaceBoardDTO interfaceBoardDTO = new InterfaceBoardDTO();
         interfaceBoardDTO.setMac(mac);
-        interfaceBoardDTO.setDataSheetInterface(dataSheetInterfaceDTO);
+        interfaceBoardDTO.setReceptionOrder(new ReceptionOrderDTO());
 
         return interfaceBoardDTO;
     }
@@ -169,7 +172,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         List<Operator> operators = operatorService.findAllOperatorsByBrandName(brandName);
         List<ContractDTO> contractList = contractService.findAllContractByOpeatorIn(operators);
 
-        return contractList.stream().mapToLong(ContractDTO::getNumberInterfaceBoard).sum();
+        return contractList.stream().mapToLong(ContractDTO::getAmountInterfaceBoard).sum();
     }
 
     @Override
@@ -186,6 +189,6 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         List<ContractDTO> contractList = contractService.getContractByReference(reference);
         validateExistingContract(contractList);
 
-        return contractList.stream().mapToLong(ContractDTO::getNumberInterfaceBoard).sum();
+        return contractList.stream().mapToLong(ContractDTO::getAmountInterfaceBoard).sum();
     }
 }

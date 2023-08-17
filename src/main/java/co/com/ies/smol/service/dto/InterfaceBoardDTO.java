@@ -19,7 +19,7 @@ public class InterfaceBoardDTO implements Serializable {
     @NotNull
     private String mac;
 
-    private DataSheetInterfaceDTO dataSheetInterface;
+    private ReceptionOrderDTO receptionOrder;
 
     public Long getId() {
         return id;
@@ -53,12 +53,12 @@ public class InterfaceBoardDTO implements Serializable {
         this.mac = mac;
     }
 
-    public DataSheetInterfaceDTO getDataSheetInterface() {
-        return dataSheetInterface;
+    public ReceptionOrderDTO getReceptionOrder() {
+        return receptionOrder;
     }
 
-    public void setDataSheetInterface(DataSheetInterfaceDTO dataSheetInterface) {
-        this.dataSheetInterface = dataSheetInterface;
+    public void setReceptionOrder(ReceptionOrderDTO receptionOrder) {
+        this.receptionOrder = receptionOrder;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class InterfaceBoardDTO implements Serializable {
             ", ipAddress='" + getIpAddress() + "'" +
             ", hash='" + getHash() + "'" +
             ", mac='" + getMac() + "'" +
-            ", dataSheetInterface=" + getDataSheetInterface() +
+            ", receptionOrder=" + getReceptionOrder() +
             "}";
     }
 }

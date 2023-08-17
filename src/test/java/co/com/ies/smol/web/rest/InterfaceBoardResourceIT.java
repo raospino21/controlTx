@@ -2,24 +2,33 @@ package co.com.ies.smol.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import co.com.ies.smol.IntegrationTest;
-import co.com.ies.smol.domain.DataSheetInterface;
 import co.com.ies.smol.domain.InterfaceBoard;
+import co.com.ies.smol.domain.ReceptionOrder;
 import co.com.ies.smol.repository.InterfaceBoardRepository;
+import co.com.ies.smol.service.InterfaceBoardService;
 import co.com.ies.smol.service.criteria.InterfaceBoardCriteria;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.mapper.InterfaceBoardMapper;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link InterfaceBoardResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class InterfaceBoardResourceIT {
@@ -51,8 +61,14 @@ class InterfaceBoardResourceIT {
     @Autowired
     private InterfaceBoardRepository interfaceBoardRepository;
 
+    @Mock
+    private InterfaceBoardRepository interfaceBoardRepositoryMock;
+
     @Autowired
     private InterfaceBoardMapper interfaceBoardMapper;
+
+    @Mock
+    private InterfaceBoardService interfaceBoardServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -71,15 +87,15 @@ class InterfaceBoardResourceIT {
     public static InterfaceBoard createEntity(EntityManager em) {
         InterfaceBoard interfaceBoard = new InterfaceBoard().ipAddress(DEFAULT_IP_ADDRESS).hash(DEFAULT_HASH).mac(DEFAULT_MAC);
         // Add required entity
-        DataSheetInterface dataSheetInterface;
-        if (TestUtil.findAll(em, DataSheetInterface.class).isEmpty()) {
-            dataSheetInterface = DataSheetInterfaceResourceIT.createEntity(em);
-            em.persist(dataSheetInterface);
+        ReceptionOrder receptionOrder;
+        if (TestUtil.findAll(em, ReceptionOrder.class).isEmpty()) {
+            receptionOrder = ReceptionOrderResourceIT.createEntity(em);
+            em.persist(receptionOrder);
             em.flush();
         } else {
-            dataSheetInterface = TestUtil.findAll(em, DataSheetInterface.class).get(0);
+            receptionOrder = TestUtil.findAll(em, ReceptionOrder.class).get(0);
         }
-        interfaceBoard.setDataSheetInterface(dataSheetInterface);
+        interfaceBoard.setReceptionOrder(receptionOrder);
         return interfaceBoard;
     }
 
@@ -92,15 +108,15 @@ class InterfaceBoardResourceIT {
     public static InterfaceBoard createUpdatedEntity(EntityManager em) {
         InterfaceBoard interfaceBoard = new InterfaceBoard().ipAddress(UPDATED_IP_ADDRESS).hash(UPDATED_HASH).mac(UPDATED_MAC);
         // Add required entity
-        DataSheetInterface dataSheetInterface;
-        if (TestUtil.findAll(em, DataSheetInterface.class).isEmpty()) {
-            dataSheetInterface = DataSheetInterfaceResourceIT.createUpdatedEntity(em);
-            em.persist(dataSheetInterface);
+        ReceptionOrder receptionOrder;
+        if (TestUtil.findAll(em, ReceptionOrder.class).isEmpty()) {
+            receptionOrder = ReceptionOrderResourceIT.createUpdatedEntity(em);
+            em.persist(receptionOrder);
             em.flush();
         } else {
-            dataSheetInterface = TestUtil.findAll(em, DataSheetInterface.class).get(0);
+            receptionOrder = TestUtil.findAll(em, ReceptionOrder.class).get(0);
         }
-        interfaceBoard.setDataSheetInterface(dataSheetInterface);
+        interfaceBoard.setReceptionOrder(receptionOrder);
         return interfaceBoard;
     }
 
@@ -186,6 +202,23 @@ class InterfaceBoardResourceIT {
             .andExpect(jsonPath("$.[*].ipAddress").value(hasItem(DEFAULT_IP_ADDRESS)))
             .andExpect(jsonPath("$.[*].hash").value(hasItem(DEFAULT_HASH)))
             .andExpect(jsonPath("$.[*].mac").value(hasItem(DEFAULT_MAC)));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllInterfaceBoardsWithEagerRelationshipsIsEnabled() throws Exception {
+        when(interfaceBoardServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restInterfaceBoardMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(interfaceBoardServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllInterfaceBoardsWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(interfaceBoardServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restInterfaceBoardMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
+        verify(interfaceBoardRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -420,25 +453,25 @@ class InterfaceBoardResourceIT {
 
     @Test
     @Transactional
-    void getAllInterfaceBoardsByDataSheetInterfaceIsEqualToSomething() throws Exception {
-        DataSheetInterface dataSheetInterface;
-        if (TestUtil.findAll(em, DataSheetInterface.class).isEmpty()) {
+    void getAllInterfaceBoardsByReceptionOrderIsEqualToSomething() throws Exception {
+        ReceptionOrder receptionOrder;
+        if (TestUtil.findAll(em, ReceptionOrder.class).isEmpty()) {
             interfaceBoardRepository.saveAndFlush(interfaceBoard);
-            dataSheetInterface = DataSheetInterfaceResourceIT.createEntity(em);
+            receptionOrder = ReceptionOrderResourceIT.createEntity(em);
         } else {
-            dataSheetInterface = TestUtil.findAll(em, DataSheetInterface.class).get(0);
+            receptionOrder = TestUtil.findAll(em, ReceptionOrder.class).get(0);
         }
-        em.persist(dataSheetInterface);
+        em.persist(receptionOrder);
         em.flush();
-        interfaceBoard.setDataSheetInterface(dataSheetInterface);
+        interfaceBoard.setReceptionOrder(receptionOrder);
         interfaceBoardRepository.saveAndFlush(interfaceBoard);
-        Long dataSheetInterfaceId = dataSheetInterface.getId();
+        Long receptionOrderId = receptionOrder.getId();
 
-        // Get all the interfaceBoardList where dataSheetInterface equals to dataSheetInterfaceId
-        defaultInterfaceBoardShouldBeFound("dataSheetInterfaceId.equals=" + dataSheetInterfaceId);
+        // Get all the interfaceBoardList where receptionOrder equals to receptionOrderId
+        defaultInterfaceBoardShouldBeFound("receptionOrderId.equals=" + receptionOrderId);
 
-        // Get all the interfaceBoardList where dataSheetInterface equals to (dataSheetInterfaceId + 1)
-        defaultInterfaceBoardShouldNotBeFound("dataSheetInterfaceId.equals=" + (dataSheetInterfaceId + 1));
+        // Get all the interfaceBoardList where receptionOrder equals to (receptionOrderId + 1)
+        defaultInterfaceBoardShouldNotBeFound("receptionOrderId.equals=" + (receptionOrderId + 1));
     }
 
     /**

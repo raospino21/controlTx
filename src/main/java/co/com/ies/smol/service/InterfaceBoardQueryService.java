@@ -99,12 +99,12 @@ public class InterfaceBoardQueryService extends QueryService<InterfaceBoard> {
             if (criteria.getMac() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getMac(), InterfaceBoard_.mac));
             }
-            if (criteria.getDataSheetInterfaceId() != null) {
+            if (criteria.getReceptionOrderId() != null) {
                 specification =
                     specification.and(
                         buildSpecification(
-                            criteria.getDataSheetInterfaceId(),
-                            root -> root.join(InterfaceBoard_.dataSheetInterface, JoinType.LEFT).get(DataSheetInterface_.id)
+                            criteria.getReceptionOrderId(),
+                            root -> root.join(InterfaceBoard_.receptionOrder, JoinType.LEFT).get(ReceptionOrder_.id)
                         )
                     );
             }

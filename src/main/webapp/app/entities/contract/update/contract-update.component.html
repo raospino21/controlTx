@@ -34,33 +34,33 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="controTxApp.contract.numberInterfaceBoard" for="field_numberInterfaceBoard"
-            >Number Interface Board</label
+          <label class="form-label" jhiTranslate="controTxApp.contract.amountInterfaceBoard" for="field_amountInterfaceBoard"
+            >Amount Interface Board</label
           >
           <input
             type="number"
             class="form-control"
-            name="numberInterfaceBoard"
-            id="field_numberInterfaceBoard"
-            data-cy="numberInterfaceBoard"
-            formControlName="numberInterfaceBoard"
+            name="amountInterfaceBoard"
+            id="field_amountInterfaceBoard"
+            data-cy="amountInterfaceBoard"
+            formControlName="amountInterfaceBoard"
           />
           <div
             *ngIf="
-              editForm.get('numberInterfaceBoard')!.invalid &&
-              (editForm.get('numberInterfaceBoard')!.dirty || editForm.get('numberInterfaceBoard')!.touched)
+              editForm.get('amountInterfaceBoard')!.invalid &&
+              (editForm.get('amountInterfaceBoard')!.dirty || editForm.get('amountInterfaceBoard')!.touched)
             "
           >
             <small
               class="form-text text-danger"
-              *ngIf="editForm.get('numberInterfaceBoard')?.errors?.required"
+              *ngIf="editForm.get('amountInterfaceBoard')?.errors?.required"
               jhiTranslate="entity.validation.required"
             >
               Este campo es obligatorio.
             </small>
             <small
               class="form-text text-danger"
-              [hidden]="!editForm.get('numberInterfaceBoard')?.errors?.number"
+              [hidden]="!editForm.get('amountInterfaceBoard')?.errors?.number"
               jhiTranslate="entity.validation.number"
             >
               Este campo debe ser un número.

@@ -6,7 +6,7 @@ export interface IContract {
   id: number;
   reference?: string | null;
   type?: ContractType | null;
-  numberInterfaceBoard?: number | null;
+  amountInterfaceBoard?: number | null;
   startTime?: dayjs.Dayjs | null;
   finishTime?: dayjs.Dayjs | null;
   operator?: Pick<IOperator, 'id' | 'name'> | null;

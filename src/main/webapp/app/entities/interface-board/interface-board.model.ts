@@ -1,11 +1,11 @@
-import { IDataSheetInterface } from 'app/entities/data-sheet-interface/data-sheet-interface.model';
+import { IReceptionOrder } from 'app/entities/reception-order/reception-order.model';
 
 export interface IInterfaceBoard {
   id: number;
   ipAddress?: string | null;
   hash?: string | null;
   mac?: string | null;
-  dataSheetInterface?: Pick<IDataSheetInterface, 'id'> | null;
+  receptionOrder?: Pick<IReceptionOrder, 'id' | 'providerLotNumber'> | null;
 }
 
 export type NewInterfaceBoard = Omit<IInterfaceBoard, 'id'> & { id: null };

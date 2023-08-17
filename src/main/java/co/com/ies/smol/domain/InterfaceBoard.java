@@ -1,5 +1,6 @@
 package co.com.ies.smol.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -35,7 +36,8 @@ public class InterfaceBoard implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    private DataSheetInterface dataSheetInterface;
+    @JsonIgnoreProperties(value = { "purchaseOrder" }, allowSetters = true)
+    private ReceptionOrder receptionOrder;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -91,16 +93,16 @@ public class InterfaceBoard implements Serializable {
         this.mac = mac;
     }
 
-    public DataSheetInterface getDataSheetInterface() {
-        return this.dataSheetInterface;
+    public ReceptionOrder getReceptionOrder() {
+        return this.receptionOrder;
     }
 
-    public void setDataSheetInterface(DataSheetInterface dataSheetInterface) {
-        this.dataSheetInterface = dataSheetInterface;
+    public void setReceptionOrder(ReceptionOrder receptionOrder) {
+        this.receptionOrder = receptionOrder;
     }
 
-    public InterfaceBoard dataSheetInterface(DataSheetInterface dataSheetInterface) {
-        this.setDataSheetInterface(dataSheetInterface);
+    public InterfaceBoard receptionOrder(ReceptionOrder receptionOrder) {
+        this.setReceptionOrder(receptionOrder);
         return this;
     }
 
@@ -123,20 +125,14 @@ public class InterfaceBoard implements Serializable {
         return getClass().hashCode();
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
-        return (
-            "InterfaceBoard [id=" +
-            id +
-            ", ipAddress=" +
-            ipAddress +
-            ", hash=" +
-            hash +
-            ", mac=" +
-            mac +
-            ", dataSheetInterface=" +
-            dataSheetInterface +
-            "]"
-        );
+        return "InterfaceBoard{" +
+            "id=" + getId() +
+            ", ipAddress='" + getIpAddress() + "'" +
+            ", hash='" + getHash() + "'" +
+            ", mac='" + getMac() + "'" +
+            "}";
     }
 }

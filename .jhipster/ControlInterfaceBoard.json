@@ -19,7 +19,7 @@
       "fieldName": "state",
       "fieldType": "StatusInterfaceBoard",
       "fieldValidateRules": ["required"],
-      "fieldValues": "OPERATION,STOCK,IN_TRANSFER,REPAIR,WARRANTY,LOW"
+      "fieldValues": "OPERATION,STOCK,IN_TRANSFER,REPAIR,WARRANTY,DISCHARGED"
     },
     {
       "fieldName": "startTime",

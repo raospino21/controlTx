@@ -25,8 +25,13 @@ export const EntityNavbarItems = [
     translationKey: 'global.menu.entities.controlInterfaceBoard',
   },
   {
-    name: 'DataSheetInterface',
-    route: 'data-sheet-interface',
-    translationKey: 'global.menu.entities.dataSheetInterface',
+    name: 'PurchaseOrder',
+    route: 'purchase-order',
+    translationKey: 'global.menu.entities.purchaseOrder',
+  },
+  {
+    name: 'ReceptionOrder',
+    route: 'reception-order',
+    translationKey: 'global.menu.entities.receptionOrder',
   },
 ];
