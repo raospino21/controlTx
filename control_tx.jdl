@@ -39,7 +39,7 @@ application {
     withAdminUi true
   }
 
-  entities Brand, Operator, Contract, InterfaceBoard, ControlInterfaceBoard, DataSheetInterface 
+  entities Brand, Operator, Contract, InterfaceBoard, ControlInterfaceBoard, PurchaseOrder,  ReceptionOrder
 }
 
 entity Brand {
@@ -56,26 +56,32 @@ entity Operator {
 enum ContractType {
   SALE,
   RENT,
-  LOAD
+  LOAN
 }
 
 entity Contract {
   id Long 
   reference String 
   type ContractType required
-  numberInterfaceBoard Long required  
+  amountInterfaceBoard Long required  
   startTime	ZonedDateTime required
   finishTime ZonedDateTime 
 }
 
-entity DataSheetInterface {
+entity PurchaseOrder {
   id Long
-  colcircuitosLotNumber Long required
   orderAmount Long required
+  createAt ZonedDateTime required
+  iesOrderNumber  Long required
+}
+
+entity ReceptionOrder {
+  id Long
+  providerLotNumber Long required
   amountReceived Long required
   remission String maxlength(30) required
   entryDate ZonedDateTime required
-  iesOrderNumber  Long required
+  warrantyDate ZonedDateTime required  
 }
 
 entity InterfaceBoard {
@@ -96,7 +102,7 @@ enum StatusInterfaceBoard {
   IN_TRANSFER,
   REPAIR, 
   WARRANTY,
-  LOW
+  DISCHARGED
 }
 
 entity ControlInterfaceBoard { 
@@ -111,8 +117,9 @@ relationship ManyToOne {
   Operator{ brand(name) required} to Brand   
   ControlInterfaceBoard{ contract(reference) } to Contract  
   ControlInterfaceBoard{ interfaceBoard(mac) required } to InterfaceBoard 
-  InterfaceBoard{ dataSheetInterface required } to DataSheetInterface 
+  InterfaceBoard{ receptionOrder(providerLotNumber) required } to ReceptionOrder 
   Contract{ operator(name) required } to Operator 
+  ReceptionOrder{ purchaseOrder(iesOrderNumber) required } to PurchaseOrder 
 }
 
 service all with serviceImpl
