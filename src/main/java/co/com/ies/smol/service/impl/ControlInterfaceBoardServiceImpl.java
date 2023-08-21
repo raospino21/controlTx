@@ -111,4 +111,9 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
     public List<ControlInterfaceBoardDTO> getControlInterfaceBoardByReference(String reference) {
         return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getControlInterfaceBoardByReference(reference));
     }
+
+    @Override
+    public List<ControlInterfaceBoardDTO> getControlInterfaceBoardByContractId(Long contractId) {
+        return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getByContractId(contractId));
+    }
 }

@@ -204,23 +204,6 @@ class InterfaceBoardResourceIT {
             .andExpect(jsonPath("$.[*].mac").value(hasItem(DEFAULT_MAC)));
     }
 
-    @SuppressWarnings({ "unchecked" })
-    void getAllInterfaceBoardsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(interfaceBoardServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restInterfaceBoardMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(interfaceBoardServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllInterfaceBoardsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(interfaceBoardServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restInterfaceBoardMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(interfaceBoardRepositoryMock, times(1)).findAll(any(Pageable.class));
-    }
-
     @Test
     @Transactional
     void getInterfaceBoard() throws Exception {

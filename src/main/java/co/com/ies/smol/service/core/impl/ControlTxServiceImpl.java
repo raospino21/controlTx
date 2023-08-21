@@ -4,6 +4,7 @@ import co.com.ies.smol.domain.InterfaceBoard;
 import co.com.ies.smol.domain.Operator;
 import co.com.ies.smol.domain.core.ControlTxDomainImpl;
 import co.com.ies.smol.domain.core.error.ControlTxException;
+import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.domain.enumeration.Location;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.service.ContractService;
@@ -18,13 +19,9 @@ import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
-import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
-import co.com.ies.smol.web.rest.core.ControlTxController;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -141,14 +138,23 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
             InterfaceBoardDTO interfaceBoardDTO = validateExistingInterfaceBoard(oInterfaceBoardDTO);
             InterfaceBoard interfaceBoard = interfaceBoardService.toEntity(interfaceBoardDTO);
 
+            ContractType contractType = assignBoardDTO.getContractType();
+            Optional<ContractDTO> oContract = contractService.getContractByReferenceAndType(reference, contractType);
+            ContractDTO contract = validateExistingContract(oContract);
+
+            Long contractedBoard = contract.getAmountInterfaceBoard();
+            List<ControlInterfaceBoardDTO> assigenedControlBoardList = controlInterfaceBoardService.getControlInterfaceBoardByContractId(
+                contract.getId()
+            );
+            Long assigenedControlBoard = Long.valueOf(assigenedControlBoardList.size());
+            if (contractedBoard.equals(assigenedControlBoard)) {
+                throw new ControlTxException("No es posible asignar una nueva tarjeta a este contrato");
+            }
             Optional<ControlInterfaceBoardDTO> oControlInterfaceBoardDTO = controlInterfaceBoardService.getControlInterfaceBoardByInterfaceBoard(
                 interfaceBoard
             );
 
             ControlInterfaceBoardDTO controlInterfaceBoardDTO = validateExistingBoardControl(oControlInterfaceBoardDTO);
-
-            Optional<ContractDTO> oContract = contractService.getContractByReferenceAndType(reference, assignBoardDTO.getContractType());
-            ContractDTO contract = validateExistingContract(oContract);
 
             controlInterfaceBoardDTO.setFinishTime(ZonedDateTime.now());
             controlInterfaceBoardService.save(controlInterfaceBoardDTO);
