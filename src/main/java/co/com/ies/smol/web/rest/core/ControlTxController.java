@@ -35,7 +35,7 @@ public class ControlTxController {
 
     @PostMapping("/board/register")
     public ResponseEntity<String> createBoardRegister(@Valid @RequestBody BoardRegisterDTO boardRegisterDTO, Errors errors)
-        throws URISyntaxException {
+        throws ControlTxException {
         log.debug("REST request to save BoardRegisterDTO : {}", boardRegisterDTO);
 
         FieldError fieldError = errors.getFieldError();

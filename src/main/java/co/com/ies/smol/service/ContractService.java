@@ -1,6 +1,7 @@
 package co.com.ies.smol.service;
 
 import co.com.ies.smol.domain.Operator;
+import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.service.dto.ContractDTO;
 import java.util.List;
 import java.util.Optional;
@@ -67,6 +68,8 @@ public interface ContractService {
     void delete(Long id);
 
     List<ContractDTO> getContractByReference(String reference);
+
+    Optional<ContractDTO> getContractByReferenceAndType(String reference, ContractType type);
 
     List<ContractDTO> findAllContractByOpeatorIn(List<Operator> operators);
 

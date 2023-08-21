@@ -81,4 +81,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         log.debug("Request to delete PurchaseOrder : {}", id);
         purchaseOrderRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<PurchaseOrderDTO> getPurchaseOrderByIesOrderNumber(Long iesOrderNumber) {
+        return purchaseOrderRepository.getByIesOrderNumber(iesOrderNumber).map(purchaseOrderMapper::toDto);
+    }
 }

@@ -10,11 +10,13 @@ import co.com.ies.smol.service.ContractService;
 import co.com.ies.smol.service.ControlInterfaceBoardService;
 import co.com.ies.smol.service.InterfaceBoardService;
 import co.com.ies.smol.service.OperatorService;
+import co.com.ies.smol.service.PurchaseOrderService;
 import co.com.ies.smol.service.ReceptionOrderService;
 import co.com.ies.smol.service.core.ControlTxService;
 import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
+import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
@@ -41,26 +43,28 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     private final ControlInterfaceBoardService controlInterfaceBoardService;
     private final ContractService contractService;
     private final OperatorService operatorService;
+    private final PurchaseOrderService purchaseOrderService;
 
     public ControlTxServiceImpl(
         ReceptionOrderService receptionOrderService,
         InterfaceBoardService interfaceBoardService,
         ControlInterfaceBoardService controlInterfaceBoardService,
         ContractService contractService,
-        OperatorService operatorService
+        OperatorService operatorService,
+        PurchaseOrderService purchaseOrderService
     ) {
         this.receptionOrderService = receptionOrderService;
         this.interfaceBoardService = interfaceBoardService;
         this.controlInterfaceBoardService = controlInterfaceBoardService;
         this.contractService = contractService;
         this.operatorService = operatorService;
+        this.purchaseOrderService = purchaseOrderService;
     }
 
     @Override
-    public void createBoardRegister(BoardRegisterDTO boardRegisterDTO) {
+    public void createBoardRegister(BoardRegisterDTO boardRegisterDTO) throws ControlTxException {
         List<String> macs = boardRegisterDTO.getMacs();
-        ReceptionOrderDTO receptionOrderDTO = createDataSheetInterface(boardRegisterDTO);
-        receptionOrderDTO = receptionOrderService.save(receptionOrderDTO);
+        ReceptionOrderDTO receptionOrderDTO = createReceptionOrder(boardRegisterDTO);
 
         for (String mac : macs) {
             InterfaceBoardDTO interfaceBoardDTO = createInterfaceBoard(mac, receptionOrderDTO);
@@ -83,24 +87,28 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         }
     }
 
-    //FIXME: cambio el objeto
-    protected ReceptionOrderDTO createDataSheetInterface(BoardRegisterDTO boardRegisterDTO) {
+    protected ReceptionOrderDTO createReceptionOrder(BoardRegisterDTO boardRegisterDTO) throws ControlTxException {
         ReceptionOrderDTO receptionOrderDTO = new ReceptionOrderDTO();
         receptionOrderDTO.setProviderLotNumber(boardRegisterDTO.getColcircuitosLotNumber());
         receptionOrderDTO.setAmountReceived(boardRegisterDTO.getAmountReceived());
         receptionOrderDTO.setRemission(boardRegisterDTO.getRemission());
-        receptionOrderDTO.setEntryDate(ZonedDateTime.now());
-        //receptionOrderDTO.setIesOrderNumber(boardRegisterDTO.getIesOrderNumber());
+        ZonedDateTime currentTime = ZonedDateTime.now();
+        receptionOrderDTO.setEntryDate(currentTime);
+        receptionOrderDTO.setWarrantyDate(currentTime.plusYears(1));
+        Long purchaseOrder = boardRegisterDTO.getIesOrderNumber();
+        Optional<PurchaseOrderDTO> oPurchaseOrderDTO = purchaseOrderService.getPurchaseOrderByIesOrderNumber(purchaseOrder);
+        if (oPurchaseOrderDTO.isEmpty()) {
+            throw new ControlTxException("Orden de compra no encontrada " + purchaseOrder);
+        }
+        receptionOrderDTO.setPurchaseOrder(oPurchaseOrderDTO.get());
 
-        return receptionOrderDTO;
+        return receptionOrderService.save(receptionOrderDTO);
     }
 
-    //FIXME: cambio el objeto
-
-    protected InterfaceBoardDTO createInterfaceBoard(String mac, ReceptionOrderDTO receptionOrderDTO) {
+    protected InterfaceBoardDTO createInterfaceBoard(String mac, ReceptionOrderDTO receptionOrder) {
         InterfaceBoardDTO interfaceBoardDTO = new InterfaceBoardDTO();
         interfaceBoardDTO.setMac(mac);
-        interfaceBoardDTO.setReceptionOrder(new ReceptionOrderDTO());
+        interfaceBoardDTO.setReceptionOrder(receptionOrder);
 
         return interfaceBoardDTO;
     }
@@ -139,8 +147,8 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
 
             ControlInterfaceBoardDTO controlInterfaceBoardDTO = validateExistingBoardControl(oControlInterfaceBoardDTO);
 
-            Optional<ContractDTO> oContract = Optional.empty(); //contractService.getContractByReference(reference);
-            ContractDTO contract = new ContractDTO(); // validateExistingContract(oContract);
+            Optional<ContractDTO> oContract = contractService.getContractByReferenceAndType(reference, assignBoardDTO.getContractType());
+            ContractDTO contract = validateExistingContract(oContract);
 
             controlInterfaceBoardDTO.setFinishTime(ZonedDateTime.now());
             controlInterfaceBoardService.save(controlInterfaceBoardDTO);
@@ -187,7 +195,6 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     @Override
     public Long getCountInterfaceBoardByContracted(String reference) throws ControlTxException {
         List<ContractDTO> contractList = contractService.getContractByReference(reference);
-        validateExistingContract(contractList);
 
         return contractList.stream().mapToLong(ContractDTO::getAmountInterfaceBoard).sum();
     }

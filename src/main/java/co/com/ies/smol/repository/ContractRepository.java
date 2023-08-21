@@ -2,7 +2,7 @@ package co.com.ies.smol.repository;
 
 import co.com.ies.smol.domain.Contract;
 import co.com.ies.smol.domain.Operator;
-import co.com.ies.smol.service.dto.OperatorDTO;
+import co.com.ies.smol.domain.enumeration.ContractType;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -45,4 +45,6 @@ public interface ContractRepository extends JpaRepository<Contract, Long>, JpaSp
     List<Contract> findAllByOperatorInAndFinishTimeIsNull(List<Operator> operators);
 
     Optional<Contract> findByOperator(Operator operator);
+
+    Optional<Contract> getByReferenceAndType(String reference, ContractType type);
 }

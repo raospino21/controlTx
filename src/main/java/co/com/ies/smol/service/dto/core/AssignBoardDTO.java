@@ -1,5 +1,6 @@
 package co.com.ies.smol.service.dto.core;
 
+import co.com.ies.smol.domain.enumeration.ContractType;
 import java.io.Serializable;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
@@ -14,6 +15,9 @@ public class AssignBoardDTO implements Serializable {
     @NotNull
     @NotBlank
     private String reference;
+
+    @NotNull
+    ContractType contractType;
 
     public String getReference() {
         return reference;
@@ -31,8 +35,16 @@ public class AssignBoardDTO implements Serializable {
         this.macs = macs;
     }
 
+    public ContractType getContractType() {
+        return contractType;
+    }
+
+    public void setContractType(ContractType contractType) {
+        this.contractType = contractType;
+    }
+
     @Override
     public String toString() {
-        return "AssignBoardDTO [macs=" + macs + ", reference=" + reference + "]";
+        return "AssignBoardDTO [macs=" + macs + ", reference=" + reference + ", contractType=" + contractType + "]";
     }
 }

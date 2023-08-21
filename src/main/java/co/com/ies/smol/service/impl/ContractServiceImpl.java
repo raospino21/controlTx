@@ -2,6 +2,7 @@ package co.com.ies.smol.service.impl;
 
 import co.com.ies.smol.domain.Contract;
 import co.com.ies.smol.domain.Operator;
+import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.repository.ContractRepository;
 import co.com.ies.smol.service.ContractService;
 import co.com.ies.smol.service.dto.ContractDTO;
@@ -102,5 +103,10 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Optional<ContractDTO> findContractByOperator(Operator operator) {
         return contractRepository.findByOperator(operator).map(contractMapper::toDto);
+    }
+
+    @Override
+    public Optional<ContractDTO> getContractByReferenceAndType(String reference, ContractType type) {
+        return contractRepository.getByReferenceAndType(reference, type).map(contractMapper::toDto);
     }
 }

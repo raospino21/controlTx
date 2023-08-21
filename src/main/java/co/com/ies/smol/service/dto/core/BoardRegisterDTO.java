@@ -13,9 +13,6 @@ public class BoardRegisterDTO implements Serializable {
     private Long colcircuitosLotNumber;
 
     @NotNull
-    private Long orderAmount;
-
-    @NotNull
     private Long amountReceived;
 
     @NotNull
@@ -34,14 +31,6 @@ public class BoardRegisterDTO implements Serializable {
 
     public void setColcircuitosLotNumber(Long colcircuitosLotNumber) {
         this.colcircuitosLotNumber = colcircuitosLotNumber;
-    }
-
-    public Long getOrderAmount() {
-        return orderAmount;
-    }
-
-    public void setOrderAmount(Long orderAmount) {
-        this.orderAmount = orderAmount;
     }
 
     public Long getAmountReceived() {
@@ -83,7 +72,6 @@ public class BoardRegisterDTO implements Serializable {
         BoardRegisterDTO that = (BoardRegisterDTO) o;
         return (
             Objects.equals(colcircuitosLotNumber, that.colcircuitosLotNumber) &&
-            Objects.equals(orderAmount, that.orderAmount) &&
             Objects.equals(amountReceived, that.amountReceived) &&
             Objects.equals(remission, that.remission) &&
             Objects.equals(iesOrderNumber, that.iesOrderNumber) &&
@@ -93,7 +81,7 @@ public class BoardRegisterDTO implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(colcircuitosLotNumber, orderAmount, amountReceived, remission, iesOrderNumber, macs);
+        return Objects.hash(colcircuitosLotNumber, amountReceived, remission, iesOrderNumber, macs);
     }
 
     @Override
@@ -101,8 +89,6 @@ public class BoardRegisterDTO implements Serializable {
         return (
             "BoardRegisterDTO [colcircuitosLotNumber=" +
             colcircuitosLotNumber +
-            ", orderAmount=" +
-            orderAmount +
             ", amountReceived=" +
             amountReceived +
             ", remission=" +

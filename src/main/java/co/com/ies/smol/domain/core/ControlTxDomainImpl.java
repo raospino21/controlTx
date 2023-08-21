@@ -28,9 +28,10 @@ public abstract class ControlTxDomainImpl {
         return oInterfaceBoardDTO.get();
     }
 
-    public void validateExistingContract(List<ContractDTO> contractList) throws ControlTxException {
-        if (contractList.isEmpty()) {
+    public ContractDTO validateExistingContract(Optional<ContractDTO> oContract) throws ControlTxException {
+        if (oContract.isEmpty()) {
             throw new ControlTxException(ControlTxException.CONTRACT_NOT_FOUND);
         }
+        return oContract.get();
     }
 }

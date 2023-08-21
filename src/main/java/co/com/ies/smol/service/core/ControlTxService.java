@@ -7,7 +7,7 @@ import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import java.util.List;
 
 public interface ControlTxService {
-    void createBoardRegister(BoardRegisterDTO boardRegisterDTO);
+    void createBoardRegister(BoardRegisterDTO boardRegisterDTO) throws ControlTxException;
 
     void assignInterfaceBoard(AssignBoardDTO assignBoardDTO) throws ControlTxException;
 
