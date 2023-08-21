@@ -23,6 +23,7 @@ import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.slf4j.Logger;
@@ -190,10 +191,17 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     }
 
     @Override
-    public List<InterfaceBoardDTO> getInterfaceBoardAssignedByContract(String reference) throws ControlTxException {
-        List<ControlInterfaceBoardDTO> controlInterfaceBoardList = controlInterfaceBoardService.getControlInterfaceBoardByReference(
-            reference
-        );
+    public List<InterfaceBoardDTO> getInterfaceBoardAssignedByContractAndType(String reference, ContractType contractType)
+        throws ControlTxException {
+        List<ControlInterfaceBoardDTO> controlInterfaceBoardList;
+
+        if (Objects.isNull(contractType)) {
+            controlInterfaceBoardList = controlInterfaceBoardService.getControlInterfaceBoardByReference(reference);
+        } else {
+            Optional<ContractDTO> oContract = contractService.getContractByReferenceAndType(reference, contractType);
+            ContractDTO contract = validateExistingContract(oContract);
+            controlInterfaceBoardList = controlInterfaceBoardService.getControlInterfaceBoardByContractId(contract.getId());
+        }
 
         return controlInterfaceBoardList.stream().map(ControlInterfaceBoardDTO::getInterfaceBoard).toList();
     }

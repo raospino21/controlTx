@@ -1,11 +1,11 @@
 package co.com.ies.smol.web.rest.core;
 
 import co.com.ies.smol.domain.core.error.ControlTxException;
+import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.service.core.ControlTxService;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import javax.validation.Valid;
@@ -92,12 +92,15 @@ public class ControlTxController {
     /**
      * Entrega las tarjetas que está asociadas al contrato del operador
      */
-    @GetMapping("/interface-boards/assigned-by-operator/{reference}")
-    public ResponseEntity<List<InterfaceBoardDTO>> getInterfaceBoardContratedByOperator(@PathVariable String reference)
-        throws ControlTxException {
-        log.debug("REST request getInterfaceBoardByOperator reference : {}", reference);
+    //FIXME cambiar a un requestBody
+    @GetMapping("/interface-boards/assigned-by-operator/{reference}/{contractType}")
+    public ResponseEntity<List<InterfaceBoardDTO>> getInterfaceBoardContratedByOperator(
+        @PathVariable String reference,
+        @PathVariable ContractType contractType
+    ) throws ControlTxException {
+        log.debug("REST request getInterfaceBoardByOperator reference : {} - contractType {}", reference, contractType);
 
-        return ResponseEntity.ok(controlTxService.getInterfaceBoardAssignedByContract(reference));
+        return ResponseEntity.ok(controlTxService.getInterfaceBoardAssignedByContractAndType(reference, contractType));
     }
 
     /**
