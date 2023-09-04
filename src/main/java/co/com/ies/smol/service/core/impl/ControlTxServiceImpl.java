@@ -95,10 +95,18 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         receptionOrderDTO.setWarrantyDate(currentTime.plusYears(1));
         Long purchaseOrder = boardRegisterDTO.getIesOrderNumber();
         Optional<PurchaseOrderDTO> oPurchaseOrderDTO = purchaseOrderService.getPurchaseOrderByIesOrderNumber(purchaseOrder);
+
+        log.debug("***********************REST request to save oPurchaseOrderDTO : {}", oPurchaseOrderDTO);
         if (oPurchaseOrderDTO.isEmpty()) {
             throw new ControlTxException("Orden de compra no encontrada " + purchaseOrder);
         }
         receptionOrderDTO.setPurchaseOrder(oPurchaseOrderDTO.get());
+
+        if (!(oPurchaseOrderDTO.get().getOrderAmount() >= boardRegisterDTO.getAmountReceived())) {
+            throw new ControlTxException(
+                "el numero de tarjetas registrada en la orden de compra debe ser mayor a la cantidad de tarjetas recibidas"
+            );
+        }
 
         return receptionOrderService.save(receptionOrderDTO);
     }
