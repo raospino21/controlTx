@@ -87,7 +87,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
 
     protected ReceptionOrderDTO createReceptionOrder(BoardRegisterDTO boardRegisterDTO) throws ControlTxException {
         ReceptionOrderDTO receptionOrderDTO = new ReceptionOrderDTO();
-        receptionOrderDTO.setProviderLotNumber(boardRegisterDTO.getColcircuitosLotNumber());
+        receptionOrderDTO.setProviderLotNumber(boardRegisterDTO.getProviderLotNumber());
         receptionOrderDTO.setAmountReceived(boardRegisterDTO.getAmountReceived());
         receptionOrderDTO.setRemission(boardRegisterDTO.getRemission());
         ZonedDateTime currentTime = ZonedDateTime.now();

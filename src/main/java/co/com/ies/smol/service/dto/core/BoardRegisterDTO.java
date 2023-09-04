@@ -2,7 +2,6 @@ package co.com.ies.smol.service.dto.core;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -10,7 +9,7 @@ import javax.validation.constraints.Size;
 public class BoardRegisterDTO implements Serializable {
 
     @NotNull
-    private Long colcircuitosLotNumber;
+    private Long providerLotNumber;
 
     @NotNull
     private Long amountReceived;
@@ -25,12 +24,16 @@ public class BoardRegisterDTO implements Serializable {
     @NotNull
     private List<String> macs;
 
-    public Long getColcircuitosLotNumber() {
-        return colcircuitosLotNumber;
+    public Long getProviderLotNumber() {
+        return providerLotNumber;
     }
 
-    public void setColcircuitosLotNumber(Long colcircuitosLotNumber) {
-        this.colcircuitosLotNumber = colcircuitosLotNumber;
+    public void setProviderLotNumber(Long providerLotNumber) {
+        this.providerLotNumber = providerLotNumber;
+    }
+
+    public void setMacs(List<String> macs) {
+        this.macs = macs;
     }
 
     public Long getAmountReceived() {
@@ -66,29 +69,10 @@ public class BoardRegisterDTO implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BoardRegisterDTO that = (BoardRegisterDTO) o;
-        return (
-            Objects.equals(colcircuitosLotNumber, that.colcircuitosLotNumber) &&
-            Objects.equals(amountReceived, that.amountReceived) &&
-            Objects.equals(remission, that.remission) &&
-            Objects.equals(iesOrderNumber, that.iesOrderNumber) &&
-            Objects.equals(macs, that.macs)
-        );
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(colcircuitosLotNumber, amountReceived, remission, iesOrderNumber, macs);
-    }
-
-    @Override
     public String toString() {
         return (
-            "BoardRegisterDTO [colcircuitosLotNumber=" +
-            colcircuitosLotNumber +
+            "BoardRegisterDTO [providerLotNumber=" +
+            providerLotNumber +
             ", amountReceived=" +
             amountReceived +
             ", remission=" +
