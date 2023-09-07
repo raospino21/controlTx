@@ -101,15 +101,22 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
 
         if (!existingInterfaces.isEmpty()) {
             Long trueAmount = receptionOrderDTO.getAmountReceived() - existingInterfaces.size();
-            receptionOrderDTO.setAmountReceived(trueAmount);
-            updateReceptionOrder(receptionOrderDTO);
+            if (trueAmount == 0) {
+                deleteReceptionOrderById(receptionOrderDTO.getId());
+            } else {
+                receptionOrderDTO.setAmountReceived(trueAmount);
+                updateReceptionOrder(receptionOrderDTO);
+            }
         }
 
         return buildResponse(existingInterfaces);
     }
 
-    protected ReceptionOrderDTO createReceptionOrder(BoardRegisterDTO boardRegisterDTO, PurchaseOrderDTO purchaseOrderDTO)
-        throws ControlTxException {
+    private void deleteReceptionOrderById(Long receptionOrderId) {
+        receptionOrderService.delete(receptionOrderId);
+    }
+
+    protected ReceptionOrderDTO createReceptionOrder(BoardRegisterDTO boardRegisterDTO, PurchaseOrderDTO purchaseOrderDTO) {
         ReceptionOrderDTO receptionOrderDTO = new ReceptionOrderDTO();
         receptionOrderDTO.setProviderLotNumber(boardRegisterDTO.getProviderLotNumber());
         receptionOrderDTO.setAmountReceived(boardRegisterDTO.getAmountReceived());
