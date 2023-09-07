@@ -48,7 +48,7 @@ public interface ControlInterfaceBoardRepository
 
     @Query(
         nativeQuery = true,
-        value = "SELECT * FROM CONTROL_INTERFACE_BOARD WHERE id IN (SELECT id FROM CONTROL_INTERFACE_BOARD WHERE CONTRACT_ID is not null and finish_time is null and CONTRACT_ID in (1101,1401)\n" + //
+        value = "SELECT * FROM CONTROL_INTERFACE_BOARD WHERE id IN (SELECT id FROM CONTROL_INTERFACE_BOARD WHERE CONTRACT_ID is not null and finish_time is null and CONTRACT_ID in (?1)\n" + //
         "GROUP BY CONTRACT_ID, id)"
     )
     List<ControlInterfaceBoard> getControlInterfaceBoardByContractIds(List<Long> contractIds);

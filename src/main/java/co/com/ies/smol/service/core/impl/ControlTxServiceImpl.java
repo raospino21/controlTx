@@ -245,4 +245,21 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
 
         return contractList.stream().mapToLong(ContractDTO::getAmountInterfaceBoard).sum();
     }
+
+    @Override
+    public List<InterfaceBoardDTO> getInterfaceBoardAssignedByContract(String reference) throws ControlTxException {
+        List<ControlInterfaceBoardDTO> controlInterfaceBoardList = controlInterfaceBoardService.getControlInterfaceBoardByReference(
+            reference
+        );
+
+        return controlInterfaceBoardList.stream().map(ControlInterfaceBoardDTO::getInterfaceBoard).toList();
+    }
+
+    @Override
+    public Long getCountInterfaceBoardByContractedAndType(String reference, ContractType contractType) throws ControlTxException {
+        Optional<ContractDTO> oContract = contractService.getContractByReferenceAndType(reference, contractType);
+        ContractDTO contract = validateExistingContract(oContract);
+
+        return contract.getAmountInterfaceBoard();
+    }
 }

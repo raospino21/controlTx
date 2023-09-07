@@ -19,5 +19,8 @@ public interface ControlTxService {
     List<InterfaceBoardDTO> getInterfaceBoardAssignedByContractAndType(String reference, ContractType contractType)
         throws ControlTxException;
 
+    List<InterfaceBoardDTO> getInterfaceBoardAssignedByContract(String reference) throws ControlTxException;
     Long getCountInterfaceBoardByContracted(String reference) throws ControlTxException;
+
+    Long getCountInterfaceBoardByContractedAndType(String reference, ContractType contractType) throws ControlTxException;
 }

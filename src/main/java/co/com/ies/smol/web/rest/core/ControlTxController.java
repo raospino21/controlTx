@@ -88,17 +88,31 @@ public class ControlTxController {
     }
 
     /**
-     * Entrega las tarjetas que está asociadas al contrato del operador
+     * Entrega las tarjetas que está asociadas a un operador según el tipo de contrato
      */
-    //FIXME cambiar a un requestBody
     @GetMapping("/interface-boards/assigned-by-operator/{reference}/{contractType}")
-    public ResponseEntity<List<InterfaceBoardDTO>> getInterfaceBoardContratedByOperator(
+    public ResponseEntity<List<InterfaceBoardDTO>> getInterfaceBoardContratedByOperatorAndContractType(
         @PathVariable String reference,
         @PathVariable ContractType contractType
     ) throws ControlTxException {
-        log.debug("REST request getInterfaceBoardByOperator reference : {} - contractType {}", reference, contractType);
+        log.debug(
+            "REST request getInterfaceBoardContratedByOperatorAndContractType reference : {} - contractType {}",
+            reference,
+            contractType
+        );
 
         return ResponseEntity.ok(controlTxService.getInterfaceBoardAssignedByContractAndType(reference, contractType));
+    }
+
+    /**
+     * Entrega las tarjetas que está asociadas a un operador sin importar el tipo de contrato
+     */
+    @GetMapping("/interface-boards/assigned-by-operator/{reference}")
+    public ResponseEntity<List<InterfaceBoardDTO>> getInterfaceBoardContratedByOperator(@PathVariable String reference)
+        throws ControlTxException {
+        log.debug("REST request getInterfaceBoardByOperator reference : {} ", reference);
+
+        return ResponseEntity.ok(controlTxService.getInterfaceBoardAssignedByContract(reference));
     }
 
     /**
@@ -109,5 +123,18 @@ public class ControlTxController {
         log.debug("REST request getCountInterfaceBoardByContract reference : {}", reference);
 
         return ResponseEntity.ok(controlTxService.getCountInterfaceBoardByContracted(reference));
+    }
+
+    /**
+     * Entrega la cantdad de tarjetas que fueron contratadas egún el tipo de contrato
+     */
+    @GetMapping("/count/interface-boards/contracted/{reference}/{contractType}")
+    public ResponseEntity<Long> getCountInterfaceBoardByContractedAndType(
+        @PathVariable String reference,
+        @PathVariable ContractType contractType
+    ) throws ControlTxException {
+        log.debug("REST request getCountInterfaceBoardByContractedAndType reference : {}, contractType {}", reference, contractType);
+
+        return ResponseEntity.ok(controlTxService.getCountInterfaceBoardByContractedAndType(reference, contractType));
     }
 }
