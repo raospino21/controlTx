@@ -45,9 +45,7 @@ public class ControlTxController {
             return ResponseEntity.ok(errorMsg);
         }
 
-        controlTxService.createBoardRegister(boardRegisterDTO);
-
-        return ResponseEntity.ok("ok process succesfully!!");
+        return ResponseEntity.ok(controlTxService.createBoardRegister(boardRegisterDTO));
     }
 
     @PostMapping("/assign/board")

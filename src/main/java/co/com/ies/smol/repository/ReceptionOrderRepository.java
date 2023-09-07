@@ -39,4 +39,9 @@ public interface ReceptionOrderRepository extends JpaRepository<ReceptionOrder, 
         "select receptionOrder from ReceptionOrder receptionOrder left join fetch receptionOrder.purchaseOrder where receptionOrder.id =:id"
     )
     Optional<ReceptionOrder> findOneWithToOneRelationships(@Param("id") Long id);
+
+    @Query(
+        "select receptionOrder from ReceptionOrder receptionOrder left join fetch receptionOrder.purchaseOrder where receptionOrder.purchaseOrder.iesOrderNumber =:iesOrderNumber"
+    )
+    List<ReceptionOrder> getByIesOrderNumber(Long iesOrderNumber);
 }

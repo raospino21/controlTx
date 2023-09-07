@@ -53,5 +53,14 @@
             <column name="reception_order_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
+        <addUniqueConstraint tableName="event_device" columnNames="device_id, transmitted_at"
+                             constraintName="event_device_transmitted_un"/>
     </changeSet>
+
+    <changeSet id="20210927194820-2" author="jhipster">
+        <addUniqueConstraint tableName="interface_board" columnNames="mac"
+                             constraintName="mac_unique"/>
+    </changeSet>
+
+
 </databaseChangeLog>

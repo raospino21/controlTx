@@ -5,6 +5,7 @@ import co.com.ies.smol.repository.ReceptionOrderRepository;
 import co.com.ies.smol.service.ReceptionOrderService;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.mapper.ReceptionOrderMapper;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,5 +85,10 @@ public class ReceptionOrderServiceImpl implements ReceptionOrderService {
     public void delete(Long id) {
         log.debug("Request to delete ReceptionOrder : {}", id);
         receptionOrderRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ReceptionOrderDTO> getReceptionOrderByIesOrderNumber(Long purchaseOrder) {
+        return receptionOrderMapper.toDto(receptionOrderRepository.getByIesOrderNumber(purchaseOrder));
     }
 }

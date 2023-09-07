@@ -22,6 +22,7 @@ import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -60,13 +61,34 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     }
 
     @Override
-    public void createBoardRegister(BoardRegisterDTO boardRegisterDTO) throws ControlTxException {
+    public String createBoardRegister(BoardRegisterDTO boardRegisterDTO) throws ControlTxException {
+        Long purchaseOrder = boardRegisterDTO.getIesOrderNumber();
+        Optional<PurchaseOrderDTO> oPurchaseOrderDTO = purchaseOrderService.getPurchaseOrderByIesOrderNumber(purchaseOrder);
+        PurchaseOrderDTO purchaseOrderDTO = validateExistingPurchaseOrderAndGet(oPurchaseOrderDTO);
+
+        List<ReceptionOrderDTO> receptionOrderList = receptionOrderService.getReceptionOrderByIesOrderNumber(purchaseOrder);
+
+        Long boardReceived = receptionOrderList.stream().mapToLong(ReceptionOrderDTO::getAmountReceived).sum();
+        Long boardToRegister = boardRegisterDTO.getAmountReceived();
+
+        Long boardHypotheticalTotal = boardReceived + boardToRegister;
+        Long boardOrderIes = purchaseOrderDTO.getOrderAmount();
+        validateAvailability(boardOrderIes, boardHypotheticalTotal);
+
         List<String> macs = boardRegisterDTO.getMacs();
-        ReceptionOrderDTO receptionOrderDTO = createReceptionOrder(boardRegisterDTO);
+        validateIncomingBoardSize(boardToRegister, Long.valueOf(macs.size()));
+        ReceptionOrderDTO receptionOrderDTO = createReceptionOrder(boardRegisterDTO, purchaseOrderDTO);
+
+        List<InterfaceBoardDTO> existingInterfaces = new ArrayList<>();
 
         for (String mac : macs) {
+            Optional<InterfaceBoardDTO> oInterfaceBoardDTO = interfaceBoardService.getInterfaceBoardByMac(mac);
+
+            if (oInterfaceBoardDTO.isPresent()) {
+                existingInterfaces.add(oInterfaceBoardDTO.get());
+                continue;
+            }
             InterfaceBoardDTO interfaceBoardDTO = createInterfaceBoard(mac, receptionOrderDTO);
-            interfaceBoardDTO = interfaceBoardService.save(interfaceBoardDTO);
 
             ControlInterfaceBoardDTO controlInterfaceBoardDTO = createControlInterfaceBoard(
                 Location.IES,
@@ -74,18 +96,20 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
                 interfaceBoardDTO,
                 null
             );
-            controlInterfaceBoardDTO = controlInterfaceBoardService.save(controlInterfaceBoardDTO);
-
-            log.info(
-                "receptionOrderDTO ID {}  - interfaceBoardDTO ID {} - controlInterfaceBoardDTO ID {} ",
-                receptionOrderDTO.getId(),
-                interfaceBoardDTO.getId(),
-                controlInterfaceBoardDTO.getId()
-            );
+            controlInterfaceBoardService.save(controlInterfaceBoardDTO);
         }
+
+        if (!existingInterfaces.isEmpty()) {
+            Long trueAmount = receptionOrderDTO.getAmountReceived() - existingInterfaces.size();
+            receptionOrderDTO.setAmountReceived(trueAmount);
+            updateReceptionOrder(receptionOrderDTO);
+        }
+
+        return buildResponse(existingInterfaces);
     }
 
-    protected ReceptionOrderDTO createReceptionOrder(BoardRegisterDTO boardRegisterDTO) throws ControlTxException {
+    protected ReceptionOrderDTO createReceptionOrder(BoardRegisterDTO boardRegisterDTO, PurchaseOrderDTO purchaseOrderDTO)
+        throws ControlTxException {
         ReceptionOrderDTO receptionOrderDTO = new ReceptionOrderDTO();
         receptionOrderDTO.setProviderLotNumber(boardRegisterDTO.getProviderLotNumber());
         receptionOrderDTO.setAmountReceived(boardRegisterDTO.getAmountReceived());
@@ -93,21 +117,12 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         ZonedDateTime currentTime = ZonedDateTime.now();
         receptionOrderDTO.setEntryDate(currentTime);
         receptionOrderDTO.setWarrantyDate(currentTime.plusYears(1));
-        Long purchaseOrder = boardRegisterDTO.getIesOrderNumber();
-        Optional<PurchaseOrderDTO> oPurchaseOrderDTO = purchaseOrderService.getPurchaseOrderByIesOrderNumber(purchaseOrder);
+        receptionOrderDTO.setPurchaseOrder(purchaseOrderDTO);
 
-        log.debug("***********************REST request to save oPurchaseOrderDTO : {}", oPurchaseOrderDTO);
-        if (oPurchaseOrderDTO.isEmpty()) {
-            throw new ControlTxException("Orden de compra no encontrada " + purchaseOrder);
-        }
-        receptionOrderDTO.setPurchaseOrder(oPurchaseOrderDTO.get());
+        return receptionOrderService.save(receptionOrderDTO);
+    }
 
-        if (!(oPurchaseOrderDTO.get().getOrderAmount() >= boardRegisterDTO.getAmountReceived())) {
-            throw new ControlTxException(
-                "el numero de tarjetas registrada en la orden de compra debe ser mayor a la cantidad de tarjetas recibidas"
-            );
-        }
-
+    protected ReceptionOrderDTO updateReceptionOrder(ReceptionOrderDTO receptionOrderDTO) {
         return receptionOrderService.save(receptionOrderDTO);
     }
 
@@ -115,6 +130,8 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         InterfaceBoardDTO interfaceBoardDTO = new InterfaceBoardDTO();
         interfaceBoardDTO.setMac(mac);
         interfaceBoardDTO.setReceptionOrder(receptionOrder);
+
+        interfaceBoardDTO = interfaceBoardService.save(interfaceBoardDTO);
 
         return interfaceBoardDTO;
     }
@@ -156,6 +173,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
                 contract.getId()
             );
             Long assigenedControlBoard = Long.valueOf(assigenedControlBoardList.size());
+
             if (contractedBoard.equals(assigenedControlBoard)) {
                 throw new ControlTxException("No es posible asignar una nueva tarjeta a este contrato");
             }
