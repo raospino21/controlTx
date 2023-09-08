@@ -73,4 +73,6 @@ public interface ControlInterfaceBoardService {
     List<ControlInterfaceBoardDTO> getControlInterfaceBoardByReference(String reference);
 
     List<ControlInterfaceBoardDTO> getControlInterfaceBoardByContractId(Long contractId);
+
+    List<ControlInterfaceBoardDTO> getInfoBoardsAvailable();
 }

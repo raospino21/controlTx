@@ -294,4 +294,9 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
 
         return new BoardAssociationResponseDTO(contractSubList);
     }
+
+    @Override
+    public List<InterfaceBoardDTO> getInfoBoardsAvailable() {
+        return controlInterfaceBoardService.getInfoBoardsAvailable().stream().map(ControlInterfaceBoardDTO::getInterfaceBoard).toList();
+    }
 }

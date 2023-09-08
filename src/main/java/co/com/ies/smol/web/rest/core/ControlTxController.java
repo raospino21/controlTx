@@ -148,4 +148,14 @@ public class ControlTxController {
 
         return ResponseEntity.ok(controlTxService.getInfoBoardAssociation(operatorId));
     }
+
+    /**
+     * Entrega la tarjetas disponibles en stock
+     */
+    @GetMapping("/info/boards/available")
+    public ResponseEntity<List<InterfaceBoardDTO>> getInfoBoardsAvailable() {
+        log.debug("REST request getInfoBoardsAvailable");
+
+        return ResponseEntity.ok(controlTxService.getInfoBoardsAvailable());
+    }
 }

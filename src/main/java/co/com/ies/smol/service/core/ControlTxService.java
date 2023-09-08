@@ -26,4 +26,6 @@ public interface ControlTxService {
     Long getCountInterfaceBoardByContractedAndType(String reference, ContractType contractType) throws ControlTxException;
 
     BoardAssociationResponseDTO getInfoBoardAssociation(Long operatorId) throws ControlTxException;
+
+    List<InterfaceBoardDTO> getInfoBoardsAvailable();
 }

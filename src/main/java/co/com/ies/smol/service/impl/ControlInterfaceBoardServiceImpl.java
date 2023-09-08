@@ -2,6 +2,7 @@ package co.com.ies.smol.service.impl;
 
 import co.com.ies.smol.domain.ControlInterfaceBoard;
 import co.com.ies.smol.domain.InterfaceBoard;
+import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.repository.ControlInterfaceBoardRepository;
 import co.com.ies.smol.service.ControlInterfaceBoardService;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
@@ -115,5 +116,10 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
     @Override
     public List<ControlInterfaceBoardDTO> getControlInterfaceBoardByContractId(Long contractId) {
         return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getByContractId(contractId));
+    }
+
+    @Override
+    public List<ControlInterfaceBoardDTO> getInfoBoardsAvailable() {
+        return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getByStateAndFinishTimeIsNull(StatusInterfaceBoard.STOCK));
     }
 }
