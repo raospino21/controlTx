@@ -109,4 +109,9 @@ public class ContractServiceImpl implements ContractService {
     public Optional<ContractDTO> getContractByReferenceAndType(String reference, ContractType type) {
         return contractRepository.getByReferenceAndType(reference, type).map(contractMapper::toDto);
     }
+
+    @Override
+    public List<ContractDTO> getContractByOperatorId(Long operatorId) {
+        return contractMapper.toDto(contractRepository.getContractByOperatorId(operatorId));
+    }
 }

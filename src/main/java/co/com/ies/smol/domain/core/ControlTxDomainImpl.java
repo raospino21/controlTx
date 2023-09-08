@@ -4,6 +4,7 @@ import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
+import co.com.ies.smol.service.dto.OperatorDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import java.util.List;
 import java.util.Objects;
@@ -69,5 +70,12 @@ public abstract class ControlTxDomainImpl {
         response.append(" ]");
 
         return response.toString();
+    }
+
+    public OperatorDTO validateExistingOperator(Optional<OperatorDTO> oOperatorDto) throws ControlTxException {
+        if (oOperatorDto.isEmpty()) {
+            throw new ControlTxException(ControlTxException.OPERATOR_NOT_FOUND);
+        }
+        return oOperatorDto.get();
     }
 }

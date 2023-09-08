@@ -5,6 +5,7 @@ import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.service.core.ControlTxService;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
+import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import java.util.List;
 import java.util.Objects;
@@ -136,5 +137,15 @@ public class ControlTxController {
         log.debug("REST request getCountInterfaceBoardByContractedAndType reference : {}, contractType {}", reference, contractType);
 
         return ResponseEntity.ok(controlTxService.getCountInterfaceBoardByContractedAndType(reference, contractType));
+    }
+
+    /**
+     * Entrega la información de tarjetas asociadas vs contratadas
+     */
+    @GetMapping("/info/boards/association/{operatorId}")
+    public ResponseEntity<BoardAssociationResponseDTO> getInfoBoardAssociation(@PathVariable Long operatorId) throws ControlTxException {
+        log.debug("REST request getInfoBoardAssociation operatorId : {} ", operatorId);
+
+        return ResponseEntity.ok(controlTxService.getInfoBoardAssociation(operatorId));
     }
 }

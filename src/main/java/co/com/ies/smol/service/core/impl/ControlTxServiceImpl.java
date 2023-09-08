@@ -17,10 +17,13 @@ import co.com.ies.smol.service.core.ControlTxService;
 import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
+import co.com.ies.smol.service.dto.OperatorDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
+import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
+import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -261,5 +264,34 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         ContractDTO contract = validateExistingContract(oContract);
 
         return contract.getAmountInterfaceBoard();
+    }
+
+    @Override
+    public BoardAssociationResponseDTO getInfoBoardAssociation(Long operatorId) throws ControlTxException {
+        Optional<OperatorDTO> oOperator = operatorService.findOne(operatorId);
+        validateExistingOperator(oOperator);
+        List<ContractDTO> contractList = contractService.getContractByOperatorId(operatorId);
+
+        List<ContractSubDTO> contractSubList = new ArrayList<>();
+
+        contractList.forEach(contract -> {
+            List<ControlInterfaceBoardDTO> controlInterfaceBoardList = controlInterfaceBoardService.getControlInterfaceBoardByContractId(
+                contract.getId()
+            );
+            log.warn(
+                "-------tarjetas contratadas {} - cantidad de tarjetas {} asociada al contrato  #  {} ",
+                contract.getAmountInterfaceBoard(),
+                controlInterfaceBoardList.size(),
+                contract.getType()
+            );
+            ContractSubDTO contractSub = new ContractSubDTO(
+                contract.getAmountInterfaceBoard(),
+                controlInterfaceBoardList.size(),
+                contract.getType()
+            );
+            contractSubList.add(contractSub);
+        });
+
+        return new BoardAssociationResponseDTO(contractSubList);
     }
 }

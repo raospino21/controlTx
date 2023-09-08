@@ -74,4 +74,6 @@ public interface ContractService {
     List<ContractDTO> findAllContractByOpeatorIn(List<Operator> operators);
 
     Optional<ContractDTO> findContractByOperator(Operator operator);
+
+    List<ContractDTO> getContractByOperatorId(Long operatorId);
 }

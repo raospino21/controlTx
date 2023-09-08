@@ -47,4 +47,7 @@ public interface ContractRepository extends JpaRepository<Contract, Long>, JpaSp
     Optional<Contract> findByOperator(Operator operator);
 
     Optional<Contract> getByReferenceAndType(String reference, ContractType type);
+
+    @Query("select contract from Contract contract left join fetch contract.operator where contract.operator.id =:operatorId")
+    List<Contract> getContractByOperatorId(Long operatorId);
 }
