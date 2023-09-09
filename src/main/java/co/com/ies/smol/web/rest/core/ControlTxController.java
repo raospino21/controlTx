@@ -2,6 +2,7 @@ package co.com.ies.smol.web.rest.core;
 
 import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.domain.enumeration.ContractType;
+import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.service.core.ControlTxService;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
@@ -157,5 +158,18 @@ public class ControlTxController {
         log.debug("REST request getInfoBoardsAvailable");
 
         return ResponseEntity.ok(controlTxService.getInfoBoardsAvailable());
+    }
+
+    /**
+     * Entrega la tarjetas disponibles en stock
+     */
+    @GetMapping("/info/boards/by-state/{operatorId}/{state}")
+    public ResponseEntity<List<InterfaceBoardDTO>> getInfoBoardsByOperatorIdAndState(
+        @PathVariable Long operatorId,
+        StatusInterfaceBoard state
+    ) {
+        log.debug("REST request getInfoBoardsAvailable");
+
+        return ResponseEntity.ok(controlTxService.getInfoBoardsByOperatorIdAndState(operatorId, state));
     }
 }

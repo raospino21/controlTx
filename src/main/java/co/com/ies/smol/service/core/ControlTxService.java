@@ -2,6 +2,7 @@ package co.com.ies.smol.service.core;
 
 import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.domain.enumeration.ContractType;
+import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
@@ -28,4 +29,6 @@ public interface ControlTxService {
     BoardAssociationResponseDTO getInfoBoardAssociation(Long operatorId) throws ControlTxException;
 
     List<InterfaceBoardDTO> getInfoBoardsAvailable();
+
+    List<InterfaceBoardDTO> getInfoBoardsByOperatorIdAndState(Long operatorId, StatusInterfaceBoard state);
 }

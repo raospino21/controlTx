@@ -299,4 +299,9 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     public List<InterfaceBoardDTO> getInfoBoardsAvailable() {
         return controlInterfaceBoardService.getInfoBoardsAvailable().stream().map(ControlInterfaceBoardDTO::getInterfaceBoard).toList();
     }
+
+    @Override
+    public List<InterfaceBoardDTO> getInfoBoardsByOperatorIdAndState(Long operatorId, StatusInterfaceBoard state) {
+        return controlInterfaceBoardService.getInfoBoardsAvailable().stream().map(ControlInterfaceBoardDTO::getInterfaceBoard).toList();
+    }
 }
