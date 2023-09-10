@@ -166,7 +166,7 @@ public class ControlTxController {
     @GetMapping("/info/boards/by-state/{operatorId}/{state}")
     public ResponseEntity<List<InterfaceBoardDTO>> getInfoBoardsByOperatorIdAndState(
         @PathVariable Long operatorId,
-        StatusInterfaceBoard state
+        @PathVariable StatusInterfaceBoard state
     ) {
         log.debug("REST request getInfoBoardsAvailable");
 
