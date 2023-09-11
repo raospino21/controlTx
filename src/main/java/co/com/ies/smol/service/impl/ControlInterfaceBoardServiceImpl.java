@@ -124,11 +124,11 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
 
     @Override
     public List<ControlInterfaceBoardDTO> getByContractIdAndState(Long contractId, StatusInterfaceBoard state) {
-        return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getByContractIdAndState(contractId, state));
+        return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getByContractIdAndState(contractId, state.name()));
     }
 
     @Override
     public List<ControlInterfaceBoardDTO> getByContractIdInAndState(List<Long> contractIdList, StatusInterfaceBoard state) {
-        return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getByContractIdInAndState(contractIdList, state));
+        return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getByContractIdInAndState(contractIdList, state.name()));
     }
 }

@@ -69,11 +69,11 @@ public interface ControlInterfaceBoardRepository
     @Query(
         "select controlInterfaceBoard from ControlInterfaceBoard controlInterfaceBoard left join fetch controlInterfaceBoard.contract left join fetch controlInterfaceBoard.interfaceBoard where controlInterfaceBoard.contract.id =:contractId and state =:state and controlInterfaceBoard.finishTime is null "
     )
-    List<ControlInterfaceBoard> getByContractIdAndState(Long contractId, StatusInterfaceBoard state);
+    List<ControlInterfaceBoard> getByContractIdAndState(Long contractId, @Param("state") String state);
 
     @Query(
         nativeQuery = true,
-        value = "select * from control_interface_board cib left outer join contract c on cib.contract_id = c.id left outer join interface_board ib on cib.interface_board_id = ib.id where c.id in :contractIdList  and state =:state and (cib.finish_time is null)"
+        value = "select cib.* from control_interface_board cib left outer join contract c on cib.contract_id = c.id left outer join interface_board ib on cib.interface_board_id = ib.id where c.id in :contractIdList and state = (:state) and (cib.finish_time is null)"
     )
-    List<ControlInterfaceBoard> getByContractIdInAndState(List<Long> contractIdList, StatusInterfaceBoard state);
+    List<ControlInterfaceBoard> getByContractIdInAndState(List<Long> contractIdList, @Param("state") String state);
 }

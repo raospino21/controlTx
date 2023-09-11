@@ -311,6 +311,6 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
             state
         );
 
-        return controlInterfaceBoardService.getInfoBoardsAvailable().stream().map(ControlInterfaceBoardDTO::getInterfaceBoard).toList();
+        return controlInterfaceBoardList.stream().map(ControlInterfaceBoardDTO::getInterfaceBoard).toList();
     }
 }
