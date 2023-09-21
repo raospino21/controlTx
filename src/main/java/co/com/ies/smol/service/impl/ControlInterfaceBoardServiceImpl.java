@@ -121,4 +121,14 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
     public List<ControlInterfaceBoardDTO> getInfoBoardsAvailable() {
         return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getByStateAndFinishTimeIsNull(StatusInterfaceBoard.STOCK));
     }
+
+    @Override
+    public List<ControlInterfaceBoardDTO> getByContractIdAndState(Long contractId, StatusInterfaceBoard state) {
+        return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getByContractIdAndState(contractId, state.name()));
+    }
+
+    @Override
+    public List<ControlInterfaceBoardDTO> getByContractIdInAndState(List<Long> contractIdList, StatusInterfaceBoard state) {
+        return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getByContractIdInAndState(contractIdList, state.name()));
+    }
 }
