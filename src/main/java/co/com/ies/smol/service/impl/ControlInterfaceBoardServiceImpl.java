@@ -6,7 +6,6 @@ import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.repository.ControlInterfaceBoardRepository;
 import co.com.ies.smol.service.ControlInterfaceBoardService;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
-import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.mapper.ControlInterfaceBoardMapper;
 import java.util.List;
 import java.util.Optional;

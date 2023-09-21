@@ -23,7 +23,7 @@ public class Operator implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "company_name")
     private String name;
 
     @Column(name = "nit")

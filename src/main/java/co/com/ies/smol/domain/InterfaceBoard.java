@@ -31,7 +31,7 @@ public class InterfaceBoard implements Serializable {
     private String hash;
 
     @NotNull
-    @Column(name = "mac", nullable = false)
+    @Column(name = "serial", nullable = false)
     private String mac;
 
     @ManyToOne(optional = false)
