@@ -90,6 +90,18 @@ public class ControlTxController {
     }
 
     /**
+     * Entrega la cantidad de tarjetas estan vinculadas a todos los operadores asociados a la marca
+     * tener en cuenta que solo para contratos vigentes
+     */
+
+    @GetMapping("/count/interface-boards/assigned-operator-by-brand/{brandName}")
+    public ResponseEntity<Integer> getCountInterfaceBoardByBrandAssignedOperator(@PathVariable String brandName) {
+        log.debug("REST request getInterfaceBoardByBrand brandName : {}", brandName);
+
+        return ResponseEntity.ok(controlTxService.getInterfaceBoardByBrand(brandName).size());
+    }
+
+    /**
      * Entrega las tarjetas que está asociadas a un operador según el tipo de contrato
      */
     @GetMapping("/interface-boards/assigned-by-operator/{reference}/{contractType}")
