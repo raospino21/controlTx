@@ -28,6 +28,19 @@
           </a>
         </li>
         <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
+
+        <li
+          *jhiHasAnyAuthority="['ROLE_COMMERCIAL']"
+          class="nav-item"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <a class="nav-link" routerLink="commercial-admin/report" (click)="collapseNavbar()">
+            <i class="fa fa-hand-spock-o" aria-hidden="true"></i>
+            <span>Comercial</span>
+          </a>
+        </li>
+
         <li
           *ngSwitchCase="true"
           ngbDropdown
@@ -76,7 +89,7 @@
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="collapseNavbar()"
-                *jhiHasAnyAuthority="['ROLE_ADMIN']"
+                *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_COMMERCIAL']"
               >
                 <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
                 <span jhiTranslate="global.menu.entities.contract">Contract</span>
