@@ -88,8 +88,14 @@ export class ContractUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
+    const queryObject: any = {
+      page: 0,
+      size: 100,
+      eagerload: true,
+    };
+
     this.operatorService
-      .query()
+      .query(queryObject)
       .pipe(map((res: HttpResponse<IOperator[]>) => res.body ?? []))
       .pipe(
         map((operators: IOperator[]) =>
