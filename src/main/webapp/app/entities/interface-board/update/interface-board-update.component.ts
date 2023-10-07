@@ -87,8 +87,14 @@ export class InterfaceBoardUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
+    const queryObject: any = {
+      page: 0,
+      size: 100,
+      eagerload: true,
+    };
+
     this.receptionOrderService
-      .query()
+      .query(queryObject)
       .pipe(map((res: HttpResponse<IReceptionOrder[]>) => res.body ?? []))
       .pipe(
         map((receptionOrders: IReceptionOrder[]) =>
