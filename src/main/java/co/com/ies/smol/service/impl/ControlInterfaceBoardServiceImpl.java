@@ -4,7 +4,10 @@ import co.com.ies.smol.domain.ControlInterfaceBoard;
 import co.com.ies.smol.domain.InterfaceBoard;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.repository.ControlInterfaceBoardRepository;
+import co.com.ies.smol.service.ControlInterfaceBoardQueryService;
 import co.com.ies.smol.service.ControlInterfaceBoardService;
+import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria;
+import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria.StatusInterfaceBoardFilter;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.mapper.ControlInterfaceBoardMapper;
 import java.util.List;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
  * Service Implementation for managing {@link ControlInterfaceBoard}.
@@ -29,12 +33,16 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
 
     private final ControlInterfaceBoardMapper controlInterfaceBoardMapper;
 
+    private final ControlInterfaceBoardQueryService controlInterfaceBoardQueryService;
+
     public ControlInterfaceBoardServiceImpl(
         ControlInterfaceBoardRepository controlInterfaceBoardRepository,
-        ControlInterfaceBoardMapper controlInterfaceBoardMapper
+        ControlInterfaceBoardMapper controlInterfaceBoardMapper,
+        ControlInterfaceBoardQueryService controlInterfaceBoardQueryService
     ) {
         this.controlInterfaceBoardRepository = controlInterfaceBoardRepository;
         this.controlInterfaceBoardMapper = controlInterfaceBoardMapper;
+        this.controlInterfaceBoardQueryService = controlInterfaceBoardQueryService;
     }
 
     @Override
@@ -118,8 +126,18 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
     }
 
     @Override
-    public List<ControlInterfaceBoardDTO> getInfoBoardsAvailable() {
-        return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getByStateAndFinishTimeIsNull(StatusInterfaceBoard.STOCK));
+    public Page<ControlInterfaceBoardDTO> getInfoBoardsAvailable(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
+        ControlInterfaceBoardCriteria criteria = new ControlInterfaceBoardCriteria();
+
+        StatusInterfaceBoardFilter statusFilter = new StatusInterfaceBoardFilter();
+        statusFilter.setEquals(StatusInterfaceBoard.STOCK);
+        criteria.setState(statusFilter);
+
+        ZonedDateTimeFilter finishTimeFilter = new ZonedDateTimeFilter();
+        finishTimeFilter.setEquals(null);
+        criteria.setFinishTime(finishTimeFilter);
+
+        return controlInterfaceBoardQueryService.findByCriteria(criteria, pageable);
     }
 
     @Override

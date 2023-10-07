@@ -32,6 +32,8 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Transactional
@@ -296,8 +298,8 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     }
 
     @Override
-    public List<InterfaceBoardDTO> getInfoBoardsAvailable() {
-        return controlInterfaceBoardService.getInfoBoardsAvailable().stream().map(ControlInterfaceBoardDTO::getInterfaceBoard).toList();
+    public Page<InterfaceBoardDTO> getInfoBoardsAvailable(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
+        return controlInterfaceBoardService.getInfoBoardsAvailable(pageable).map(ControlInterfaceBoardDTO::getInterfaceBoard);
     }
 
     @Override

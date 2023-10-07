@@ -3,11 +3,14 @@ package co.com.ies.smol.service.core;
 import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
+import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ControlTxService {
     String createBoardRegister(BoardRegisterDTO boardRegisterDTO) throws ControlTxException;
@@ -28,7 +31,7 @@ public interface ControlTxService {
 
     BoardAssociationResponseDTO getInfoBoardAssociation(Long operatorId) throws ControlTxException;
 
-    List<InterfaceBoardDTO> getInfoBoardsAvailable();
+    Page<InterfaceBoardDTO> getInfoBoardsAvailable(@org.springdoc.api.annotations.ParameterObject Pageable pageable);
 
     List<InterfaceBoardDTO> getInfoBoardsByOperatorIdAndState(Long operatorId, StatusInterfaceBoard state);
 }
