@@ -1,6 +1,6 @@
 {
   "global": {
-    "title": "ControTx",
+    "title": "ControlTx",
     "browsehappy": "Está usando un navegador <strong>no actualizado</strong>. Por favor, <a href=\"http://browsehappy.com/?locale=es\">actualice su navegador</a> para mejorar su experiencia.",
     "menu": {
       "home": "Inicio",
@@ -24,6 +24,11 @@
         "login": "Iniciar sesión",
         "logout": "Cerrar la sesión",
         "register": "Crear una cuenta"
+      },
+      "store": {
+        "main": "Almacen",
+        "interfaceBoard": "Tarjeta",
+        "assingBoard": "Asignar tarjeta"
       },
       "admin": {
         "main": "Administración",

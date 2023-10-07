@@ -25,6 +25,11 @@
         "logout": "Sign out",
         "register": "Register"
       },
+      "store": {
+        "main": "Store",
+        "interfaceBoard": "Interface Board",
+        "assingBoard": "Assing Board"
+      },
       "admin": {
         "main": "Administration",
         "userManagement": "User management",
