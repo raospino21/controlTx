@@ -27,8 +27,8 @@
       },
       "store": {
         "main": "Store",
-        "interfaceBoard": "Interface Board",
-        "assingBoard": "Assing Board"
+        "createBoard": "Create Board",
+        "assingBoard": "Link Board To Contract"
       },
       "accounting": {
         "title": "Accounting",

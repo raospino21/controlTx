@@ -30,7 +30,7 @@
         "brand": "Marca",
         "operator": "Operador",
         "contract": "Contracto",
-        "interfaceBoard": "Terjetas",
+        "interfaceBoard": "Tarjetas",
         "controlInterfaceBoard": "Control Tx",
         "purchaseOrder": "Orden de Compra",
         "receptionOrder": "Orden de Recepcion",
@@ -38,9 +38,9 @@
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "store": {
-        "main": "Almacen",
-        "interfaceBoard": "Tarjeta",
-        "assingBoard": "Asignar tarjeta"
+        "main": "Almacén",
+        "createBoard": "Crear Tarjeta",
+        "assingBoard": "Vincular Tarjeta Al Contrato "
       },
       "accounting": {
         "title": "Contabilidad",

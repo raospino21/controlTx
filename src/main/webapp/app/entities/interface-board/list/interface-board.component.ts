@@ -11,6 +11,7 @@ import { ASC, DESC, SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/conf
 import { EntityArrayResponseType, InterfaceBoardService } from '../service/interface-board.service';
 import { InterfaceBoardDeleteDialogComponent } from '../delete/interface-board-delete-dialog.component';
 import { FilterOptions, IFilterOptions, IFilterOption } from 'app/shared/filter/filter.model';
+import { AccountService } from 'app/core/auth/account.service';
 
 @Component({
   selector: 'jhi-interface-board',
@@ -19,11 +20,9 @@ import { FilterOptions, IFilterOptions, IFilterOption } from 'app/shared/filter/
 export class InterfaceBoardComponent implements OnInit {
   interfaceBoards?: IInterfaceBoard[];
   isLoading = false;
-
   predicate = 'id';
   ascending = true;
   filters: IFilterOptions = new FilterOptions();
-
   itemsPerPage = ITEMS_PER_PAGE;
   totalItems = 0;
   page = 1;
@@ -32,7 +31,8 @@ export class InterfaceBoardComponent implements OnInit {
     protected interfaceBoardService: InterfaceBoardService,
     protected activatedRoute: ActivatedRoute,
     public router: Router,
-    protected modalService: NgbModal
+    protected modalService: NgbModal,
+    public accountService: AccountService
   ) {}
 
   trackId = (_index: number, item: IInterfaceBoard): number => this.interfaceBoardService.getInterfaceBoardIdentifier(item);
@@ -41,6 +41,10 @@ export class InterfaceBoardComponent implements OnInit {
     this.load();
 
     this.filters.filterChanges.subscribe(filterOptions => this.handleNavigation(1, this.predicate, this.ascending, filterOptions));
+  }
+
+  canView(role: string[]) {
+    return this.accountService.hasAnyAuthority(role);
   }
 
   delete(interfaceBoard: IInterfaceBoard): void {
