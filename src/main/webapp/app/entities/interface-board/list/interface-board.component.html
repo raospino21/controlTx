@@ -40,13 +40,13 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="ipAddress">
+          <th scope="col" jhiSortBy="ipAddress" *ngIf="canView(['ROLE_ADMIN'])">
             <div class="d-flex">
               <span jhiTranslate="controTxApp.interfaceBoard.ipAddress">Ip Address</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="hash">
+          <th scope="col" jhiSortBy="hash" *ngIf="canView(['ROLE_ADMIN'])">
             <div class="d-flex">
               <span jhiTranslate="controTxApp.interfaceBoard.hash">Hash</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
@@ -72,8 +72,8 @@
           <td>
             <a [routerLink]="['/interface-board', interfaceBoard.id, 'view']">{{ interfaceBoard.id }}</a>
           </td>
-          <td>{{ interfaceBoard.ipAddress }}</td>
-          <td>{{ interfaceBoard.hash }}</td>
+          <td *ngIf="canView(['ROLE_ADMIN'])">{{ interfaceBoard.ipAddress }}</td>
+          <td *ngIf="canView(['ROLE_ADMIN'])">{{ interfaceBoard.hash }}</td>
           <td>{{ interfaceBoard.mac }}</td>
           <td>
             <div *ngIf="interfaceBoard.receptionOrder">
