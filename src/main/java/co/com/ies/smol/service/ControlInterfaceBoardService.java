@@ -2,6 +2,7 @@ package co.com.ies.smol.service;
 
 import co.com.ies.smol.domain.InterfaceBoard;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
+import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import java.util.List;
 import java.util.Optional;
@@ -80,4 +81,6 @@ public interface ControlInterfaceBoardService {
     List<ControlInterfaceBoardDTO> getByContractIdInAndState(List<Long> contractIdList, StatusInterfaceBoard state);
 
     List<ControlInterfaceBoardDTO> getByContractIdAndState(Long contractId, StatusInterfaceBoard state);
+
+    Page<ControlInterfaceBoardDTO> getControlInterfaceBoardAvailable(ControlInterfaceBoardCriteria criteria, Pageable pageable);
 }

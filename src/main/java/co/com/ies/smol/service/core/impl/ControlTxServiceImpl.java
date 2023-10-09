@@ -14,6 +14,7 @@ import co.com.ies.smol.service.OperatorService;
 import co.com.ies.smol.service.PurchaseOrderService;
 import co.com.ies.smol.service.ReceptionOrderService;
 import co.com.ies.smol.service.core.ControlTxService;
+import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria;
 import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
@@ -314,5 +315,10 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         );
 
         return controlInterfaceBoardList.stream().map(ControlInterfaceBoardDTO::getInterfaceBoard).toList();
+    }
+
+    @Override
+    public Page<ControlInterfaceBoardDTO> getControlInterfaceBoardAvailable(ControlInterfaceBoardCriteria criteria, Pageable pageable) {
+        return controlInterfaceBoardService.getControlInterfaceBoardAvailable(criteria, pageable);
     }
 }

@@ -7,7 +7,7 @@ import { ReportStoreComponent } from './report/report-store.component';
 export class StoreChildren {}
 
 export const STORE_LIST_ROUTE: Route = {
-  path: 'report',
+  path: 'link-contract-board',
   component: ReportStoreComponent,
   data: {
     authorities: ['ROLE_STORE'],

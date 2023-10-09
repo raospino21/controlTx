@@ -1,7 +1,56 @@
 <div>
-  <div class="input-group mt-3 col-1 mx-0 px-2 pl-1 row">
-    <button type="submit" class="btn btn-primary" (click)="filter()">
-      <fa-icon icon="search"></fa-icon>
-    </button>
+  <div class="table-responsive table-link-contract-board" *ngIf="controlInterfaceBoards && controlInterfaceBoards.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col">
+            <div class="d-flex"><span>Ubicacion</span></div>
+          </th>
+          <th scope="col">
+            <div class="d-flex"><span>Estado</span></div>
+          </th>
+          <th scope="col">
+            <div class="d-flex"><span>Fecha de vinculacion</span></div>
+          </th>
+          <th scope="col">
+            <div class="d-flex"><span>Contrato</span></div>
+          </th>
+          <th scope="col">
+            <div class="d-flex"><span>Mac</span></div>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let controlInterfaceBoard of controlInterfaceBoards" data-cy="entityTable">
+          <td>{{ controlInterfaceBoard.location }}</td>
+          <td>{{ controlInterfaceBoard.state }}</td>
+          <td>{{ controlInterfaceBoard.startTime | formatMediumDatetime }}</td>
+          <td>
+            <div *ngIf="controlInterfaceBoard.contract">
+              <a [routerLink]="['/contract', controlInterfaceBoard.contract.id, 'view']">{{
+                controlInterfaceBoard!.contract!.reference
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="controlInterfaceBoard.interfaceBoard">
+              <a [routerLink]="['/interface-board', controlInterfaceBoard.interfaceBoard.id, 'view']">{{
+                controlInterfaceBoard!.interfaceBoard!.mac
+              }}</a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="controlInterfaceBoards && controlInterfaceBoards.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: pageSize }"></jhi-item-count>
+    </div>
+    <button [disabled]="page === 0" (click)="prevPage()">Anterior</button>
+    <span>{{ page }} / {{ totalPages }}</span>
+    <button [disabled]="page === totalPages" (click)="nextPage()">Siguiente</button>
   </div>
 </div>

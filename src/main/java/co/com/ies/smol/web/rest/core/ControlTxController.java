@@ -4,6 +4,8 @@ import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.service.core.ControlTxService;
+import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria;
+import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
@@ -192,5 +194,20 @@ public class ControlTxController {
         log.debug("REST request getInfoBoardsAvailable");
 
         return ResponseEntity.ok(controlTxService.getInfoBoardsByOperatorIdAndState(operatorId, state));
+    }
+
+    /**
+     * Entrega los registro de control interface board disponibles
+     */
+    @GetMapping("/info/control-interface-boards/avalaible/")
+    public ResponseEntity<List<ControlInterfaceBoardDTO>> getControlInterfaceBoardAvailable(
+        ControlInterfaceBoardCriteria criteria,
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable
+    ) {
+        log.debug("REST request getControlInterfaceBoardAvailable");
+
+        Page<ControlInterfaceBoardDTO> page = controlTxService.getControlInterfaceBoardAvailable(criteria, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 }
