@@ -3,14 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ITEMS_PER_PAGE, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { IInterfaceBoard } from 'app/entities/interface-board/interface-board.model';
-import { CommercialService } from './report-commercial.service';
+import { CommercialService } from './board-in-stock.service';
 
 @Component({
   selector: 'jhi-report',
-  templateUrl: './report-commercial.component.html',
-  styleUrls: ['./report-commercial.component.scss'],
+  templateUrl: './board-in-stock.component.html',
+  styleUrls: ['./board-in-stock.component.scss'],
 })
-export class ReportCommercialComponent implements OnInit {
+export class BoardInStockComponent implements OnInit {
   constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected commercialService: CommercialService) {}
 
   interfaceBoards?: IInterfaceBoard[];
