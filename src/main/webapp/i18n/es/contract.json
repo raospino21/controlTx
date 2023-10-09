@@ -2,7 +2,7 @@
   "controTxApp": {
     "contract": {
       "home": {
-        "title": "Contracts",
+        "title": "Contractos",
         "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Contract",
         "createOrEditLabel": "Crear o editar Contract",

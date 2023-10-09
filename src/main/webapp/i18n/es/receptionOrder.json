@@ -2,7 +2,7 @@
   "controTxApp": {
     "receptionOrder": {
       "home": {
-        "title": "Reception Orders",
+        "title": "Orden de Recepción",
         "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Reception Order",
         "createOrEditLabel": "Crear o editar Reception Order",

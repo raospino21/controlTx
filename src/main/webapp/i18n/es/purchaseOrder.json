@@ -2,7 +2,7 @@
   "controTxApp": {
     "purchaseOrder": {
       "home": {
-        "title": "Purchase Orders",
+        "title": "Orden de Compra",
         "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Purchase Order",
         "createOrEditLabel": "Crear o editar Purchase Order",

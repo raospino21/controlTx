@@ -2,7 +2,7 @@
   "controTxApp": {
     "operator": {
       "home": {
-        "title": "Operators",
+        "title": "Operadores",
         "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Operator",
         "createOrEditLabel": "Crear o editar Operator",

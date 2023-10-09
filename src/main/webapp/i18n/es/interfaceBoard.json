@@ -2,7 +2,7 @@
   "controTxApp": {
     "interfaceBoard": {
       "home": {
-        "title": "Interface Boards",
+        "title": "Tarjetas",
         "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Interface Board",
         "createOrEditLabel": "Crear o editar Interface Board",

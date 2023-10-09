@@ -30,6 +30,11 @@
         "interfaceBoard": "Interface Board",
         "assingBoard": "Assing Board"
       },
+      "accounting": {
+        "title": "Accounting",
+        "purchaseOrder": "Purchase Order",
+        "receptionOrder": "Reception Order"
+      },
       "commercial": {
         "title": "Comercial",
         "brand": "Brand",

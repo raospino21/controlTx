@@ -2,7 +2,7 @@
   "controTxApp": {
     "brand": {
       "home": {
-        "title": "Brands",
+        "title": "Marcas",
         "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Brand",
         "createOrEditLabel": "Crear o editar Brand",

@@ -42,6 +42,11 @@
         "interfaceBoard": "Tarjeta",
         "assingBoard": "Asignar tarjeta"
       },
+      "accounting": {
+        "title": "Contabilidad",
+        "purchaseOrder": "Orden de Compra",
+        "receptionOrder": "Orden de Recepcion"
+      },
       "admin": {
         "main": "Administración",
         "userManagement": "Gestión de usuarios",
