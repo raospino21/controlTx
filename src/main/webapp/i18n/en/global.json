@@ -39,7 +39,7 @@
         "controlInterfaceBoard": "Control Interface Board",
         "purchaseOrder": "Purchase Order",
         "receptionOrder": "Reception Order",
-        "report": "Report",
+        "boardInStock": "Board In Stock",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "admin": {

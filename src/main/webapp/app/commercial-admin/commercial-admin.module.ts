@@ -4,11 +4,11 @@ import { SharedModule } from 'app/shared/shared.module';
 
 import { CommercialComponent } from './commercial-admin.component';
 import { COMMERCIAL_ROUTE } from './commercial-admin.route';
-import { ReportCommercialComponent } from './component-children/report/report-commercial.component';
+import { BoardInStockComponent } from './component-children/board/board-in-stock.component';
 
 @NgModule({
   imports: [SharedModule, RouterModule.forRoot([COMMERCIAL_ROUTE], { useHash: true })],
-  declarations: [CommercialComponent, ReportCommercialComponent],
+  declarations: [CommercialComponent, BoardInStockComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CommercialAdminModule {}

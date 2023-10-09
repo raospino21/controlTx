@@ -30,18 +30,6 @@
         <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
 
         <li
-          *jhiHasAnyAuthority="['ROLE_COMMERCIAL']"
-          class="nav-item"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
-          <a class="nav-link" routerLink="commercial-admin/report" (click)="collapseNavbar()">
-            <i class="fa fa-hand-spock-o" aria-hidden="true"></i>
-            <span>Comercial</span>
-          </a>
-        </li>
-
-        <li
           *ngSwitchCase="true"
           ngbDropdown
           class="nav-item dropdown pointer"
@@ -49,7 +37,14 @@
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
         >
-          <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entityStore-menu" data-cy="entity">
+          <a
+            class="nav-link dropdown-toggle"
+            ngbDropdownToggle
+            href="javascript:void(0);"
+            id="entityStore-menu"
+            data-cy="entity"
+            *jhiHasAnyAuthority="['ROLE_STORE']"
+          >
             <i class="store" aria-hidden="true"></i>
             <span>
               <fa-icon icon="store"></fa-icon>
@@ -119,7 +114,6 @@
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="collapseNavbar()"
-                *jhiHasAnyAuthority="['ROLE_ADMIN']"
               >
                 <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
                 <span jhiTranslate="global.menu.entities.brand">Brand</span>
@@ -145,7 +139,6 @@
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="collapseNavbar()"
-                *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_COMMERCIAL']"
               >
                 <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
                 <span jhiTranslate="global.menu.entities.contract">Contract</span>
@@ -158,7 +151,6 @@
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="collapseNavbar()"
-                *jhiHasAnyAuthority="['ROLE_ADMIN']"
               >
                 <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
                 <span jhiTranslate="global.menu.entities.interfaceBoard">Interface Board</span>
@@ -171,7 +163,6 @@
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="collapseNavbar()"
-                *jhiHasAnyAuthority="['ROLE_ADMIN']"
               >
                 <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
                 <span jhiTranslate="global.menu.entities.controlInterfaceBoard">Control Interface Board</span>
@@ -197,7 +188,6 @@
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="collapseNavbar()"
-                *jhiHasAnyAuthority="['ROLE_ADMIN']"
               >
                 <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
                 <span jhiTranslate="global.menu.entities.receptionOrder">Reception Order</span>
@@ -206,6 +196,95 @@
             <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
           </ul>
         </li>
+
+        <li
+          *ngSwitchCase="true"
+          ngbDropdown
+          class="nav-item dropdown pointer"
+          display="dynamic"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <a
+            class="nav-link dropdown-toggle"
+            ngbDropdownToggle
+            href="javascript:void(0);"
+            id="entity-menu"
+            data-cy="entity"
+            *jhiHasAnyAuthority="['ROLE_COMMERCIAL']"
+          >
+            <span>
+              <fa-icon icon="th-list"></fa-icon>
+              <span jhiTranslate="global.menu.commercial.title">Comercial</span>
+            </span>
+          </a>
+          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="entity-menu">
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="commercial-admin/board-in-stock"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                <span jhiTranslate="global.menu.commercial.boardInStock">Tarjetas en Stock</span>
+              </a>
+            </li>
+
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="operator"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                <span jhiTranslate="global.menu.commercial.operator">Operator</span>
+              </a>
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="contract"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                <span jhiTranslate="global.menu.commercial.contract">Contract</span>
+              </a>
+            </li>
+
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="purchase-order"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                <span jhiTranslate="global.menu.commercial.purchaseOrder">Purchase Order</span>
+              </a>
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="reception-order"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                <span jhiTranslate="global.menu.commercial.receptionOrder">Reception Order</span>
+              </a>
+            </li>
+            <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
+          </ul>
+        </li>
+
         <li
           *jhiHasAnyAuthority="'ROLE_ADMIN'"
           ngbDropdown

@@ -13,6 +13,7 @@
         data-cy="entityCreateButton"
         class="btn btn-primary jh-create-entity create-reception-order"
         [routerLink]="['/reception-order/new']"
+        *jhiHasAnyAuthority="['ROLE_ADMIN']"
       >
         <fa-icon icon="plus"></fa-icon>
         <span jhiTranslate="controTxApp.receptionOrder.home.createLabel"> Crear nuevo Reception Order </span>
@@ -113,12 +114,19 @@
                 [routerLink]="['/reception-order', receptionOrder.id, 'edit']"
                 class="btn btn-primary btn-sm"
                 data-cy="entityEditButton"
+                *jhiHasAnyAuthority="'ROLE_ADMIN'"
               >
                 <fa-icon icon="pencil-alt"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
               </button>
 
-              <button type="submit" (click)="delete(receptionOrder)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+              <button
+                type="submit"
+                (click)="delete(receptionOrder)"
+                class="btn btn-danger btn-sm"
+                data-cy="entityDeleteButton"
+                *jhiHasAnyAuthority="'ROLE_ADMIN'"
+              >
                 <fa-icon icon="times"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
               </button>

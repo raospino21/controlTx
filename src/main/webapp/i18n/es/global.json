@@ -34,7 +34,7 @@
         "controlInterfaceBoard": "Control Tx",
         "purchaseOrder": "Orden de Compra",
         "receptionOrder": "Orden de Recepcion",
-        "report": "Reporte",
+        "boardInStock": "Tarjetas en Stock",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "store": {
