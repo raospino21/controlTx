@@ -25,6 +25,18 @@
         "logout": "Cerrar la sesión",
         "register": "Crear una cuenta"
       },
+      "commercial": {
+        "title": "Comercial",
+        "brand": "Marca",
+        "operator": "Operador",
+        "contract": "Contracto",
+        "interfaceBoard": "Terjetas",
+        "controlInterfaceBoard": "Control Tx",
+        "purchaseOrder": "Orden de Compra",
+        "receptionOrder": "Orden de Recepcion",
+        "report": "Reporte",
+        "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
+      },
       "store": {
         "main": "Almacen",
         "interfaceBoard": "Tarjeta",
