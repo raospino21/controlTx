@@ -1,0 +1,78 @@
+<div>
+  <section class="d-flex row gap-3">
+    <div class="mb-1 col-4 row">
+      <span class="px-1 h6 col-12">Número del contrato</span>
+      <input type="text" [(ngModel)]="filters.reference" [ngModelOptions]="{ standalone: true }" />
+    </div>
+
+    <div class="mb-1 col-4 row">
+      <span class="px-1 h6 col-12">Mac</span>
+      <input type="text" [(ngModel)]="filters.mac" [ngModelOptions]="{ standalone: true }" />
+    </div>
+
+    <button type="submit" class="btn btn-primary col-1 mt-4" (click)="filter()">
+      <span class="mr-4">Buscar</span>
+      <fa-icon icon="search"></fa-icon>
+    </button>
+
+    <button type="submit" class="btn btn-primary col-1 mt-4" (click)="cleanFilters()">
+      <span class="mr-4">Limpiar</span>
+      <fa-icon icon="trash-alt"></fa-icon>
+    </button>
+  </section>
+
+  <div class="table-responsive table-link-contract-board" *ngIf="controlInterfaceBoards && controlInterfaceBoards.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col">
+            <div class="d-flex"><span>Ubicacion</span></div>
+          </th>
+          <th scope="col">
+            <div class="d-flex"><span>Estado</span></div>
+          </th>
+          <th scope="col">
+            <div class="d-flex"><span>Fecha de vinculacion</span></div>
+          </th>
+          <th scope="col">
+            <div class="d-flex"><span>Contrato</span></div>
+          </th>
+          <th scope="col">
+            <div class="d-flex"><span>Mac</span></div>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let controlInterfaceBoard of controlInterfaceBoards" data-cy="entityTable">
+          <td>{{ controlInterfaceBoard.location }}</td>
+          <td>{{ controlInterfaceBoard.state }}</td>
+          <td>{{ controlInterfaceBoard.startTime!.toString() | date: 'yyyy-MM-dd HH:mm' }}</td>
+          <td>
+            <div *ngIf="controlInterfaceBoard.contract">
+              <a [routerLink]="['/contract', controlInterfaceBoard.contract.id, 'view']">{{
+                controlInterfaceBoard!.contract!.reference
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="controlInterfaceBoard.interfaceBoard">
+              <a [routerLink]="['/interface-board', controlInterfaceBoard.interfaceBoard.id, 'view']">{{
+                controlInterfaceBoard!.interfaceBoard!.mac
+              }}</a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="controlInterfaceBoards && controlInterfaceBoards.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: pageSize }"></jhi-item-count>
+    </div>
+    <button [disabled]="page === 0" (click)="prevPage()">Anterior</button>
+    <span>{{ page }} / {{ totalPages }}</span>
+    <button [disabled]="page === totalPages" (click)="nextPage()">Siguiente</button>
+  </div>
+</div>

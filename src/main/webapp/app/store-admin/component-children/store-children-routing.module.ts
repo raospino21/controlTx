@@ -1,14 +1,14 @@
 import { Injectable, NgModule } from '@angular/core';
 import { Route, RouterModule, Routes } from '@angular/router';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
-import { ReportStoreComponent } from './report/report-store.component';
+import { LinkBoardComponent } from './link-board/link-board.component';
 
 @Injectable({ providedIn: 'root' })
 export class StoreChildren {}
 
 export const STORE_LIST_ROUTE: Route = {
   path: 'link-contract-board',
-  component: ReportStoreComponent,
+  component: LinkBoardComponent,
   data: {
     authorities: ['ROLE_STORE'],
     defaultSort: 'id,asc',
