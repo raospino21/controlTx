@@ -50,9 +50,10 @@ export class ReportStoreComponent implements OnInit {
     this.controlInterfaceBoards = controlInterfaceBoards;
   }
 
-  private cleanFilters(): void {
+  public cleanFilters(): void {
     this.filters.reference = null;
     this.filters.mac = null;
+    this.loadData();
   }
 
   get totalPages(): number {
@@ -79,6 +80,7 @@ export class ReportStoreComponent implements OnInit {
   };
 
   public filter(): void {
+    this.page = 1;
     this.loadData();
   }
 }
