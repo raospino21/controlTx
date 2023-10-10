@@ -20,12 +20,9 @@ export class ReportStoreComponent implements OnInit {
   ) {}
 
   controlInterfaceBoards?: IControlInterfaceBoard[];
-
   pageSize: number = ITEMS_PER_PAGE;
   page = 1;
   totalItems = 0;
-
-  public filter(): void {}
 
   canView(role: string[]) {
     return this.accountService.hasAnyAuthority(role);
@@ -36,18 +33,26 @@ export class ReportStoreComponent implements OnInit {
   }
 
   loadData(): void {
-    this.service.getControlBoardsAvailable(this.page - 1, this.pageSize).subscribe(res => {
+    const queryObject: any = {
+      page: this.page - 1,
+      size: this.pageSize,
+      reference: this.filters.reference,
+      mac: this.filters.mac,
+    };
+
+    this.service.getControlBoardsAvailable(queryObject).subscribe(res => {
       this.onSuccess(res.body!, res.headers);
     });
   }
 
   private onSuccess(controlInterfaceBoards: IControlInterfaceBoard[], headers: HttpHeaders): void {
     this.totalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
-    console.log('-----page ', this.page);
-    console.log('-----pageSize ', this.pageSize);
-    console.log('-----totalItems ', this.totalItems);
     this.controlInterfaceBoards = controlInterfaceBoards;
-    console.log('-----tamanio ', this.controlInterfaceBoards.length);
+  }
+
+  private cleanFilters(): void {
+    this.filters.reference = null;
+    this.filters.mac = null;
   }
 
   get totalPages(): number {
@@ -66,5 +71,14 @@ export class ReportStoreComponent implements OnInit {
       this.page--;
       this.loadData();
     }
+  }
+
+  filters = {
+    reference: null,
+    mac: null,
+  };
+
+  public filter(): void {
+    this.loadData();
   }
 }

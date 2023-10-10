@@ -1,4 +1,20 @@
 <div>
+  <section class="form-inline">
+    <div class="input-group mb-1 col-2 mr-1 row">
+      <span class="px-1 h6 col-12">Número del contrato</span>
+      <input type="text" [(ngModel)]="filters.reference" [ngModelOptions]="{ standalone: true }" />
+    </div>
+
+    <div class="input-group mb-1 col-2 mr-1 row">
+      <span class="px-1 h6 col-12">Mac</span>
+      <input type="text" [(ngModel)]="filters.mac" [ngModelOptions]="{ standalone: true }" />
+    </div>
+
+    <button type="submit" class="btn btn-primary" (click)="filter()">
+      <fa-icon icon="search"></fa-icon>
+    </button>
+  </section>
+
   <div class="table-responsive table-link-contract-board" *ngIf="controlInterfaceBoards && controlInterfaceBoards.length > 0">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
