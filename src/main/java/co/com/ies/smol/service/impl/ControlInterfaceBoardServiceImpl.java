@@ -168,18 +168,6 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
         locationFilter.setEquals(Location.CLIENT);
         criteria.setLocation(locationFilter);
 
-        if (Objects.isNull(criteria.getContractId())) {
-            LongFilter contractFilter = new LongFilter();
-            contractFilter.setNotEquals(null);
-            criteria.setContractId(contractFilter);
-        }
-
-        if (Objects.isNull(criteria.getInterfaceBoardId())) {
-            LongFilter contractFilter = new LongFilter();
-            contractFilter.setNotEquals(null);
-            criteria.setContractId(contractFilter);
-        }
-
         return controlInterfaceBoardQueryService.findByCriteria(criteria, pageable);
     }
 }

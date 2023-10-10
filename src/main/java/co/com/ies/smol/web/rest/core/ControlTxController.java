@@ -4,12 +4,12 @@ import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.service.core.ControlTxService;
-import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
+import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
 import java.util.List;
 import java.util.Objects;
 import javax.validation.Valid;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.PaginationUtil;
@@ -201,12 +202,14 @@ public class ControlTxController {
      */
     @GetMapping("/info/control-interface-boards/avalaible/")
     public ResponseEntity<List<ControlInterfaceBoardDTO>> getControlInterfaceBoardAvailable(
-        ControlInterfaceBoardCriteria criteria,
+        @RequestParam(value = "mac", required = false) String mac,
+        @RequestParam(value = "reference", required = false) String reference,
         @org.springdoc.api.annotations.ParameterObject Pageable pageable
     ) {
-        log.debug("REST request getControlInterfaceBoardAvailable");
+        FilterControlInterfaceBoard filter = new FilterControlInterfaceBoard(mac, reference);
+        log.debug("REST request getControlInterfaceBoardAvailable filter {}", filter);
 
-        Page<ControlInterfaceBoardDTO> page = controlTxService.getControlInterfaceBoardAvailable(criteria, pageable);
+        Page<ControlInterfaceBoardDTO> page = controlTxService.getControlInterfaceBoardAvailable(filter, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

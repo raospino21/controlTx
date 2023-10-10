@@ -24,6 +24,7 @@ import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
+import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
 import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import tech.jhipster.service.filter.LongFilter;
 
 @Transactional
 @Service
@@ -318,7 +320,35 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     }
 
     @Override
-    public Page<ControlInterfaceBoardDTO> getControlInterfaceBoardAvailable(ControlInterfaceBoardCriteria criteria, Pageable pageable) {
+    public Page<ControlInterfaceBoardDTO> getControlInterfaceBoardAvailable(FilterControlInterfaceBoard filter, Pageable pageable) {
+        ControlInterfaceBoardCriteria criteria = new ControlInterfaceBoardCriteria();
+
+        LongFilter contractFilter = new LongFilter();
+        contractFilter.setNotEquals(null);
+        criteria.setContractId(contractFilter);
+
+        LongFilter interfaceBoardFilter = new LongFilter();
+        interfaceBoardFilter.setNotEquals(null);
+        criteria.setInterfaceBoardId(interfaceBoardFilter);
+
+        if (Objects.nonNull(filter.reference())) {
+            List<ContractDTO> contractList = contractService.getContractByReference(filter.reference());
+
+            if (!contractList.isEmpty()) {
+                List<Long> contractIdList = contractList.stream().map(ContractDTO::getId).toList();
+                contractFilter.setIn(contractIdList);
+                criteria.setContractId(contractFilter);
+            }
+        }
+
+        if (Objects.nonNull(filter.mac())) {
+            Optional<InterfaceBoardDTO> oInterfaceBoard = interfaceBoardService.getInterfaceBoardByMac(filter.mac());
+            oInterfaceBoard.ifPresent(interfaceBoard -> {
+                interfaceBoardFilter.setEquals(interfaceBoard.getId());
+                criteria.setInterfaceBoardId(interfaceBoardFilter);
+            });
+        }
+
         return controlInterfaceBoardService.getControlInterfaceBoardAvailable(criteria, pageable);
     }
 }
