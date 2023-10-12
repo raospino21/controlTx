@@ -11,6 +11,8 @@ import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
+import co.com.ies.smol.service.dto.core.RequestStatusRecord;
+import co.com.ies.smol.web.rest.errors.BadRequestAlertException;
 import java.util.List;
 import java.util.Objects;
 import javax.validation.Valid;
@@ -40,12 +42,14 @@ public class ControlTxController {
 
     private final ControlTxService controlTxService;
 
+    private static final String ENTITY_NAME = "ControlTx";
+
     public ControlTxController(ControlTxService controlTxService) {
         this.controlTxService = controlTxService;
     }
 
     @PostMapping("/board/register")
-    public ResponseEntity<String> createBoardRegister(@Valid @RequestBody BoardRegisterDTO boardRegisterDTO, Errors errors)
+    public ResponseEntity<RequestStatusRecord> createBoardRegister(@Valid @RequestBody BoardRegisterDTO boardRegisterDTO, Errors errors)
         throws ControlTxException {
         log.debug("REST request to save BoardRegisterDTO : {}", boardRegisterDTO);
 
@@ -53,14 +57,15 @@ public class ControlTxController {
 
         if (errors.hasErrors() && Objects.nonNull(fieldError)) {
             String errorMsg = fieldError.getField().concat(" ").concat(fieldError.getDefaultMessage());
-            return ResponseEntity.ok(errorMsg);
+            throw new BadRequestAlertException(errorMsg, ENTITY_NAME, "400");
         }
+        String message = controlTxService.createBoardRegister(boardRegisterDTO);
 
-        return ResponseEntity.ok(controlTxService.createBoardRegister(boardRegisterDTO));
+        return ResponseEntity.ok(new RequestStatusRecord(message, 200));
     }
 
     @PostMapping("/assign/board")
-    public ResponseEntity<String> assignInterfaceBoard(@Valid @RequestBody AssignBoardDTO assignBoardDTO, Errors errors)
+    public ResponseEntity<RequestStatusRecord> assignInterfaceBoard(@Valid @RequestBody AssignBoardDTO assignBoardDTO, Errors errors)
         throws ControlTxException {
         log.debug("REST request to save assignInterfaceBoard : {}", assignBoardDTO);
 
@@ -68,12 +73,12 @@ public class ControlTxController {
 
         if (errors.hasErrors() && Objects.nonNull(fieldError)) {
             String errorMsg = fieldError.getField().concat(" ").concat(fieldError.getDefaultMessage());
-            return ResponseEntity.ok(errorMsg);
+            throw new BadRequestAlertException(errorMsg, ENTITY_NAME, "400");
         }
 
         controlTxService.assignInterfaceBoard(assignBoardDTO);
 
-        return ResponseEntity.ok("ok process assignInterfaceBoard succesfully!!");
+        return ResponseEntity.ok(new RequestStatusRecord("ok process assignInterfaceBoard succesfully!!", 200));
     }
 
     /**

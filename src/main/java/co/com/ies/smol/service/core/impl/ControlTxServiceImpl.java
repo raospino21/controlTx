@@ -73,12 +73,8 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         Long purchaseOrder = boardRegisterDTO.getIesOrderNumber();
         Optional<PurchaseOrderDTO> oPurchaseOrderDTO = purchaseOrderService.getPurchaseOrderByIesOrderNumber(purchaseOrder);
         PurchaseOrderDTO purchaseOrderDTO = validateExistingPurchaseOrderAndGet(oPurchaseOrderDTO);
-        System.out.println("ControlTxServiceImpl.createBoardRegister()");
 
-        log.info("---------------f");
         List<ReceptionOrderDTO> receptionOrderList = receptionOrderService.getReceptionOrderByIesOrderNumber(purchaseOrder);
-
-        System.out.println("ControlTxServiceImpl.createBoardRegister()");
 
         Long boardReceived = receptionOrderList.stream().mapToLong(ReceptionOrderDTO::getAmountReceived).sum();
         Long boardToRegister = boardRegisterDTO.getAmountReceived();
