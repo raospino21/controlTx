@@ -4,6 +4,8 @@ import { ApplicationConfigService } from 'app/core/config/application-config.ser
 import { IInterfaceBoard } from 'app/entities/interface-board/interface-board.model';
 import { Observable } from 'rxjs/internal/Observable';
 import { createRequestOption } from 'app/core/request/request-util';
+import { IContract } from 'app/entities/contract/contract.model';
+import { IAssignBoard } from './assign-board.model';
 
 @Injectable({ providedIn: 'root' })
 export class StoreService {
@@ -16,5 +18,15 @@ export class StoreService {
       params: options,
       observe: 'response',
     });
+  }
+
+  getPendingContractsForBoard(): Observable<HttpResponse<IContract[]>> {
+    return this.http.get<IContract[]>(this.resourceUrl + '/info/pending/contracts/boards', {
+      observe: 'response',
+    });
+  }
+
+  assignInterfaceBoard(request: IAssignBoard): Observable<string> {
+    return this.http.post<string>(this.resourceUrl + '/assign/board', request);
   }
 }

@@ -19,6 +19,11 @@
       <span class="mr-4">Limpiar</span>
       <fa-icon icon="trash-alt"></fa-icon>
     </button>
+
+    <button class="btn btn-primary col-1 mt-4" (click)="modalAssignBoard()">
+      <span>Asignar tarjeta</span>
+      <fa-icon icon="link"></fa-icon>
+    </button>
   </section>
 
   <div class="table-responsive table-link-contract-board" *ngIf="controlInterfaceBoards && controlInterfaceBoards.length > 0">
@@ -75,4 +80,78 @@
     <span>{{ page }} / {{ totalPages }}</span>
     <button [disabled]="page === totalPages" (click)="nextPage()">Siguiente</button>
   </div>
+
+  <ng-template #assignBoardTpl let-modal>
+    <form class="p-5" name="formAssignBoard" role="form" novalidate [formGroup]="formAssignBoard" aria-label="assgin boards">
+      <h3 class="pb-3" data-cy="AssingBoardHeading">Asignación de tarjetas</h3>
+      <div class="content">
+        <div class="row mt-0">
+          <div class="col">
+            <label>Contrato</label>
+            <select
+              id="inputState"
+              (change)="onSelectChange($event)"
+              class="form-control"
+              formControlName="reference"
+              [ngClass]="{ valid: !formAssignBoard.get('reference')?.errors, invalid: formAssignBoard.get('reference')!.invalid }"
+            >
+              <option [value]="contract.reference" *ngFor="let contract of contractsFilter">
+                {{ contract.reference }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col">
+            <label>Tipo</label>
+            <select
+              id="inputState"
+              class="form-control"
+              formControlName="contractType"
+              [ngClass]="{ valid: !formAssignBoard.get('contractType')?.errors, invalid: formAssignBoard.get('contractType')!.invalid }"
+            >
+              <option [value]="type" jhiTranslate="{{ 'controTxApp.ContractType.' + type }}" *ngFor="let type of contractsType">
+                {{ type }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col">
+            <label>Mac</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="mac"
+              placeholder="Ingrese la Mac"
+              [ngClass]="{ valid: !formAssignBoard.get('mac')?.errors, invalid: formAssignBoard.get('mac')!.invalid }"
+            />
+          </div>
+        </div>
+        <hr />
+
+        <div class="row">
+          <div class="col">
+            <button
+              [disabled]="formAssignBoard.get('contractType')!.invalid || formAssignBoard.get('mac')!.invalid"
+              type="submit"
+              id="save-entity"
+              data-cy="entityCreateSaveButton"
+              class="btn btn-success btn-block"
+              (click)="assignBoard()"
+            >
+              <fa-icon icon="save"></fa-icon>
+              &nbsp;<span jhiTranslate="entity.action.save">Save</span>
+            </button>
+          </div>
+
+          <div class="col">
+            <button type="button" (click)="cleanFormAssignBoard()" (click)="modal.close()" class="btn btn-danger btn-block">
+              <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+            </button>
+          </div>
+        </div>
+
+        <hr />
+      </div>
+    </form>
+  </ng-template>
 </div>
