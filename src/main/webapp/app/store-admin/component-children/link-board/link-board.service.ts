@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IContract } from 'app/entities/contract/contract.model';
 import { IAssignBoard } from './assign-board.model';
+import { IRequestStatus } from 'app/shared/request-status.model';
 
 @Injectable({ providedIn: 'root' })
 export class StoreService {
@@ -26,7 +27,7 @@ export class StoreService {
     });
   }
 
-  assignInterfaceBoard(request: IAssignBoard): Observable<string> {
-    return this.http.post<string>(this.resourceUrl + '/assign/board', request);
+  assignInterfaceBoard(request: IAssignBoard): Observable<IRequestStatus> {
+    return this.http.post<IRequestStatus>(this.resourceUrl + '/assign/board', request);
   }
 }
