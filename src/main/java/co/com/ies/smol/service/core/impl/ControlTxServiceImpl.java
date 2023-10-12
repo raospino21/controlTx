@@ -73,8 +73,12 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         Long purchaseOrder = boardRegisterDTO.getIesOrderNumber();
         Optional<PurchaseOrderDTO> oPurchaseOrderDTO = purchaseOrderService.getPurchaseOrderByIesOrderNumber(purchaseOrder);
         PurchaseOrderDTO purchaseOrderDTO = validateExistingPurchaseOrderAndGet(oPurchaseOrderDTO);
+        System.out.println("ControlTxServiceImpl.createBoardRegister()");
 
+        log.info("---------------f");
         List<ReceptionOrderDTO> receptionOrderList = receptionOrderService.getReceptionOrderByIesOrderNumber(purchaseOrder);
+
+        System.out.println("ControlTxServiceImpl.createBoardRegister()");
 
         Long boardReceived = receptionOrderList.stream().mapToLong(ReceptionOrderDTO::getAmountReceived).sum();
         Long boardToRegister = boardRegisterDTO.getAmountReceived();
@@ -350,5 +354,24 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         }
 
         return controlInterfaceBoardService.getControlInterfaceBoardAvailable(criteria, pageable);
+    }
+
+    @Override
+    public List<ContractDTO> getPendingContractsForBoard() {
+        List<ContractDTO> contractList = contractService.findAll();
+
+        List<ContractDTO> pendingContractsForBoard = new ArrayList<>();
+
+        contractList.forEach(contract -> {
+            List<ControlInterfaceBoardDTO> controlInterfaceBoardList = controlInterfaceBoardService.getControlInterfaceBoardByContractId(
+                contract.getId()
+            );
+
+            if ((contract.getAmountInterfaceBoard() - controlInterfaceBoardList.size()) != 0) {
+                pendingContractsForBoard.add(contract);
+            }
+        });
+
+        return pendingContractsForBoard;
     }
 }

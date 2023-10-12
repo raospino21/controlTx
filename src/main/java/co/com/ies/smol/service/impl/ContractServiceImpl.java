@@ -6,7 +6,6 @@ import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.repository.ContractRepository;
 import co.com.ies.smol.service.ContractService;
 import co.com.ies.smol.service.dto.ContractDTO;
-import co.com.ies.smol.service.dto.OperatorDTO;
 import co.com.ies.smol.service.mapper.ContractMapper;
 import java.util.List;
 import java.util.Optional;
@@ -113,5 +112,10 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public List<ContractDTO> getContractByOperatorId(Long operatorId) {
         return contractMapper.toDto(contractRepository.getContractByOperatorId(operatorId));
+    }
+
+    @Override
+    public List<ContractDTO> findAll() {
+        return contractMapper.toDto(contractRepository.findAll());
     }
 }

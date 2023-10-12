@@ -4,6 +4,7 @@ import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.service.core.ControlTxService;
+import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
@@ -212,5 +213,15 @@ public class ControlTxController {
         Page<ControlInterfaceBoardDTO> page = controlTxService.getControlInterfaceBoardAvailable(filter, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * Entrega los contratos pendientes por asociar tarjetas
+     */
+    @GetMapping("/info/pending/contracts/boards")
+    public ResponseEntity<List<ContractDTO>> getPendingContractsForBoard() {
+        log.debug("REST request getPendingContractsForBoard  ");
+
+        return ResponseEntity.ok(controlTxService.getPendingContractsForBoard());
     }
 }
