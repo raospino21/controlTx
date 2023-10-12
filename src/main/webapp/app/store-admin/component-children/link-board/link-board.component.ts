@@ -3,13 +3,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ITEMS_PER_PAGE, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { AccountService } from 'app/core/auth/account.service';
 import { IControlInterfaceBoard } from 'app/entities/control-interface-board/control-interface-board.model';
-import { HttpHeaders } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { IContract } from 'app/entities/contract/contract.model';
 import { NgbModal, NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { ContractType } from 'app/entities/enumerations/contract-type.model';
 import { StoreService } from './link-board.service';
 import { AssignBoard } from './assign-board.model';
+import { IRequestStatus } from 'app/shared/request-status.model';
 
 @Component({
   selector: 'jhi-report',
@@ -33,6 +34,8 @@ export class LinkBoardComponent implements OnInit {
   contractsType: ContractType[] = [];
   controlInterfaceBoards?: IControlInterfaceBoard[];
   firstTimeStatus = true;
+  public errorMsg = '';
+  public typeAlertErrorMsg = 'danger';
   pageSize: number = ITEMS_PER_PAGE;
   page = 1;
   totalItems = 0;
@@ -109,7 +112,7 @@ export class LinkBoardComponent implements OnInit {
 
   private openModal(assignBoard: any): void {
     this.modalService.open(assignBoard, {
-      // backdrop: 'static',
+      backdrop: 'static',
       keyboard: false,
     });
     this.getPendingContractsForBoard();
@@ -143,7 +146,6 @@ export class LinkBoardComponent implements OnInit {
   }
 
   assignBoard(): void {
-    this.modalService.dismissAll();
     const assignBoard = {
       ...new AssignBoard(),
       reference: this.formAssignBoard.get(['reference'])!.value,
@@ -151,9 +153,14 @@ export class LinkBoardComponent implements OnInit {
       macs: [this.formAssignBoard.get(['mac'])?.value],
     };
 
-    this.service.assignInterfaceBoard(assignBoard).subscribe(res => {
-      console.log('---------- respuesta ', res);
-    });
+    this.service.assignInterfaceBoard(assignBoard).subscribe(
+      (res: IRequestStatus) => {
+        this.showAlert('success', res.msg!, 4000);
+      },
+      (error: HttpErrorResponse) => {
+        this.showAlert('danger', error.error.detail, 4000);
+      }
+    );
   }
 
   public cleanFormAssignBoard(): void {
@@ -162,5 +169,15 @@ export class LinkBoardComponent implements OnInit {
       reference: null,
       mac: null,
     });
+  }
+
+  public showAlert(typeAlertErrorMsg: string, errorMsg: string, showTime: number): void {
+    this.typeAlertErrorMsg = typeAlertErrorMsg;
+    this.errorMsg = errorMsg!;
+
+    setTimeout(() => {
+      this.errorMsg = '';
+      this.modalService.dismissAll();
+    }, showTime);
   }
 }

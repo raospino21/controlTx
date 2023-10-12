@@ -82,6 +82,17 @@
   </div>
 
   <ng-template #assignBoardTpl let-modal>
+    <div *ngIf="errorMsg !== ''">
+      <ngb-alert [type]="typeAlertErrorMsg">
+        <strong
+          [ngClass]="{ 'text-dark': typeAlertErrorMsg === 'warning' || typeAlertErrorMsg === 'success' || typeAlertErrorMsg === 'danger' }"
+          class="h5"
+        >
+          {{ errorMsg }}
+        </strong>
+      </ngb-alert>
+    </div>
+
     <form class="p-5" name="formAssignBoard" role="form" novalidate [formGroup]="formAssignBoard" aria-label="assgin boards">
       <h3 class="pb-3" data-cy="AssingBoardHeading">Asignación de tarjetas</h3>
       <div class="content">
