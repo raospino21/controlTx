@@ -7,6 +7,7 @@ import { InterfaceBoardDetailComponent } from '../detail/interface-board-detail.
 import { InterfaceBoardUpdateComponent } from '../update/interface-board-update.component';
 import { InterfaceBoardRoutingResolveService } from './interface-board-routing-resolve.service';
 import { ASC } from 'app/config/navigation.constants';
+import { InterfaceBoardCreateComponent } from '../create/interface-board-create.component';
 
 const interfaceBoardRoute: Routes = [
   {
@@ -28,6 +29,14 @@ const interfaceBoardRoute: Routes = [
   {
     path: 'new',
     component: InterfaceBoardUpdateComponent,
+    resolve: {
+      interfaceBoard: InterfaceBoardRoutingResolveService,
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
+    path: 'create',
+    component: InterfaceBoardCreateComponent,
     resolve: {
       interfaceBoard: InterfaceBoardRoutingResolveService,
     },

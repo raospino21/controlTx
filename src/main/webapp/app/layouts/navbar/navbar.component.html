@@ -78,6 +78,18 @@
                 <span jhiTranslate="global.menu.store.assingBoard">Assing Board</span>
               </a>
             </li>
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="commercial-admin/board-in-stock"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                <span jhiTranslate="global.menu.commercial.boardInStock">Boards In Stock</span>
+              </a>
+            </li>
           </ul>
         </li>
         <!-- store section -->

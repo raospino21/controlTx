@@ -1,0 +1,81 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="errorMsg !== ''">
+      <ngb-alert [type]="typeAlertErrorMsg">
+        <strong
+          [ngClass]="{ 'text-dark': typeAlertErrorMsg === 'warning' || typeAlertErrorMsg === 'success' || typeAlertErrorMsg === 'danger' }"
+          class="h5"
+        >
+          {{ errorMsg }}
+        </strong>
+      </ngb-alert>
+    </div>
+
+    <form [formGroup]="formCreateInterfaceBoard" (ngSubmit)="save()" name="formCreateInterfaceBoard" role="form" novalidate>
+      <h2 id="jhi-interface-board-heading" data-cy="InterfaceBoardCreateHeading">Crear tarjeta</h2>
+
+      <div>
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.interfaceBoard.mac" for="field_mac">Mac</label>
+          <input type="text" class="form-control" name="mac" id="field_mac" data-cy="mac" formControlName="mac" />
+          <div
+            *ngIf="
+              formCreateInterfaceBoard.get('mac')!.invalid &&
+              (formCreateInterfaceBoard.get('mac')!.dirty || formCreateInterfaceBoard.get('mac')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="formCreateInterfaceBoard.get('mac')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.interfaceBoard.receptionOrder" for="field_receptionOrder"
+            >Reception Order</label
+          >
+          <select class="form-control" id="field_receptionOrder" formControlName="receptionOrderOption">
+            <option *ngIf="!formCreateInterfaceBoard.get('receptionOrderOption')!.value" [ngValue]="null" selected></option>
+            <option [ngValue]="receptionOrderOption" *ngFor="let receptionOrderOption of receptionOrdersSharedCollection">
+              {{ receptionOrderOption.providerLotNumber }}
+            </option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            formCreateInterfaceBoard.get(['receptionOrderOption'])!.invalid &&
+            (formCreateInterfaceBoard.get(['receptionOrderOption'])!.dirty ||
+              formCreateInterfaceBoard.get(['receptionOrderOption'])!.touched)
+          "
+        >
+          <small
+            class="form-text text-danger"
+            *ngIf="formCreateInterfaceBoard.get(['receptionOrder'])?.errors?.required"
+            jhiTranslate="entity.validation.required"
+          >
+            Este campo es obligatorio.
+          </small>
+        </div>
+      </div>
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="formCreateInterfaceBoard.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
