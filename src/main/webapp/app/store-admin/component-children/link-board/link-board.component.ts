@@ -153,14 +153,10 @@ export class LinkBoardComponent implements OnInit {
       macs: [this.formAssignBoard.get(['mac'])?.value],
     };
 
-    this.service.assignInterfaceBoard(assignBoard).subscribe(
-      (res: IRequestStatus) => {
-        this.showAlert('success', res.msg!, 4000);
-      },
-      (error: HttpErrorResponse) => {
-        this.showAlert('danger', error.error.detail, 4000);
-      }
-    );
+    this.service.assignInterfaceBoard(assignBoard).subscribe({
+      next: (res: IRequestStatus) => this.showAlert('success', res.msg!, 4000),
+      error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.detail, 4000),
+    });
   }
 
   public cleanFormAssignBoard(): void {
