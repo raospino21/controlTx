@@ -13,7 +13,6 @@ import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria.StatusInte
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.mapper.ControlInterfaceBoardMapper;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
@@ -169,5 +167,12 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
         criteria.setLocation(locationFilter);
 
         return controlInterfaceBoardQueryService.findByCriteria(criteria, pageable);
+    }
+
+    @Override
+    public List<ControlInterfaceBoardDTO> getControlInterfaceBoardByReceptionOrderIdAndFinishTimeIsNull(Long receptionOrderId) {
+        return controlInterfaceBoardMapper.toDto(
+            controlInterfaceBoardRepository.getByReceptionOrderIdAndFinishTimeIsNull(receptionOrderId)
+        );
     }
 }

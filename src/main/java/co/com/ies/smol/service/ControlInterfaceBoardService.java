@@ -83,4 +83,6 @@ public interface ControlInterfaceBoardService {
     List<ControlInterfaceBoardDTO> getByContractIdAndState(Long contractId, StatusInterfaceBoard state);
 
     Page<ControlInterfaceBoardDTO> getControlInterfaceBoardAvailable(ControlInterfaceBoardCriteria criteria, Pageable pageable);
+
+    List<ControlInterfaceBoardDTO> getControlInterfaceBoardByReceptionOrderIdAndFinishTimeIsNull(Long receptionOrderId);
 }

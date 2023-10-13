@@ -50,42 +50,30 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     private final ControlInterfaceBoardService controlInterfaceBoardService;
     private final ContractService contractService;
     private final OperatorService operatorService;
-    private final PurchaseOrderService purchaseOrderService;
 
     public ControlTxServiceImpl(
         ReceptionOrderService receptionOrderService,
         InterfaceBoardService interfaceBoardService,
         ControlInterfaceBoardService controlInterfaceBoardService,
         ContractService contractService,
-        OperatorService operatorService,
-        PurchaseOrderService purchaseOrderService
+        OperatorService operatorService
     ) {
         this.receptionOrderService = receptionOrderService;
         this.interfaceBoardService = interfaceBoardService;
         this.controlInterfaceBoardService = controlInterfaceBoardService;
         this.contractService = contractService;
         this.operatorService = operatorService;
-        this.purchaseOrderService = purchaseOrderService;
     }
 
     @Override
     public String createBoardRegister(BoardRegisterDTO boardRegisterDTO) throws ControlTxException {
-        Long purchaseOrder = boardRegisterDTO.getIesOrderNumber();
-        Optional<PurchaseOrderDTO> oPurchaseOrderDTO = purchaseOrderService.getPurchaseOrderByIesOrderNumber(purchaseOrder);
-        PurchaseOrderDTO purchaseOrderDTO = validateExistingPurchaseOrderAndGet(oPurchaseOrderDTO);
-
-        List<ReceptionOrderDTO> receptionOrderList = receptionOrderService.getReceptionOrderByIesOrderNumber(purchaseOrder);
-
-        Long boardReceived = receptionOrderList.stream().mapToLong(ReceptionOrderDTO::getAmountReceived).sum();
-        Long boardToRegister = boardRegisterDTO.getAmountReceived();
-
-        Long boardHypotheticalTotal = boardReceived + boardToRegister;
-        Long boardOrderIes = purchaseOrderDTO.getOrderAmount();
-        validateAvailability(boardOrderIes, boardHypotheticalTotal);
-
         List<String> macs = boardRegisterDTO.getMacs();
-        validateIncomingBoardSize(boardToRegister, Long.valueOf(macs.size()));
-        ReceptionOrderDTO receptionOrderDTO = createReceptionOrder(boardRegisterDTO, purchaseOrderDTO);
+        ReceptionOrderDTO receptionOrderDTO = boardRegisterDTO.getReceptionOrder();
+
+        List<ControlInterfaceBoardDTO> controlInterfaceBoardList = controlInterfaceBoardService.getControlInterfaceBoardByReceptionOrderIdAndFinishTimeIsNull(
+            receptionOrderDTO.getId()
+        );
+        isItPossibleToAssociate(receptionOrderDTO.getAmountReceived(), controlInterfaceBoardList.size(), Long.valueOf(macs.size()));
 
         List<InterfaceBoardDTO> existingInterfaces = new ArrayList<>();
 
@@ -122,19 +110,6 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
 
     private void deleteReceptionOrderById(Long receptionOrderId) {
         receptionOrderService.delete(receptionOrderId);
-    }
-
-    protected ReceptionOrderDTO createReceptionOrder(BoardRegisterDTO boardRegisterDTO, PurchaseOrderDTO purchaseOrderDTO) {
-        ReceptionOrderDTO receptionOrderDTO = new ReceptionOrderDTO();
-        receptionOrderDTO.setProviderLotNumber(boardRegisterDTO.getProviderLotNumber());
-        receptionOrderDTO.setAmountReceived(boardRegisterDTO.getAmountReceived());
-        receptionOrderDTO.setRemission(boardRegisterDTO.getRemission());
-        ZonedDateTime currentTime = ZonedDateTime.now();
-        receptionOrderDTO.setEntryDate(currentTime);
-        receptionOrderDTO.setWarrantyDate(currentTime.plusYears(1));
-        receptionOrderDTO.setPurchaseOrder(purchaseOrderDTO);
-
-        return receptionOrderService.save(receptionOrderDTO);
     }
 
     protected ReceptionOrderDTO updateReceptionOrder(ReceptionOrderDTO receptionOrderDTO) {
