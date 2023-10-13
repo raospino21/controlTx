@@ -78,4 +78,11 @@ public abstract class ControlTxDomainImpl {
         }
         return oOperatorDto.get();
     }
+
+    public void isItPossibleToAssociate(Long amountReceptionOrder, int alreadyLinked, Long amountReceived) throws ControlTxException {
+        Long available = amountReceptionOrder - alreadyLinked;
+        if (amountReceived > available) {
+            throw new ControlTxException("El monto a recibir  excedido - disponible " + available);
+        }
+    }
 }
