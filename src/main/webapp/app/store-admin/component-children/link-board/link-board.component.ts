@@ -8,9 +8,10 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { IContract } from 'app/entities/contract/contract.model';
 import { NgbModal, NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { ContractType } from 'app/entities/enumerations/contract-type.model';
-import { StoreService } from './link-board.service';
+
 import { AssignBoard } from './assign-board.model';
 import { IRequestStatus } from 'app/shared/request-status.model';
+import { StoreService } from '../store.service';
 
 @Component({
   selector: 'jhi-report',

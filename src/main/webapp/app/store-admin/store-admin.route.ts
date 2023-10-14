@@ -1,15 +1,15 @@
 import { Route } from '@angular/router';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 import { StoreComponent } from './store-admin.component';
-import { STORE_LIST_ROUTE } from './component-children/store-children-routing.module';
+import { BOARD_ROUTE, STORE_LIST_ROUTE } from './component-children/store-children-routing.module';
 
-const CHILDREN = [STORE_LIST_ROUTE];
+const CHILDREN = [BOARD_ROUTE, STORE_LIST_ROUTE];
 
 export const STORE_ROUTE: Route = {
   path: 'store-admin',
   component: StoreComponent,
   data: {
-    authorities: ['ROLE_STORE'],
+    authorities: ['ROLE_STORE', 'ROLE_COMMERCIAL'],
     pageTitle: 'store.title',
   },
   canActivate: [UserRouteAccessService],
