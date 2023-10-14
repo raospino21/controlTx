@@ -13,7 +13,7 @@
         data-cy="entityCreateButton"
         class="btn btn-primary jh-create-entity create-reception-order"
         [routerLink]="['/reception-order/new']"
-        *jhiHasAnyAuthority="['ROLE_ADMIN']"
+        *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_STORE']"
       >
         <fa-icon icon="plus"></fa-icon>
         <span jhiTranslate="controTxApp.receptionOrder.home.createLabel"> Crear nuevo Reception Order </span>

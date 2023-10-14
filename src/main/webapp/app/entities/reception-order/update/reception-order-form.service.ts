@@ -100,7 +100,7 @@ export class ReceptionOrderFormService {
     return {
       id: null,
       entryDate: currentTime,
-      warrantyDate: currentTime,
+      warrantyDate: currentTime.add(1, 'year'),
     };
   }
 

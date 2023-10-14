@@ -28,8 +28,7 @@ export type EntityArrayResponseType = HttpResponse<IReceptionOrder[]>;
 @Injectable({ providedIn: 'root' })
 export class ReceptionOrderService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/reception-orders');
-
-  protected resourceUrlNew = this.applicationConfigService.getEndpointFor('api/info/receptionOrder');
+  protected urlLoadRelationshipsOptions = this.applicationConfigService.getEndpointFor('api/info/reception-order');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
@@ -70,7 +69,7 @@ export class ReceptionOrderService {
   receptionOrderAvailable(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http
-      .get<RestReceptionOrder[]>(this.resourceUrlNew, { params: options, observe: 'response' })
+      .get<RestReceptionOrder[]>(this.urlLoadRelationshipsOptions, { params: options, observe: 'response' })
       .pipe(map(res => this.convertResponseArrayFromServer(res)));
   }
 

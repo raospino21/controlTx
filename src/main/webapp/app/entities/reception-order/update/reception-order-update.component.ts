@@ -88,7 +88,7 @@ export class ReceptionOrderUpdateComponent implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     this.purchaseOrderService
-      .query()
+      .purchaseOrderAvailable()
       .pipe(map((res: HttpResponse<IPurchaseOrder[]>) => res.body ?? []))
       .pipe(
         map((purchaseOrders: IPurchaseOrder[]) =>
