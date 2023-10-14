@@ -5,6 +5,7 @@ import co.com.ies.smol.repository.PurchaseOrderRepository;
 import co.com.ies.smol.service.PurchaseOrderService;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.mapper.PurchaseOrderMapper;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,5 +86,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     @Override
     public Optional<PurchaseOrderDTO> getPurchaseOrderByIesOrderNumber(Long iesOrderNumber) {
         return purchaseOrderRepository.getByIesOrderNumber(iesOrderNumber).map(purchaseOrderMapper::toDto);
+    }
+
+    @Override
+    public List<PurchaseOrderDTO> getAllPurchaseOrder() {
+        return purchaseOrderMapper.toDto(purchaseOrderRepository.findAll());
     }
 }

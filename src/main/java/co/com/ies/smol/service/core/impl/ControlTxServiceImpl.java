@@ -50,19 +50,22 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     private final ControlInterfaceBoardService controlInterfaceBoardService;
     private final ContractService contractService;
     private final OperatorService operatorService;
+    private final PurchaseOrderService purchaseOrderService;
 
     public ControlTxServiceImpl(
         ReceptionOrderService receptionOrderService,
         InterfaceBoardService interfaceBoardService,
         ControlInterfaceBoardService controlInterfaceBoardService,
         ContractService contractService,
-        OperatorService operatorService
+        OperatorService operatorService,
+        PurchaseOrderService purchaseOrderService
     ) {
         this.receptionOrderService = receptionOrderService;
         this.interfaceBoardService = interfaceBoardService;
         this.controlInterfaceBoardService = controlInterfaceBoardService;
         this.contractService = contractService;
         this.operatorService = operatorService;
+        this.purchaseOrderService = purchaseOrderService;
     }
 
     @Override
@@ -363,5 +366,28 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         });
 
         return receptionOrderListAvailable;
+    }
+
+    @Override
+    public List<PurchaseOrderDTO> getPendingPurchaseOrderForReceptionOrder() {
+        List<PurchaseOrderDTO> purchaseOrderList = purchaseOrderService.getAllPurchaseOrder();
+        List<PurchaseOrderDTO> purchaseOrderrListAvailable = new ArrayList<>();
+
+        List<ReceptionOrderDTO> receptionOrderList = receptionOrderService.getAllReceptionOrder();
+
+        purchaseOrderList.forEach(purchaseOrder -> {
+            Long totalAmount = receptionOrderList
+                .stream()
+                .filter(receptionOrder -> receptionOrder.getPurchaseOrder().getId().equals(purchaseOrder.getId()))
+                .mapToLong(ReceptionOrderDTO::getAmountReceived)
+                .sum();
+            boolean isAvailable = isAvailable(purchaseOrder.getOrderAmount(), totalAmount.intValue());
+
+            if (isAvailable) {
+                purchaseOrderrListAvailable.add(purchaseOrder);
+            }
+        });
+
+        return purchaseOrderrListAvailable;
     }
 }

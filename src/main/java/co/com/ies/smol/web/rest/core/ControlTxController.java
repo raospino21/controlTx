@@ -7,6 +7,7 @@ import co.com.ies.smol.service.core.ControlTxService;
 import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
+import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
@@ -232,11 +233,20 @@ public class ControlTxController {
     }
 
     /**
-     * Entrega los contratos pendientes por asociar tarjetas
+     * Entrega las ordenes de recepción pendientes por asociar tarjetas
      */
-    @GetMapping("/info/receptionOrder")
+    @GetMapping("/info/reception-order")
     public ResponseEntity<List<ReceptionOrderDTO>> getPendingReceptionOrderForBoard() {
         log.debug("REST request getPendingReceptionOrderForBoard  ");
         return ResponseEntity.ok(controlTxService.getPendingReceptionOrderForBoard());
+    }
+
+    /**
+     * Entrega las ordenes de compras pendientes por asociar una orden de recepción
+     */
+    @GetMapping("/info/purchase-order")
+    public ResponseEntity<List<PurchaseOrderDTO>> getPendingPurchaseOrderForReceptionOrder() {
+        log.debug("REST request getPendingPurchaseOrderForReceptionOrder  ");
+        return ResponseEntity.ok(controlTxService.getPendingPurchaseOrderForReceptionOrder());
     }
 }
