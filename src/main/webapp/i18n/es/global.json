@@ -7,13 +7,13 @@
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
         "main": "Entidades",
-        "brand": "Brand",
-        "operator": "Operator",
-        "contract": "Contract",
-        "interfaceBoard": "Interface Board",
-        "controlInterfaceBoard": "Control Interface Board",
-        "purchaseOrder": "Purchase Order",
-        "receptionOrder": "Reception Order",
+        "brand": "Marca",
+        "operator": "Operador",
+        "contract": "Contracto",
+        "interfaceBoard": "Tarjetas",
+        "controlInterfaceBoard": "Historia de la Tarjeta",
+        "purchaseOrder": "Orden de Compra",
+        "receptionOrder": "Orden de Recepción",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

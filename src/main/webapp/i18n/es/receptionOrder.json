@@ -4,7 +4,7 @@
       "home": {
         "title": "Orden de Recepción",
         "refreshListLabel": "Refrescar lista",
-        "createLabel": "Crear nuevo Reception Order",
+        "createLabel": "Crear",
         "createOrEditLabel": "Crear o editar Reception Order",
         "notFound": "Ningún Reception Orders encontrado"
       },
