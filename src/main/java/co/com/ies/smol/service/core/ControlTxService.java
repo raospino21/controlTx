@@ -6,6 +6,7 @@ import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
+import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
@@ -40,4 +41,6 @@ public interface ControlTxService {
     Page<ControlInterfaceBoardDTO> getControlInterfaceBoardAvailable(FilterControlInterfaceBoard filter, Pageable pageable);
 
     List<ContractDTO> getPendingContractsForBoard();
+
+    List<ReceptionOrderDTO> getPendingReceptionOrderForBoard();
 }

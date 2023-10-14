@@ -29,6 +29,8 @@ export type EntityArrayResponseType = HttpResponse<IReceptionOrder[]>;
 export class ReceptionOrderService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/reception-orders');
 
+  protected resourceUrlNew = this.applicationConfigService.getEndpointFor('api/info/receptionOrder');
+
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
   create(receptionOrder: NewReceptionOrder): Observable<EntityResponseType> {
@@ -62,6 +64,13 @@ export class ReceptionOrderService {
     const options = createRequestOption(req);
     return this.http
       .get<RestReceptionOrder[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map(res => this.convertResponseArrayFromServer(res)));
+  }
+
+  receptionOrderAvailable(req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http
+      .get<RestReceptionOrder[]>(this.resourceUrlNew, { params: options, observe: 'response' })
       .pipe(map(res => this.convertResponseArrayFromServer(res)));
   }
 

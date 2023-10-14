@@ -77,12 +77,12 @@ export class InterfaceBoardCreateComponent implements OnInit {
   protected loadRelationshipsOptions(): void {
     const queryObject: any = {
       page: 0,
-      size: 100,
+      size: 30,
       eagerload: true,
     };
 
     this.receptionOrderService
-      .query(queryObject)
+      .receptionOrderAvailable(queryObject)
       .pipe(map((res: HttpResponse<IReceptionOrder[]>) => res.body ?? []))
       .pipe(
         map((receptionOrders: IReceptionOrder[]) =>
@@ -94,8 +94,6 @@ export class InterfaceBoardCreateComponent implements OnInit {
       )
       .subscribe((receptionOrders: IReceptionOrder[]) => {
         this.receptionOrdersSharedCollection = receptionOrders;
-        console.log('------------ receptionOrdersSharedCollection ', this.receptionOrdersSharedCollection[0].providerLotNumber);
-        console.log('------------ receptionOrders ', receptionOrders);
       });
   }
 }

@@ -85,4 +85,8 @@ public abstract class ControlTxDomainImpl {
             throw new ControlTxException("El monto a recibir  excedido - disponible " + available);
         }
     }
+
+    public boolean isAvailable(Long amountReceptionOrder, int alreadyLinked) {
+        return (amountReceptionOrder - alreadyLinked) > 0;
+    }
 }

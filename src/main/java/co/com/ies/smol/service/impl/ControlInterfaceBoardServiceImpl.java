@@ -175,4 +175,11 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
             controlInterfaceBoardRepository.getByReceptionOrderIdAndFinishTimeIsNull(receptionOrderId)
         );
     }
+
+    @Override
+    public List<ControlInterfaceBoardDTO> getControlInterfaceBoardByReceptionOrderIdInAndFinishTimeIsNull(List<Long> receptionOrderIds) {
+        return controlInterfaceBoardMapper.toDto(
+            controlInterfaceBoardRepository.getByReceptionOrderIdInAndFinishTimeIsNull(receptionOrderIds)
+        );
+    }
 }

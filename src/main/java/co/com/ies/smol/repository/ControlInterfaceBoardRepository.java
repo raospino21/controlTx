@@ -82,4 +82,10 @@ public interface ControlInterfaceBoardRepository
         value = "select cib.* from control_interface_board cib inner join interface_board ib on ib.id = cib.interface_board_id inner join reception_order ro on ro.id = ib.reception_order_id where ib.reception_order_id = :receptionOrderId and finish_time is null"
     )
     List<ControlInterfaceBoard> getByReceptionOrderIdAndFinishTimeIsNull(@Param("receptionOrderId") Long receptionOrderId);
+
+    @Query(
+        nativeQuery = true,
+        value = "select cib.* from control_interface_board cib inner join interface_board ib on ib.id = cib.interface_board_id inner join reception_order ro on ro.id = ib.reception_order_id where ib.reception_order_id in (:receptionOrderIds) and finish_time is null"
+    )
+    List<ControlInterfaceBoard> getByReceptionOrderIdInAndFinishTimeIsNull(@Param("receptionOrderIds") List<Long> receptionOrderIds);
 }

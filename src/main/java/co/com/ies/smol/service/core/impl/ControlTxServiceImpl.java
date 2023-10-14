@@ -345,4 +345,23 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
 
         return pendingContractsForBoard;
     }
+
+    @Override
+    public List<ReceptionOrderDTO> getPendingReceptionOrderForBoard() {
+        List<ReceptionOrderDTO> receptionOrderList = receptionOrderService.getAllReceptionOrder();
+        List<ReceptionOrderDTO> receptionOrderListAvailable = new ArrayList<>();
+
+        receptionOrderList.forEach(receptionOrder -> {
+            List<ControlInterfaceBoardDTO> controlInterfaceBoardList = controlInterfaceBoardService.getControlInterfaceBoardByReceptionOrderIdAndFinishTimeIsNull(
+                receptionOrder.getId()
+            );
+            boolean isAvailable = isAvailable(receptionOrder.getAmountReceived(), controlInterfaceBoardList.size());
+
+            if (isAvailable) {
+                receptionOrderListAvailable.add(receptionOrder);
+            }
+        });
+
+        return receptionOrderListAvailable;
+    }
 }
