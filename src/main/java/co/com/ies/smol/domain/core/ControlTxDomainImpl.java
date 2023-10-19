@@ -49,7 +49,7 @@ public abstract class ControlTxDomainImpl {
 
     public void validateAvailability(Long boardOrderIes, Long boardHypotheticalTotal) throws ControlTxException {
         if (boardHypotheticalTotal > boardOrderIes) {
-            throw new ControlTxException("El monto a recibir supera al total de la orden compra");
+            throw new ControlTxException("El monto a recibir supera al total de la orden compra (" + boardHypotheticalTotal + ")");
         }
     }
 

@@ -46,4 +46,6 @@ public interface ControlTxService {
     List<ReceptionOrderDTO> getPendingReceptionOrderForBoard();
 
     List<PurchaseOrderDTO> getPendingPurchaseOrderForReceptionOrder();
+
+    ReceptionOrderDTO saveReceptionOrder(ReceptionOrderDTO receptionOrderDTO) throws ControlTxException;
 }

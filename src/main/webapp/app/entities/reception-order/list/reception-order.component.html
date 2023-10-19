@@ -77,13 +77,19 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
+          <th scope="col" jhiSortBy="entryDate">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.purchaseOrder.orderAmount">Order Amount</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let receptionOrder of receptionOrders; trackBy: trackId" data-cy="entityTable">
           <td>
-            <a [routerLink]="['/reception-order', receptionOrder.id, 'view']">{{ receptionOrder.id }}</a>
+            <a [routerLink]="['/reception-order', receptionOrder.id, 'view']">{{ receptionOrder.id }} </a>
           </td>
           <td>{{ receptionOrder.providerLotNumber }}</td>
           <td>{{ receptionOrder.amountReceived }}</td>
@@ -92,11 +98,12 @@
           <td>{{ receptionOrder.warrantyDate | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="receptionOrder.purchaseOrder">
-              <a [routerLink]="['/purchase-order', receptionOrder.purchaseOrder.id, 'view']">{{
-                receptionOrder.purchaseOrder.iesOrderNumber
-              }}</a>
+              <a [routerLink]="['/purchase-order', receptionOrder.purchaseOrder.id, 'view']"
+                >{{ receptionOrder.purchaseOrder.iesOrderNumber }}
+              </a>
             </div>
           </td>
+          <td *ngIf="receptionOrder.purchaseOrder">{{ receptionOrder.purchaseOrder.orderAmount }}</td>
           <td class="text-end">
             <div class="btn-group">
               <button

@@ -98,25 +98,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
             controlInterfaceBoardService.save(controlInterfaceBoardDTO);
         }
 
-        if (!existingInterfaces.isEmpty()) {
-            Long trueAmount = receptionOrderDTO.getAmountReceived() - existingInterfaces.size();
-            if (trueAmount == 0) {
-                deleteReceptionOrderById(receptionOrderDTO.getId());
-            } else {
-                receptionOrderDTO.setAmountReceived(trueAmount);
-                updateReceptionOrder(receptionOrderDTO);
-            }
-        }
-
         return buildResponse(existingInterfaces);
-    }
-
-    private void deleteReceptionOrderById(Long receptionOrderId) {
-        receptionOrderService.delete(receptionOrderId);
-    }
-
-    protected ReceptionOrderDTO updateReceptionOrder(ReceptionOrderDTO receptionOrderDTO) {
-        return receptionOrderService.save(receptionOrderDTO);
     }
 
     protected InterfaceBoardDTO createInterfaceBoard(String mac, ReceptionOrderDTO receptionOrder) {
@@ -389,5 +371,23 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         });
 
         return purchaseOrderrListAvailable;
+    }
+
+    @Override
+    public ReceptionOrderDTO saveReceptionOrder(ReceptionOrderDTO receptionOrderDTO) throws ControlTxException {
+        PurchaseOrderDTO purchaseOrderDTO = receptionOrderDTO.getPurchaseOrder();
+        Long purchaseOrderId = purchaseOrderDTO.getIesOrderNumber();
+
+        List<ReceptionOrderDTO> receptionOrderList = receptionOrderService.getReceptionOrderByIesOrderNumber(purchaseOrderId);
+
+        Long boardReceived = receptionOrderList.stream().mapToLong(ReceptionOrderDTO::getAmountReceived).sum();
+        Long boardToRegister = receptionOrderDTO.getAmountReceived();
+
+        Long boardHypotheticalTotal = boardReceived + boardToRegister;
+        Long boardOrderIes = purchaseOrderDTO.getOrderAmount();
+
+        validateAvailability(boardOrderIes, boardHypotheticalTotal);
+
+        return receptionOrderService.save(receptionOrderDTO);
     }
 }

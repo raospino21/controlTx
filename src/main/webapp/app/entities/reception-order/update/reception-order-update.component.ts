@@ -55,7 +55,7 @@ export class ReceptionOrderUpdateComponent implements OnInit {
     if (receptionOrder.id !== null) {
       this.subscribeToSaveResponse(this.receptionOrderService.update(receptionOrder));
     } else {
-      this.subscribeToSaveResponse(this.receptionOrderService.create(receptionOrder));
+      this.subscribeToSaveResponse(this.receptionOrderService.createAlternative(receptionOrder));
     }
   }
 

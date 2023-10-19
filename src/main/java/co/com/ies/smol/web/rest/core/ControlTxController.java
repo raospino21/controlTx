@@ -15,6 +15,8 @@ import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
 import co.com.ies.smol.service.dto.core.RequestStatusRecord;
 import co.com.ies.smol.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import javax.validation.Valid;
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 
 @RestController
@@ -235,7 +238,7 @@ public class ControlTxController {
     /**
      * Entrega las ordenes de recepción pendientes por asociar tarjetas
      */
-    @GetMapping("/info/reception-order")
+    @GetMapping("/controltx/info/reception-order")
     public ResponseEntity<List<ReceptionOrderDTO>> getPendingReceptionOrderForBoard() {
         log.debug("REST request getPendingReceptionOrderForBoard  ");
         return ResponseEntity.ok(controlTxService.getPendingReceptionOrderForBoard());
@@ -248,5 +251,24 @@ public class ControlTxController {
     public ResponseEntity<List<PurchaseOrderDTO>> getPendingPurchaseOrderForReceptionOrder() {
         log.debug("REST request getPendingPurchaseOrderForReceptionOrder  ");
         return ResponseEntity.ok(controlTxService.getPendingPurchaseOrderForReceptionOrder());
+    }
+
+    @PostMapping("/controltx/reception-orders")
+    public ResponseEntity<ReceptionOrderDTO> createReceptionOrder(@Valid @RequestBody ReceptionOrderDTO receptionOrderDTO)
+        throws URISyntaxException {
+        log.debug("REST request to save ReceptionOrder : {}", receptionOrderDTO);
+        if (receptionOrderDTO.getId() != null) {
+            throw new BadRequestAlertException("A new receptionOrder cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        ReceptionOrderDTO result;
+        try {
+            result = controlTxService.saveReceptionOrder(receptionOrderDTO);
+        } catch (ControlTxException e) {
+            throw new BadRequestAlertException("limit exceeded", ENTITY_NAME, e.getMessage());
+        }
+        return ResponseEntity
+            .created(new URI("/api/reception-orders/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, true, ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
 }
