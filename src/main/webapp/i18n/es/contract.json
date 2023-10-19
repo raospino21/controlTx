@@ -2,28 +2,28 @@
   "controTxApp": {
     "contract": {
       "home": {
-        "title": "Contractos",
+        "title": "Contratos",
         "refreshListLabel": "Refrescar lista",
-        "createLabel": "Crear nuevo Contract",
-        "createOrEditLabel": "Crear o editar Contract",
-        "notFound": "Ningún Contracts encontrado"
+        "createLabel": "Crear nuevo Contrato",
+        "createOrEditLabel": "Crear o editar Contrato",
+        "notFound": "Ningún Contrato encontrado"
       },
-      "created": "Un nuevo Contract ha sido creado con el identificador {{ param }}",
-      "updated": "Un Contract ha sido actualizado con el identificador {{ param }}",
-      "deleted": "Un Contract ha sido eliminado con el identificador {{ param }}",
+      "created": "Un nuevo Contrato ha sido creado con el identificador {{ param }}",
+      "updated": "Un Contrato ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Contrato ha sido eliminado con el identificador {{ param }}",
       "delete": {
-        "question": "¿Seguro que quiere eliminar Contract {{ id }}?"
+        "question": "¿Seguro que quiere eliminar Contrato {{ id }}?"
       },
       "detail": {
-        "title": "Contract"
+        "title": "Contrato"
       },
       "id": "Id",
-      "reference": "Reference",
-      "type": "Type",
-      "amountInterfaceBoard": "Amount Interface Board",
-      "startTime": "Start Time",
-      "finishTime": "Finish Time",
-      "operator": "Operator"
+      "reference": "Referencia",
+      "type": "Tipo",
+      "amountInterfaceBoard": "Cantidad de tarjetas",
+      "startTime": "Hora de inicio",
+      "finishTime": "Hora de finalización",
+      "operator": "Operador"
     }
   }
 }

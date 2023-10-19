@@ -4,24 +4,24 @@
       "home": {
         "title": "Tarjetas",
         "refreshListLabel": "Refrescar lista",
-        "createLabel": "Crear nuevo Interface Board",
-        "createOrEditLabel": "Crear o editar Interface Board",
-        "notFound": "Ningún Interface Boards encontrado"
+        "createLabel": "Crear nueva Tarjeta",
+        "createOrEditLabel": "Crear o editar Tarjeta",
+        "notFound": "Ningúna Tarjeta encontrada"
       },
-      "created": "Un nuevo Interface Board ha sido creado con el identificador {{ param }}",
-      "updated": "Un Interface Board ha sido actualizado con el identificador {{ param }}",
-      "deleted": "Un Interface Board ha sido eliminado con el identificador {{ param }}",
+      "created": "Una nueva Tarjeta ha sido creada con el identificador {{ param }}",
+      "updated": "Una Tarjeta ha sido actualizada con el identificador {{ param }}",
+      "deleted": "Una Tarjeta ha sido eliminada con el identificador {{ param }}",
       "delete": {
-        "question": "¿Seguro que quiere eliminar Interface Board {{ id }}?"
+        "question": "¿Seguro que quiere eliminar la Tarjeta{{ id }}?"
       },
       "detail": {
-        "title": "Interface Board"
+        "title": "Tarjeta"
       },
       "id": "Id",
-      "ipAddress": "Ip Address",
+      "ipAddress": "Dirección IP",
       "hash": "Hash",
       "mac": "Mac",
-      "receptionOrder": "Reception Order"
+      "receptionOrder": "Orden de recepción"
     }
   }
 }

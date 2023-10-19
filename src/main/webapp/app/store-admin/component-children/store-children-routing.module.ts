@@ -13,7 +13,7 @@ export const STORE_LIST_ROUTE: Route = {
   data: {
     authorities: ['ROLE_STORE'],
     defaultSort: 'id,asc',
-    pageTitle: 'store-admin.home.title',
+    pageTitle: 'global.menu.store-admin.link-contract-board.title',
   },
   canActivate: [UserRouteAccessService],
 };
@@ -24,7 +24,7 @@ export const BOARD_ROUTE: Route = {
   data: {
     authorities: ['ROLE_STORE', 'ROLE_COMMERCIAL'],
     defaultSort: 'id,asc',
-    pageTitle: 'store-admin.home.title',
+    pageTitle: 'global.menu.store-admin.board-in-stock.title',
   },
   canActivate: [UserRouteAccessService],
 };

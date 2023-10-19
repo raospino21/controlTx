@@ -47,6 +47,14 @@
         "purchaseOrder": "Orden de Compra",
         "receptionOrder": "Orden de Recepcion"
       },
+      "store-admin": {
+        "board-in-stock": {
+          "title": "Tarjetas en Stock"
+        },
+        "link-contract-board": {
+          "title": "Vinculacion de Tarjetas"
+        }
+      },
       "admin": {
         "main": "Administración",
         "userManagement": "Gestión de usuarios",

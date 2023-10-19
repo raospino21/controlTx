@@ -4,21 +4,21 @@
       "home": {
         "title": "Marcas",
         "refreshListLabel": "Refrescar lista",
-        "createLabel": "Crear nuevo Brand",
-        "createOrEditLabel": "Crear o editar Brand",
-        "notFound": "Ningún Brands encontrado"
+        "createLabel": "Crear nueva Marca",
+        "createOrEditLabel": "Crear o editar Marca",
+        "notFound": "Ningúna marca encontrada"
       },
-      "created": "Un nuevo Brand ha sido creado con el identificador {{ param }}",
-      "updated": "Un Brand ha sido actualizado con el identificador {{ param }}",
-      "deleted": "Un Brand ha sido eliminado con el identificador {{ param }}",
+      "created": "Una nueva Marca ha sido creada con el identificador {{ param }}",
+      "updated": "Una Marca ha sido actualizada con el identificador {{ param }}",
+      "deleted": "Una Marca ha sido eliminada con el identificador {{ param }}",
       "delete": {
-        "question": "¿Seguro que quiere eliminar Brand {{ id }}?"
+        "question": "¿Seguro que quiere eliminar Marca {{ id }}?"
       },
       "detail": {
-        "title": "Brand"
+        "title": "Marca"
       },
       "id": "Id",
-      "name": "Name"
+      "name": "Nombre"
     }
   }
 }

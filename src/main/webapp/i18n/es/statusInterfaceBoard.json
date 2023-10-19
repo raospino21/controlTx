@@ -2,12 +2,12 @@
   "controTxApp": {
     "StatusInterfaceBoard": {
       "null": "",
-      "OPERATION": "OPERATION",
+      "OPERATION": "OPERACIÓN",
       "STOCK": "STOCK",
-      "IN_TRANSFER": "IN_TRANSFER",
-      "REPAIR": "REPAIR",
-      "WARRANTY": "WARRANTY",
-      "DISCHARGED": "DISCHARGED"
+      "IN_TRANSFER": "EN TRANSFERENCIA",
+      "REPAIR": "REPARACIÓN",
+      "WARRANTY": "GARANTÍA",
+      "DISCHARGED": "DAR DE BAJA"
     }
   }
 }

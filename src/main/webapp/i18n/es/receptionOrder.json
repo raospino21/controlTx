@@ -4,26 +4,26 @@
       "home": {
         "title": "Orden de Recepción",
         "refreshListLabel": "Refrescar lista",
-        "createLabel": "Crear",
-        "createOrEditLabel": "Crear o editar Reception Order",
-        "notFound": "Ningún Reception Orders encontrado"
+        "createLabel": "Crear Orden de Recepción",
+        "createOrEditLabel": "Crear o editar Orden de Recepción",
+        "notFound": "Ningúna Orden de Recepción encontrada"
       },
-      "created": "Un nuevo Reception Order ha sido creado con el identificador {{ param }}",
-      "updated": "Un Reception Order ha sido actualizado con el identificador {{ param }}",
-      "deleted": "Un Reception Order ha sido eliminado con el identificador {{ param }}",
+      "created": "Una Orden de Recepción ha sido creada con el identificador {{ param }}",
+      "updated": "Una Orden de Recepción ha sido actualizada con el identificador {{ param }}",
+      "deleted": "Una Orden de Recepción ha sido eliminada con el identificador {{ param }}",
       "delete": {
-        "question": "¿Seguro que quiere eliminar Reception Order {{ id }}?"
+        "question": "¿Seguro que quiere eliminar la Orden de Recepción{{ id }}?"
       },
       "detail": {
-        "title": "Reception Order"
+        "title": "Orden de Recepción"
       },
       "id": "Id",
-      "providerLotNumber": "Provider Lot Number",
-      "amountReceived": "Amount Received",
-      "remission": "Remission",
-      "entryDate": "Entry Date",
-      "warrantyDate": "Warranty Date",
-      "purchaseOrder": "Purchase Order"
+      "providerLotNumber": "Número de Lote del Proveedor",
+      "amountReceived": "Cantidad recibida",
+      "remission": "Remisión",
+      "entryDate": "Fecha de entrada",
+      "warrantyDate": "Fecha de garantía",
+      "purchaseOrder": "Orden de compra"
     }
   }
 }
