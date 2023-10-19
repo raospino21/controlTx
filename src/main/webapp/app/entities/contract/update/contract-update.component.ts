@@ -17,6 +17,7 @@ import { ContractType } from 'app/entities/enumerations/contract-type.model';
 })
 export class ContractUpdateComponent implements OnInit {
   isSaving = false;
+  isUpdate = false;
   contract: IContract | null = null;
   contractTypeValues = Object.keys(ContractType);
 
@@ -38,6 +39,7 @@ export class ContractUpdateComponent implements OnInit {
       this.contract = contract;
       if (contract) {
         this.updateForm(contract);
+        this.isUpdate = true;
       }
 
       this.loadRelationshipsOptions();

@@ -99,7 +99,7 @@
           </div>
         </div>
 
-        <div class="row mb-3">
+        <div class="row mb-3" *ngIf="isUpdate">
           <label class="form-label" jhiTranslate="controTxApp.contract.finishTime" for="field_finishTime">Finish Time</label>
           <div class="d-flex">
             <input
