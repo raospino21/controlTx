@@ -20,6 +20,8 @@ export class ReceptionOrderUpdateComponent implements OnInit {
 
   purchaseOrdersSharedCollection: IPurchaseOrder[] = [];
 
+  orderAmount: number = 0;
+
   editForm: ReceptionOrderFormGroup = this.receptionOrderFormService.createReceptionOrderFormGroup();
 
   constructor(
@@ -99,5 +101,10 @@ export class ReceptionOrderUpdateComponent implements OnInit {
         )
       )
       .subscribe((purchaseOrders: IPurchaseOrder[]) => (this.purchaseOrdersSharedCollection = purchaseOrders));
+  }
+
+  onSelectOption() {
+    const selected = this.editForm.get('purchaseOrder')!.value as IPurchaseOrder;
+    this.orderAmount = selected.orderAmount!;
   }
 }
