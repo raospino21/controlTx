@@ -21,8 +21,8 @@
       "reference": "Referencia",
       "type": "Tipo",
       "amountInterfaceBoard": "Cantidad de tarjetas",
-      "startTime": "Hora de inicio",
-      "finishTime": "Hora de finalización",
+      "startTime": "Fecha de inicio",
+      "finishTime": "Fecha de finalización",
       "operator": "Operador"
     }
   }

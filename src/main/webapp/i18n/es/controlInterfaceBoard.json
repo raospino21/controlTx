@@ -20,8 +20,8 @@
       "id": "Id",
       "location": "Ubicación",
       "state": "Estado",
-      "startTime": "Hora de inicio",
-      "finishTime": "Hora de finalización",
+      "startTime": "Fecha de inicio",
+      "finishTime": "Fecha de finalización",
       "contract": "Contrato",
       "interfaceBoard": "Tarjeta"
     }
