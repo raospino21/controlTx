@@ -2,21 +2,38 @@
   <h2 id="page-heading" data-cy="InterfaceBoardHeading">
     <span jhiTranslate="controTxApp.interfaceBoard.home.title">Interface Boards</span>
 
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
-        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-        <span jhiTranslate="controTxApp.interfaceBoard.home.refreshListLabel">Refrescar lista</span>
-      </button>
+    <div class="d-flex justify-content-between">
+      <form class="form-inline">
+        <input
+          type="text"
+          [(ngModel)]="filter.mac"
+          [ngModelOptions]="{ standalone: true }"
+          class="form-control"
+          id="filterMac"
+          placeholder="Ingrese la Mac"
+        />
+        <div>
+          <button type="submit" class="btn btn-primary" (click)="filterBtn()">Realizar Búsqueda</button>
+          <button type="button" class="btn btn-secondary" (click)="cleanFilters()">Limpiar Filtros</button>
+        </div>
+      </form>
 
-      <button
-        id="jh-create-entity"
-        data-cy="entityCreateButton"
-        class="btn btn-primary jh-create-entity create-interface-board"
-        [routerLink]="['/interface-board/create']"
-      >
-        <fa-icon icon="plus"></fa-icon>
-        <span jhiTranslate="controTxApp.interfaceBoard.home.createLabel"> Crear nuevo Interface Board </span>
-      </button>
+      <div>
+        <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+          <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+          <span jhiTranslate="controTxApp.interfaceBoard.home.refreshListLabel">Refrescar lista</span>
+        </button>
+
+        <button
+          id="jh-create-entity"
+          data-cy="entityCreateButton"
+          class="btn btn-primary jh-create-entity create-interface-board"
+          [routerLink]="['/interface-board/create']"
+        >
+          <fa-icon icon="plus"></fa-icon>
+          <span jhiTranslate="controTxApp.interfaceBoard.home.createLabel"> Crear nuevo Interface Board </span>
+        </button>
+      </div>
     </div>
   </h2>
 

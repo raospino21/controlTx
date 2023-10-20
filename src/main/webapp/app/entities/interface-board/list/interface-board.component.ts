@@ -126,7 +126,14 @@ export class InterfaceBoardComponent implements OnInit {
     filterOptions?.forEach(filterOption => {
       queryObject[filterOption.name] = filterOption.values;
     });
+    this.fillOwnFilter(queryObject);
     return this.interfaceBoardService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
+  }
+
+  protected fillOwnFilter(queryObject: any): any {
+    if (this.filter.mac != null) {
+      queryObject['mac.equals'] = this.filter.mac;
+    }
   }
 
   protected handleNavigation(page = this.page, predicate?: string, ascending?: boolean, filterOptions?: IFilterOption[]): void {
@@ -154,4 +161,27 @@ export class InterfaceBoardComponent implements OnInit {
       return [predicate + ',' + ascendingQueryParam];
     }
   }
+
+  filterBtn(): void {
+    if (this.filter !== null && this.filter.mac != null) {
+      const queryParamsObj: any = {
+        mac: this.filter!.mac,
+      };
+
+      this.router.navigate(['./'], {
+        relativeTo: this.activatedRoute,
+        queryParams: queryParamsObj,
+      });
+    }
+    this.load();
+  }
+
+  cleanFilters(): void {
+    this.filter.mac = null;
+    this.load();
+  }
+
+  filter = {
+    mac: null,
+  };
 }
