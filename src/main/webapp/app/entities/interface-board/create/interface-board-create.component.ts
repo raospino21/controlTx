@@ -43,7 +43,7 @@ export class InterfaceBoardCreateComponent implements OnInit {
     const createBoard = this.createModelFromForm();
 
     this.interfaceBoardService.createBoard(createBoard).subscribe({
-      next: (res: IRequestStatus) => this.showAlert('success', res.msg!, 4000),
+      next: (res: IRequestStatus) => this.showAlert('success', res.msg!, 2000),
       error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.detail, 4000),
     });
   }
@@ -54,6 +54,7 @@ export class InterfaceBoardCreateComponent implements OnInit {
 
     setTimeout(() => {
       this.errorMsg = '';
+      this.previousState();
     }, showTime);
   }
 
