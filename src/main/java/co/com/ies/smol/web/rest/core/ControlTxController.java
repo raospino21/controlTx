@@ -217,7 +217,7 @@ public class ControlTxController {
         @RequestParam(value = "mac", required = false) String mac,
         @RequestParam(value = "reference", required = false) String reference,
         @org.springdoc.api.annotations.ParameterObject Pageable pageable
-    ) {
+    ) throws ControlTxException {
         FilterControlInterfaceBoard filter = new FilterControlInterfaceBoard(mac, reference);
         log.debug("REST request getControlInterfaceBoardAvailable filter {}", filter);
 

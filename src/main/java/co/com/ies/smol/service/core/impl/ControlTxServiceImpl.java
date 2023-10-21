@@ -304,7 +304,8 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     }
 
     @Override
-    public Page<ControlInterfaceBoardDTO> getControlInterfaceBoardAvailable(FilterControlInterfaceBoard filter, Pageable pageable) {
+    public Page<ControlInterfaceBoardDTO> getControlInterfaceBoardAvailable(FilterControlInterfaceBoard filter, Pageable pageable)
+        throws ControlTxException {
         ControlInterfaceBoardCriteria criteria = new ControlInterfaceBoardCriteria();
 
         LongFilter contractFilter = new LongFilter();
@@ -318,19 +319,21 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         if (Objects.nonNull(filter.reference())) {
             List<ContractDTO> contractList = contractService.getContractByReference(filter.reference());
 
-            if (!contractList.isEmpty()) {
-                List<Long> contractIdList = contractList.stream().map(ContractDTO::getId).toList();
-                contractFilter.setIn(contractIdList);
-                criteria.setContractId(contractFilter);
+            if (contractList.isEmpty()) {
+                throw new ControlTxException("Contrato no encontrado (" + filter.reference() + ")");
             }
+            List<Long> contractIdList = contractList.stream().map(ContractDTO::getId).toList();
+            contractFilter.setIn(contractIdList);
+            criteria.setContractId(contractFilter);
         }
 
         if (Objects.nonNull(filter.mac())) {
-            Optional<InterfaceBoardDTO> oInterfaceBoard = interfaceBoardService.getInterfaceBoardByMac(filter.mac());
-            oInterfaceBoard.ifPresent(interfaceBoard -> {
-                interfaceBoardFilter.setEquals(interfaceBoard.getId());
-                criteria.setInterfaceBoardId(interfaceBoardFilter);
-            });
+            final InterfaceBoardDTO interfaceBoard = interfaceBoardService
+                .getInterfaceBoardByMac(filter.mac())
+                .orElseThrow(() -> new ControlTxException("Tarjeta no encontrada (" + filter.mac() + ")"));
+
+            interfaceBoardFilter.setEquals(interfaceBoard.getId());
+            criteria.setInterfaceBoardId(interfaceBoardFilter);
         }
 
         return controlInterfaceBoardService.getControlInterfaceBoardAvailable(criteria, pageable);

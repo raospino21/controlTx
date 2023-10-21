@@ -40,7 +40,8 @@ public interface ControlTxService {
 
     List<InterfaceBoardDTO> getInfoBoardsByOperatorIdAndState(Long operatorId, StatusInterfaceBoard state);
 
-    Page<ControlInterfaceBoardDTO> getControlInterfaceBoardAvailable(FilterControlInterfaceBoard filter, Pageable pageable);
+    Page<ControlInterfaceBoardDTO> getControlInterfaceBoardAvailable(FilterControlInterfaceBoard filter, Pageable pageable)
+        throws ControlTxException;
 
     List<ContractDTO> getPendingContractsForBoard();
 

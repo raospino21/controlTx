@@ -54,22 +54,30 @@ export class LinkBoardComponent implements OnInit {
       page: this.page - 1,
       size: this.pageSize,
       reference: this.filters.reference,
-      mac: this.filters.mac,
+      mac: this.filters!.mac!.trim(),
     };
 
-    this.service.getControlBoardsAvailable(queryObject).subscribe(res => {
-      this.onSuccess(res.body!, res.headers);
+    this.service.getControlBoardsAvailable(queryObject).subscribe({
+      next: (res: HttpResponse<IControlInterfaceBoard[]>) => this.onSuccess(res.body!, res.headers),
+      error: (error: HttpErrorResponse) => this.onError(error),
     });
   }
 
   private onSuccess(controlInterfaceBoards: IControlInterfaceBoard[], headers: HttpHeaders): void {
     this.totalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
     this.controlInterfaceBoards = controlInterfaceBoards;
+    this.showAlert('success', 'Exito!', 2000);
+  }
+
+  private onError(error: HttpErrorResponse): void {
+    this.filters.reference = null;
+    this.filters.mac = '';
+    this.showAlert('danger', error.error.detail, 4000);
   }
 
   public cleanFilters(): void {
     this.filters.reference = null;
-    this.filters.mac = null;
+    this.filters.mac = '';
     this.loadData();
   }
 
@@ -93,11 +101,12 @@ export class LinkBoardComponent implements OnInit {
 
   filters = {
     reference: null,
-    mac: null,
+    mac: '',
   };
 
   public filter(): void {
     this.page = 1;
+    this.filters!.mac = this.filters!.mac!.trim();
     this.loadData();
   }
 
