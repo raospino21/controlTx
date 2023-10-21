@@ -11,7 +11,7 @@ export const STORE_LIST_ROUTE: Route = {
   path: 'link-contract-board',
   component: LinkBoardComponent,
   data: {
-    authorities: ['ROLE_STORE'],
+    authorities: ['ROLE_STORE', 'ROLE_COMMERCIAL'],
     defaultSort: 'id,asc',
     pageTitle: 'global.menu.store-admin.link-contract-board.title',
   },

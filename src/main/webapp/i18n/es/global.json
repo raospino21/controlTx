@@ -35,6 +35,7 @@
         "purchaseOrder": "Orden de Compra",
         "receptionOrder": "Orden de Recepcion",
         "boardInStock": "Tarjetas en Stock",
+        "assingBoard": "Tarjeta Vinculadas a un Contrato",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "store": {

@@ -32,7 +32,7 @@
       <fa-icon icon="trash-alt"></fa-icon>
     </button>
 
-    <button class="btn btn-primary col-1 mt-4" (click)="modalAssignBoard()">
+    <button class="btn btn-primary col-1 mt-4" *jhiHasAnyAuthority="'ROLE_STORE'" (click)="modalAssignBoard()">
       <span>Asignar tarjeta</span>
       <fa-icon icon="link"></fa-icon>
     </button>
