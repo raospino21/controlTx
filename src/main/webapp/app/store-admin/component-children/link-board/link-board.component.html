@@ -57,7 +57,13 @@
             </div>
           </th>
           <th scope="col">
+            <div class="d-flex"><span>Operador</span></div>
+          </th>
+          <th scope="col">
             <div class="d-flex"><span>Contrato</span></div>
+          </th>
+          <th scope="col">
+            <div class="d-flex"><span>Tipo Contrato</span></div>
           </th>
           <th scope="col">
             <div class="d-flex"><span>Mac</span></div>
@@ -72,11 +78,22 @@
           <td>{{ controlInterfaceBoard.startTime!.toString() | date: 'yyyy-MM-dd HH:mm' }}</td>
           <td>
             <div *ngIf="controlInterfaceBoard.contract">
+              <a [routerLink]="['/operator', controlInterfaceBoard!.contract!.operator?.id, 'view']">{{
+                controlInterfaceBoard!.contract!.operator?.name
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="controlInterfaceBoard.contract">
               <a [routerLink]="['/contract', controlInterfaceBoard.contract.id, 'view']">{{
                 controlInterfaceBoard!.contract!.reference
               }}</a>
             </div>
           </td>
+          <td
+            *ngIf="controlInterfaceBoard.contract"
+            jhiTranslate="{{ 'controTxApp.ContractType.' + controlInterfaceBoard!.contract!.type }}"
+          ></td>
           <td>
             <div *ngIf="controlInterfaceBoard.interfaceBoard">
               <a [routerLink]="['/interface-board', controlInterfaceBoard.interfaceBoard.id, 'view']">{{

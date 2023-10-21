@@ -21,6 +21,8 @@ public interface ControlInterfaceBoardMapper extends EntityMapper<ControlInterfa
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "reference", source = "reference")
+    @Mapping(target = "operator", source = "operator")
+    @Mapping(target = "type", source = "type")
     ContractDTO toDtoContractReference(Contract contract);
 
     @Named("interfaceBoardMac")
