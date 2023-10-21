@@ -128,17 +128,10 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
     }
 
     @Override
-    public Page<ControlInterfaceBoardDTO> getInfoBoardsAvailable(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
-        ControlInterfaceBoardCriteria criteria = new ControlInterfaceBoardCriteria();
-
-        StatusInterfaceBoardFilter statusFilter = new StatusInterfaceBoardFilter();
-        statusFilter.setEquals(StatusInterfaceBoard.STOCK);
-        criteria.setState(statusFilter);
-
-        ZonedDateTimeFilter finishTimeFilter = new ZonedDateTimeFilter();
-        finishTimeFilter.setEquals(null);
-        criteria.setFinishTime(finishTimeFilter);
-
+    public Page<ControlInterfaceBoardDTO> getInfoBoardsAvailable(
+        ControlInterfaceBoardCriteria criteria,
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable
+    ) {
         return controlInterfaceBoardQueryService.findByCriteria(criteria, pageable);
     }
 

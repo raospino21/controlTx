@@ -15,6 +15,7 @@ import co.com.ies.smol.service.PurchaseOrderService;
 import co.com.ies.smol.service.ReceptionOrderService;
 import co.com.ies.smol.service.core.ControlTxService;
 import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria;
+import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria.StatusInterfaceBoardFilter;
 import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
@@ -38,6 +39,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import tech.jhipster.service.filter.LongFilter;
+import tech.jhipster.service.filter.ZonedDateTimeFilter;
 
 @Transactional
 @Service
@@ -261,8 +263,30 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     }
 
     @Override
-    public Page<InterfaceBoardDTO> getInfoBoardsAvailable(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
-        return controlInterfaceBoardService.getInfoBoardsAvailable(pageable).map(ControlInterfaceBoardDTO::getInterfaceBoard);
+    public Page<InterfaceBoardDTO> getInfoBoardsAvailable(String mac, @org.springdoc.api.annotations.ParameterObject Pageable pageable)
+        throws ControlTxException {
+        ControlInterfaceBoardCriteria criteria = new ControlInterfaceBoardCriteria();
+
+        if (Objects.nonNull(mac)) {
+            Optional<InterfaceBoardDTO> oInterfaceBoard = interfaceBoardService.getInterfaceBoardByMac(mac);
+
+            if (oInterfaceBoard.isEmpty()) {
+                throw new ControlTxException("Tarjeta no encontrada " + mac);
+            }
+            LongFilter interfaceBoardFilter = new LongFilter();
+            interfaceBoardFilter.setEquals(oInterfaceBoard.get().getId());
+            criteria.setInterfaceBoardId(interfaceBoardFilter);
+        }
+
+        StatusInterfaceBoardFilter statusFilter = new StatusInterfaceBoardFilter();
+        statusFilter.setEquals(StatusInterfaceBoard.STOCK);
+        criteria.setState(statusFilter);
+
+        ZonedDateTimeFilter finishTimeFilter = new ZonedDateTimeFilter();
+        finishTimeFilter.setEquals(null);
+        criteria.setFinishTime(finishTimeFilter);
+
+        return controlInterfaceBoardService.getInfoBoardsAvailable(criteria, pageable).map(ControlInterfaceBoardDTO::getInterfaceBoard);
     }
 
     @Override

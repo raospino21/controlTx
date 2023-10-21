@@ -76,7 +76,10 @@ public interface ControlInterfaceBoardService {
 
     List<ControlInterfaceBoardDTO> getControlInterfaceBoardByContractId(Long contractId);
 
-    Page<ControlInterfaceBoardDTO> getInfoBoardsAvailable(@org.springdoc.api.annotations.ParameterObject Pageable pageable);
+    Page<ControlInterfaceBoardDTO> getInfoBoardsAvailable(
+        ControlInterfaceBoardCriteria criteria,
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable
+    );
 
     List<ControlInterfaceBoardDTO> getByContractIdInAndState(List<Long> contractIdList, StatusInterfaceBoard state);
 

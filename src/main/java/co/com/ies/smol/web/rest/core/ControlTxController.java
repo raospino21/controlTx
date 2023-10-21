@@ -184,13 +184,14 @@ public class ControlTxController {
     /**
      * Entrega la tarjetas disponibles en stock
      */
-    @GetMapping("/info/boards/available")
+    @GetMapping("/info/boards/available/")
     public ResponseEntity<List<InterfaceBoardDTO>> getInfoBoardsAvailable(
+        @RequestParam(value = "mac", required = false) String mac,
         @org.springdoc.api.annotations.ParameterObject Pageable pageable
-    ) {
-        log.debug("REST request getInfoBoardsAvailable");
+    ) throws ControlTxException {
+        log.debug("REST request getInfoBoardsAvailable mac {}", mac);
 
-        Page<InterfaceBoardDTO> page = controlTxService.getInfoBoardsAvailable(pageable);
+        Page<InterfaceBoardDTO> page = controlTxService.getInfoBoardsAvailable(mac, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -211,7 +212,7 @@ public class ControlTxController {
     /**
      * Entrega los registro de control interface board disponibles
      */
-    @GetMapping("/info/control-interface-boards/avalaible/")
+    @GetMapping("/info/control-interface-boards/available/")
     public ResponseEntity<List<ControlInterfaceBoardDTO>> getControlInterfaceBoardAvailable(
         @RequestParam(value = "mac", required = false) String mac,
         @RequestParam(value = "reference", required = false) String reference,

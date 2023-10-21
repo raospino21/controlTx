@@ -35,7 +35,8 @@ public interface ControlTxService {
 
     BoardAssociationResponseDTO getInfoBoardAssociation(Long operatorId) throws ControlTxException;
 
-    Page<InterfaceBoardDTO> getInfoBoardsAvailable(@org.springdoc.api.annotations.ParameterObject Pageable pageable);
+    Page<InterfaceBoardDTO> getInfoBoardsAvailable(String mac, @org.springdoc.api.annotations.ParameterObject Pageable pageable)
+        throws ControlTxException;
 
     List<InterfaceBoardDTO> getInfoBoardsByOperatorIdAndState(Long operatorId, StatusInterfaceBoard state);
 
