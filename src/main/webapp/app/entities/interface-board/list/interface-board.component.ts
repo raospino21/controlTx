@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpHeaders } from '@angular/common/http';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
-import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { combineLatest, filter, map, Observable, switchMap, tap } from 'rxjs';
+import { NgbModal, NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
 import { IInterfaceBoard } from '../interface-board.model';
 
@@ -12,13 +12,23 @@ import { EntityArrayResponseType, InterfaceBoardService } from '../service/inter
 import { InterfaceBoardDeleteDialogComponent } from '../delete/interface-board-delete-dialog.component';
 import { FilterOptions, IFilterOptions, IFilterOption } from 'app/shared/filter/filter.model';
 import { AccountService } from 'app/core/auth/account.service';
+import { CreateBoard, ICreateBoard } from '../create/create-board.model';
+import { FormBuilder, Validators } from '@angular/forms';
+import { IReceptionOrder } from 'app/entities/reception-order/reception-order.model';
+import { ReceptionOrderService } from 'app/entities/reception-order/service/reception-order.service';
+import { UploadBoardComponent } from '../upload-board-file/upload-board.component';
 
 @Component({
   selector: 'jhi-interface-board',
   templateUrl: './interface-board.component.html',
+  styles: ['.min-width-300 { min-width: 800px; }'],
 })
 export class InterfaceBoardComponent implements OnInit {
+  @ViewChild('createBoardModalTpl', { static: true }) createBoardModalTpl: TemplateRef<any> | undefined;
   interfaceBoards?: IInterfaceBoard[];
+  interfaceBoard: IInterfaceBoard | null = null;
+  receptionOrdersSharedCollection: IReceptionOrder[] = [];
+  receptionOrderChild: IReceptionOrder | null = null;
   isLoading = false;
   predicate = 'id';
   ascending = true;
@@ -27,20 +37,27 @@ export class InterfaceBoardComponent implements OnInit {
   totalItems = 0;
   page = 1;
 
+  createBoardFromFile: ICreateBoard | null = null;
+
+  hidenButtonCreationBoardsByFile = false;
+
   constructor(
     protected interfaceBoardService: InterfaceBoardService,
     protected activatedRoute: ActivatedRoute,
     public router: Router,
     protected modalService: NgbModal,
-    public accountService: AccountService
+    public accountService: AccountService,
+    protected receptionOrderService: ReceptionOrderService,
+    protected fb: FormBuilder
   ) {}
 
   trackId = (_index: number, item: IInterfaceBoard): number => this.interfaceBoardService.getInterfaceBoardIdentifier(item);
 
   ngOnInit(): void {
+    console.log('----------- receptionOrder ngOnInit ', this.receptionOrderChild);
     this.load();
-
     this.filters.filterChanges.subscribe(filterOptions => this.handleNavigation(1, this.predicate, this.ascending, filterOptions));
+    this.loadRelationshipsOptions();
   }
 
   canView(role: string[]) {
@@ -184,4 +201,75 @@ export class InterfaceBoardComponent implements OnInit {
   filter = {
     mac: null,
   };
+
+  public isActiveAccordion(): void {
+    this.hidenButtonCreationBoardsByFile = true;
+  }
+
+  public beforeClose($event: NgbPanelChangeEvent): void {
+    // if ($event.panelId === 'toggle-1' && $event.nextState === false) {
+    //   $event.preventDefault();
+    // }
+  }
+
+  public openModal(modal: any): void {
+    this.modalService.open(modal, {
+      backdrop: 'static',
+      keyboard: false,
+    });
+  }
+
+  createModelFromForm(): ICreateBoard {
+    return {
+      ...new CreateBoard(),
+      receptionOrder: this.formCreateInterfaceBoard.get(['receptionOrderOption'])!.value as IReceptionOrder,
+      macs: [this.formCreateInterfaceBoard.get(['mac'])?.value],
+    };
+  }
+
+  formCreateInterfaceBoard = this.fb.group({
+    receptionOrderOption: [null, [Validators.required]],
+    mac: [null, [Validators.required]],
+  });
+
+  public cleanformCreateInterfaceBoard(): void {
+    this.formCreateInterfaceBoard.patchValue({
+      receptionOrderOption: null,
+      mac: null,
+    });
+  }
+
+  public createBoardsToCreateForFile(): void {
+    // const bonus = this.createBonusFromForm();
+    // this.infoBonusCreationForm = bonus;
+    // this.resetBalanceAvailableInDiferentMonth();
+    // this.setBalanceAvailableDiferentMonth(this.infoBonusCreationForm.startDate!);
+    this.receptionOrderChild = this.createModelFromForm().receptionOrder!;
+    console.log('----------- receptionOrder createBoardsToCreateForFile ', this.receptionOrderChild);
+
+    this.modalService.dismissAll();
+  }
+
+  protected loadRelationshipsOptions(): void {
+    const queryObject: any = {
+      page: 0,
+      size: 30,
+      eagerload: true,
+    };
+
+    this.receptionOrderService
+      .receptionOrderAvailable(queryObject)
+      .pipe(map((res: HttpResponse<IReceptionOrder[]>) => res.body ?? []))
+      .pipe(
+        map((receptionOrders: IReceptionOrder[]) =>
+          this.receptionOrderService.addReceptionOrderToCollectionIfMissing<IReceptionOrder>(
+            receptionOrders,
+            this.interfaceBoard?.receptionOrder
+          )
+        )
+      )
+      .subscribe((receptionOrders: IReceptionOrder[]) => {
+        this.receptionOrdersSharedCollection = receptionOrders;
+      });
+  }
 }

@@ -1,0 +1,75 @@
+<div class="container p-3" *ngIf="receptionOrder !== null">
+  <h6 class="text">El archivo debe tener extension <strong>.csv</strong>, y solo debe tener la columna con los Mac a ingresar</h6>
+  <div class="custom-file">
+    <label class="form-label" for="customFile">Seleccione un archivo</label>
+    <input type="file" (change)="handleFileSelect($event)" class="form-control" id="customFile" />
+  </div>
+</div>
+
+<div class="p-3" *ngIf="receptionOrder !== null && mac != null && mac.length > 0">
+  <div class="form-group row">
+    <dl class="row col-12 fs-6">
+      <dt class="col-sm-4">Nombre del archivo:</dt>
+      <dd class="col-sm-8">{{ fileName }}</dd>
+
+      <dt class="col-sm-4">Cantidad Filas:</dt>
+      <dd class="col-sm-8">{{ cantidadFilas }}</dd>
+
+      <dt class="col-sm-4">Cantidad a asignar:</dt>
+      <dd class="col-sm-8">{{ receptionOrder!.providerLotNumber! }}</dd>
+    </dl>
+  </div>
+
+  <section class="d-flex form-inline">
+    <button type="submit" class="btn btn-success mb-2 mr-2" *ngIf="progress === 0" (click)="upload()" [disabled]="disableButtonUpload">
+      Subir bonos
+    </button>
+    <div class="text-danger mt-0" *ngIf="disableButtonUpload">No es posible crear esta cantidad de bonos con el saldo disponible</div>
+  </section>
+
+  <div *ngIf="progress !== 0" class="progress">
+    <div
+      class="progress-bar bg-info progress-bar-striped progress-bar-animated"
+      role="progressbar"
+      attr.aria-valuenow="{{ progress }}"
+      aria-valuemin="0"
+      aria-valuemax="100"
+    >
+      {{ progress }}%
+    </div>
+  </div>
+
+  <div *ngIf="message" class="alert alert-info h5" role="alert">
+    {{ message }}
+  </div>
+
+  <div *ngIf="messageError" class="alert alert-danger h5" role="alert">
+    {{ messageError }}
+  </div>
+
+  <div *ngIf="messageBonusCreation" class="alert alert-success h5" role="alert">
+    {{ messageBonusCreation }}
+  </div>
+
+  <div *ngIf="progressCreationTasks !== 0" class="progress">
+    <div
+      class="progress-bar bg-warning progress-bar-striped progress-bar-animated"
+      role="progressbar"
+      attr.aria-valuenow="{{ progressCreationTasks }}"
+      aria-valuemin="0"
+      aria-valuemax="100"
+    >
+      {{ progressCreationTasks }}%
+    </div>
+  </div>
+
+  <div *ngIf="messageCreateBoardTasks" class="alert alert-warning h5" role="alert">
+    {{ messageCreateBoardTasks }}
+  </div>
+</div>
+
+<section class="container p-3 d-flex form-inline" *ngIf="quantityOfErrors > 0">
+  <button type="submit" class="btn btn-primary mb-2 mr-2" (click)="download()" *ngIf="progressFinishedCreateBoard === 0">
+    Descargar archivo
+  </button>
+</section>
