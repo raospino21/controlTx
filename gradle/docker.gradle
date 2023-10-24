@@ -1,6 +1,6 @@
 jib {
     from {
-        image = "eclipse-temurin:11-jre-focal"
+        image = "eclipse-temurin:17-jre-focal"
         platforms {
             platform {
                 architecture = "${findProperty('jibArchitecture') ?: 'amd64'}"
@@ -9,7 +9,7 @@ jib {
         }
     }
     to {
-        image = "controtx:latest"
+        image = "682457346504.dkr.ecr.us-east-2.amazonaws.com/controltx:${version}"
     }
     container {
         entrypoint = ["bash", "-c", "/entrypoint.sh"]
