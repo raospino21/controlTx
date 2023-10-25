@@ -40,27 +40,20 @@
         </button>
       </div>
     </div>
-    <div class="mt-4 d-flex width-50 min-width-300">
-      <ngb-accordion (shown)="isActiveAccordion()" #acc="ngbAccordion" (panelChange)="beforeClose($event)" class="min-width-300">
-        <ngb-panel id="toggle-1">
-          <ng-template ngbPanelTitle>
-            <fa-icon icon="th-list"></fa-icon>
-            <span><strong>Carga por archivo</strong></span>
-          </ng-template>
-
-          <ng-template ngbPanelContent>
-            <button class="btn btn-primary jh-create-entity create-bonus" (click)="openModal(createBoardModalTpl)">
-              <fa-icon icon="plus"></fa-icon>
-              <span> Crear Tarjetas Por Archivo </span>
-            </button>
-            <jhi-upload-board [receptionOrder]="receptionOrderChild!"> </jhi-upload-board>
-          </ng-template>
-        </ngb-panel>
-      </ngb-accordion>
-    </div>
   </h2>
 
   <ng-template #createBoardModalTpl let-modal>
+    <div class="mt-5 mx-5" *ngIf="errorMsg !== ''">
+      <ngb-alert [type]="typeAlertErrorMsg">
+        <strong
+          [ngClass]="{ 'text-dark': typeAlertErrorMsg === 'warning' || typeAlertErrorMsg === 'success' || typeAlertErrorMsg === 'danger' }"
+          class="h5"
+        >
+          {{ errorMsg }}
+        </strong>
+      </ngb-alert>
+    </div>
+
     <form
       class="p-5"
       name="formCreateInterfaceBoard"
@@ -69,47 +62,51 @@
       [formGroup]="formCreateInterfaceBoard"
       aria-label="assgin boards"
     >
-      <h3 class="pb-3" data-cy="AssingBoardHeading">Elegir Orden de Recepción</h3>
+      <h3 class="pb-3" data-cy="AssingBoardHeading">Crear Tarjetas en Lotes</h3>
       <div class="content">
         <div class="row mb-3">
           <label class="form-label" jhiTranslate="controTxApp.interfaceBoard.receptionOrder" for="field_receptionOrder"
             >Reception Order</label
           >
-          <select class="form-control" id="field_receptionOrder" formControlName="receptionOrderOption">
+          <select class="form-control" id="field_receptionOrder" formControlName="receptionOrderOption" (change)="onSelectOption()">
             <option *ngIf="!formCreateInterfaceBoard.get('receptionOrderOption')!.value" [ngValue]="null" selected></option>
             <option [ngValue]="receptionOrderOption" *ngFor="let receptionOrderOption of receptionOrdersSharedCollection">
               {{ receptionOrderOption.providerLotNumber }}
             </option>
           </select>
         </div>
+
+        <jhi-upload-board *ngIf="formCreateInterfaceBoard.get('receptionOrderOption')!.value"> </jhi-upload-board>
+
+        <div class="container p-3 d-flex justify-content-between" *ngIf="quantityOfErrors > 0">
+          <button type="submit" class="btn btn-primary" (click)="download()">
+            <fa-icon icon="save"></fa-icon>
+            Descargar archivo
+          </button>
+          <p class="text-danger">{{ quantityOfErrors }} Errores en la creacion de los tarjetas</p>
+        </div>
         <hr />
 
-        <div class="row">
-          <div class="col">
-            <button
-              [disabled]="formCreateInterfaceBoard.get('receptionOrderOption')!.invalid"
-              type="submit"
-              id="save-entity"
-              data-cy="entityCreateSaveButton"
-              class="btn btn-success btn-block"
-              (click)="createBoardsToCreateForFile()"
-            >
-              <fa-icon icon="save"></fa-icon>
-              &nbsp;<span jhiTranslate="entity.action.save">Save</span>
-            </button>
-          </div>
+        <div class="d-flex justify-content-between">
+          <button
+            [disabled]="formCreateInterfaceBoard.get('receptionOrderOption')!.invalid || macs!.length == 0"
+            type="submit"
+            id="save-entity"
+            data-cy="entityCreateSaveButton"
+            class="btn btn-success btn-block"
+            (click)="createBoardsToCreateForFile()"
+          >
+            <fa-icon icon="save"></fa-icon>
+            &nbsp;<span jhiTranslate="entity.action.save">Save</span>
+          </button>
 
-          <div class="col">
-            <button type="button" (click)="cleanformCreateInterfaceBoard()" (click)="modal.close()" class="btn btn-danger btn-block">
-              <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
-            </button>
-          </div>
+          <button type="button" (click)="cleanformCreateInterfaceBoard()" (click)="modal.close()" class="btn btn-danger btn-block">
+            <fa-icon icon="ban"></fa-icon>&nbsp;<span>Finalizar</span>
+          </button>
         </div>
       </div>
     </form>
   </ng-template>
-
-  <jhi-alert-error></jhi-alert-error>
 
   <jhi-alert></jhi-alert>
 

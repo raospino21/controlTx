@@ -1,22 +1,23 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
-import { combineLatest, filter, map, Observable, switchMap, tap } from 'rxjs';
 import { NgbModal, NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, combineLatest, filter, map, switchMap, tap } from 'rxjs';
 
 import { IInterfaceBoard } from '../interface-board.model';
 
-import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
-import { ASC, DESC, SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
-import { EntityArrayResponseType, InterfaceBoardService } from '../service/interface-board.service';
-import { InterfaceBoardDeleteDialogComponent } from '../delete/interface-board-delete-dialog.component';
-import { FilterOptions, IFilterOptions, IFilterOption } from 'app/shared/filter/filter.model';
-import { AccountService } from 'app/core/auth/account.service';
-import { CreateBoard, ICreateBoard } from '../create/create-board.model';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ASC, DEFAULT_SORT_DATA, DESC, ITEM_DELETED_EVENT, SORT } from 'app/config/navigation.constants';
+import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
+import { AccountService } from 'app/core/auth/account.service';
 import { IReceptionOrder } from 'app/entities/reception-order/reception-order.model';
 import { ReceptionOrderService } from 'app/entities/reception-order/service/reception-order.service';
-import { UploadBoardComponent } from '../upload-board-file/upload-board.component';
+import { FilterOptions, IFilterOption, IFilterOptions } from 'app/shared/filter/filter.model';
+import { IRequestStatus } from 'app/shared/request-status.model';
+import { CreateBoard, ICreateBoard } from '../create/create-board.model';
+import { InterfaceBoardDeleteDialogComponent } from '../delete/interface-board-delete-dialog.component';
+import { EntityArrayResponseType, InterfaceBoardService } from '../service/interface-board.service';
+import { UploadBoardService } from '../upload-board-file/upload-board.service';
 
 @Component({
   selector: 'jhi-interface-board',
@@ -24,7 +25,6 @@ import { UploadBoardComponent } from '../upload-board-file/upload-board.componen
   styles: ['.min-width-300 { min-width: 800px; }'],
 })
 export class InterfaceBoardComponent implements OnInit {
-  @ViewChild('createBoardModalTpl', { static: true }) createBoardModalTpl: TemplateRef<any> | undefined;
   interfaceBoards?: IInterfaceBoard[];
   interfaceBoard: IInterfaceBoard | null = null;
   receptionOrdersSharedCollection: IReceptionOrder[] = [];
@@ -36,10 +36,13 @@ export class InterfaceBoardComponent implements OnInit {
   itemsPerPage = ITEMS_PER_PAGE;
   totalItems = 0;
   page = 1;
-
   createBoardFromFile: ICreateBoard | null = null;
-
   hidenButtonCreationBoardsByFile = false;
+  macs?: string[] = [];
+  macsWithErros?: string[] = [];
+  public quantityOfErrors = 0;
+  public errorMsg = '';
+  public typeAlertErrorMsg = 'danger';
 
   constructor(
     protected interfaceBoardService: InterfaceBoardService,
@@ -48,16 +51,21 @@ export class InterfaceBoardComponent implements OnInit {
     protected modalService: NgbModal,
     public accountService: AccountService,
     protected receptionOrderService: ReceptionOrderService,
-    protected fb: FormBuilder
+    protected fb: FormBuilder,
+    protected uploadService: UploadBoardService
   ) {}
 
   trackId = (_index: number, item: IInterfaceBoard): number => this.interfaceBoardService.getInterfaceBoardIdentifier(item);
 
   ngOnInit(): void {
-    console.log('----------- receptionOrder ngOnInit ', this.receptionOrderChild);
     this.load();
     this.filters.filterChanges.subscribe(filterOptions => this.handleNavigation(1, this.predicate, this.ascending, filterOptions));
     this.loadRelationshipsOptions();
+
+    this.uploadService.layers$().subscribe(layers => {
+      this.macs = layers.macs;
+      this.resetData();
+    });
   }
 
   canView(role: string[]) {
@@ -207,15 +215,17 @@ export class InterfaceBoardComponent implements OnInit {
   }
 
   public beforeClose($event: NgbPanelChangeEvent): void {
-    // if ($event.panelId === 'toggle-1' && $event.nextState === false) {
-    //   $event.preventDefault();
-    // }
+    if ($event.panelId === 'toggle-1' && $event.nextState === false) {
+      $event.preventDefault();
+    }
   }
 
   public openModal(modal: any): void {
+    this.cleanformCreateInterfaceBoard();
     this.modalService.open(modal, {
       backdrop: 'static',
       keyboard: false,
+      size: 'lg',
     });
   }
 
@@ -233,22 +243,67 @@ export class InterfaceBoardComponent implements OnInit {
   });
 
   public cleanformCreateInterfaceBoard(): void {
+    this.resetData();
     this.formCreateInterfaceBoard.patchValue({
       receptionOrderOption: null,
       mac: null,
     });
   }
 
-  public createBoardsToCreateForFile(): void {
-    // const bonus = this.createBonusFromForm();
-    // this.infoBonusCreationForm = bonus;
-    // this.resetBalanceAvailableInDiferentMonth();
-    // this.setBalanceAvailableDiferentMonth(this.infoBonusCreationForm.startDate!);
-    this.receptionOrderChild = this.createModelFromForm().receptionOrder!;
-    console.log('----------- receptionOrder createBoardsToCreateForFile ', this.receptionOrderChild);
-
-    this.modalService.dismissAll();
+  protected resetData() {
+    this.quantityOfErrors = 0;
   }
+
+  public createBoardsToCreateForFile(): void {
+    const createBoard = this.createModelToCreateForFile();
+    this.resetData();
+    this.interfaceBoardService.createBoard(createBoard).subscribe({
+      next: (res: IRequestStatus) => this.onSuccess(res.msg!),
+      error: (error: HttpErrorResponse) => this.onError(error),
+    });
+  }
+
+  private onSuccess(message: string): void {
+    this.showAlert('success', message, 2000, true);
+  }
+
+  private onError(error: HttpErrorResponse): void {
+    this.showAlert('danger', error.error.title, 4000, false);
+    this.macsWithErros = error.error.entityName.split(',') as string[];
+    this.quantityOfErrors = this.macsWithErros!.length;
+  }
+
+  createModelToCreateForFile(): ICreateBoard {
+    return {
+      ...new CreateBoard(),
+      receptionOrder: this.formCreateInterfaceBoard.get(['receptionOrderOption'])!.value as IReceptionOrder,
+      macs: this.macs,
+    };
+  }
+
+  public showAlert(typeAlertErrorMsg: string, errorMsg: string, showTime: number, closeModal: boolean): void {
+    this.typeAlertErrorMsg = typeAlertErrorMsg;
+    this.errorMsg = errorMsg!;
+
+    setTimeout(() => {
+      this.errorMsg = '';
+      closeModal ? this.modalService.dismissAll() : null;
+    }, showTime);
+  }
+
+  onSelectOption() {
+    this.receptionOrderChild = this.formCreateInterfaceBoard.get(['receptionOrderOption'])!.value as IReceptionOrder;
+  }
+
+  createModel(): ICreateBoard {
+    return {
+      ...new CreateBoard(),
+      receptionOrder: this.formCreateInterfaceBoard.get(['receptionOrderOption'])!.value as IReceptionOrder,
+      macs: [this.formCreateInterfaceBoard.get(['mac'])?.value.trim()],
+    };
+  }
+
+  public download(): void {}
 
   protected loadRelationshipsOptions(): void {
     const queryObject: any = {
