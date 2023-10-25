@@ -64,9 +64,8 @@ public class ControlTxController {
             String errorMsg = fieldError.getField().concat(" ").concat(fieldError.getDefaultMessage());
             throw new BadRequestAlertException(errorMsg, ENTITY_NAME, "400");
         }
-        String message = controlTxService.createBoardRegister(boardRegisterDTO);
 
-        return ResponseEntity.ok(new RequestStatusRecord(message, 200));
+        return ResponseEntity.ok(controlTxService.createBoardRegister(boardRegisterDTO));
     }
 
     @PostMapping("/assign/board")

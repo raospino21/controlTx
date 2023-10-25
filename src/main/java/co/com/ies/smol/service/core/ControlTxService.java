@@ -12,12 +12,13 @@ import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
+import co.com.ies.smol.service.dto.core.RequestStatusRecord;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ControlTxService {
-    String createBoardRegister(BoardRegisterDTO boardRegisterDTO) throws ControlTxException;
+    RequestStatusRecord createBoardRegister(BoardRegisterDTO boardRegisterDTO) throws ControlTxException;
 
     void assignInterfaceBoard(AssignBoardDTO assignBoardDTO) throws ControlTxException;
 

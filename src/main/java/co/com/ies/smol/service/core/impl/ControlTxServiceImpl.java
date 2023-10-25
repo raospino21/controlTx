@@ -26,6 +26,7 @@ import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
+import co.com.ies.smol.service.dto.core.RequestStatusRecord;
 import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     }
 
     @Override
-    public String createBoardRegister(BoardRegisterDTO boardRegisterDTO) throws ControlTxException {
+    public RequestStatusRecord createBoardRegister(BoardRegisterDTO boardRegisterDTO) throws ControlTxException {
         List<String> macs = boardRegisterDTO.getMacs();
         ReceptionOrderDTO receptionOrderDTO = boardRegisterDTO.getReceptionOrder();
 

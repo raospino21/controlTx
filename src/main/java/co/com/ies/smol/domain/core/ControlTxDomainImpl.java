@@ -6,6 +6,8 @@ import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.OperatorDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
+import co.com.ies.smol.service.dto.core.RequestStatusRecord;
+import co.com.ies.smol.web.rest.errors.BadRequestAlertException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -59,17 +61,13 @@ public abstract class ControlTxDomainImpl {
         }
     }
 
-    public String buildResponse(List<InterfaceBoardDTO> existingInterfaces) {
+    public RequestStatusRecord buildResponse(List<InterfaceBoardDTO> existingInterfaces) throws ControlTxException {
         if (existingInterfaces.isEmpty()) {
-            return "ok process createBoardRegister succesfully!!";
+            return new RequestStatusRecord("Proceso Exitoso!!", 200);
         }
-        StringBuilder response = new StringBuilder();
+        String macWithErrors = existingInterfaces.stream().map(InterfaceBoardDTO::getMac).collect(Collectors.joining(", "));
 
-        response.append("Las siguientes mac no fueron registradas debido a que ya se encontraban en el sistema [ ");
-        response.append(existingInterfaces.stream().map(InterfaceBoardDTO::getMac).collect(Collectors.joining(", ")));
-        response.append(" ]");
-
-        return response.toString();
+        throw new BadRequestAlertException("Error al registrar tarjeta", macWithErrors, "400");
     }
 
     public OperatorDTO validateExistingOperator(Optional<OperatorDTO> oOperatorDto) throws ControlTxException {
