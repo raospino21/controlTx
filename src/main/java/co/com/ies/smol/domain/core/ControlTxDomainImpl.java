@@ -61,13 +61,13 @@ public abstract class ControlTxDomainImpl {
         }
     }
 
-    public RequestStatusRecord buildResponse(List<InterfaceBoardDTO> existingInterfaces) throws ControlTxException {
+    public RequestStatusRecord buildResponse(List<InterfaceBoardDTO> existingInterfaces) {
         if (existingInterfaces.isEmpty()) {
-            return new RequestStatusRecord("Proceso Exitoso!!", 200);
+            return new RequestStatusRecord("CreateBoardRegister", "Proceso Exitoso!!", 200);
         }
         String macWithErrors = existingInterfaces.stream().map(InterfaceBoardDTO::getMac).collect(Collectors.joining(", "));
 
-        throw new BadRequestAlertException("Error al registrar tarjeta", macWithErrors, "400");
+        return new RequestStatusRecord("Error al registrar tarjeta", macWithErrors, 400);
     }
 
     public OperatorDTO validateExistingOperator(Optional<OperatorDTO> oOperatorDto) throws ControlTxException {

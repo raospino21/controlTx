@@ -82,7 +82,7 @@ public class ControlTxController {
 
         controlTxService.assignInterfaceBoard(assignBoardDTO);
 
-        return ResponseEntity.ok(new RequestStatusRecord("ok process assignInterfaceBoard succesfully!!", 200));
+        return ResponseEntity.ok(new RequestStatusRecord("AssignInterfaceBoard", "Proceso Exitoso!!", 200));
     }
 
     /**
@@ -90,7 +90,7 @@ public class ControlTxController {
      * tener en cuenta que solo para contratos vigentes
      */
     @GetMapping("/interface-boards/assigned-operator-by-brand/{brandName}")
-    public ResponseEntity<List<InterfaceBoardDTO>> getInterfaceBoardByBrand(@PathVariable String brandName) throws ControlTxException {
+    public ResponseEntity<List<InterfaceBoardDTO>> getInterfaceBoardByBrand(@PathVariable String brandName) {
         log.debug("REST request getInterfaceBoardByBrand brandName : {}", brandName);
 
         return ResponseEntity.ok(controlTxService.getInterfaceBoardByBrand(brandName));
@@ -102,7 +102,7 @@ public class ControlTxController {
      */
     @GetMapping("/count/interface-boards/by-brand-contrated/{brandName}")
     public ResponseEntity<Long> getCountInterfaceBoardByBrand(@PathVariable String brandName) {
-        log.debug("REST request getInterfaceBoardByBrand brandName : {}", brandName);
+        log.debug("REST request getCountInterfaceBoardByBrand brandName : {}", brandName);
 
         return ResponseEntity.ok(controlTxService.getCountInterfaceBoardByBrand(brandName));
     }

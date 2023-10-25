@@ -257,7 +257,6 @@ export class InterfaceBoardComponent implements OnInit {
   protected resetData() {
     this.quantityOfErrors = 0;
     this.macsWithErros = [];
-    this.macs = [];
     this.uploadService.setMacsWithErros(this.macsWithErros!);
   }
 
@@ -265,19 +264,26 @@ export class InterfaceBoardComponent implements OnInit {
     const createBoard = this.createModelToCreateForFile();
     this.resetData();
     this.interfaceBoardService.createBoard(createBoard).subscribe({
-      next: (res: IRequestStatus) => this.onSuccess(res.msg!),
-      error: (error: HttpErrorResponse) => this.onError(error),
+      next: (res: IRequestStatus) => this.onProccessResponse(res!),
+      error: (error: HttpErrorResponse) => this.onError(error.error.message),
     });
+  }
+
+  private onProccessResponse(res: IRequestStatus): void {
+    if (res.code == 200) {
+      return this.onSuccess(res.msg!);
+    }
+    this.macsWithErros = res.msg!.split(',') as string[];
+    this.quantityOfErrors = this.macsWithErros!.length;
+    this.onError(res.title!);
   }
 
   private onSuccess(message: string): void {
     this.showAlert('success', message, 2000, true);
   }
 
-  private onError(error: HttpErrorResponse): void {
-    this.showAlert('danger', error.error.title, 4000, false);
-    this.macsWithErros = error.error.entityName.split(',') as string[];
-    this.quantityOfErrors = this.macsWithErros!.length;
+  private onError(message: string): void {
+    this.showAlert('danger', message, 4000, false);
   }
 
   createModelToCreateForFile(): ICreateBoard {
@@ -300,14 +306,6 @@ export class InterfaceBoardComponent implements OnInit {
 
   onSelectOption() {
     this.receptionOrderChild = this.formCreateInterfaceBoard.get(['receptionOrderOption'])!.value as IReceptionOrder;
-  }
-
-  createModel(): ICreateBoard {
-    return {
-      ...new CreateBoard(),
-      receptionOrder: this.formCreateInterfaceBoard.get(['receptionOrderOption'])!.value as IReceptionOrder,
-      macs: [this.formCreateInterfaceBoard.get(['mac'])?.value.trim()],
-    };
   }
 
   public download(): void {
