@@ -44,7 +44,7 @@ export class InterfaceBoardCreateComponent implements OnInit {
 
     this.interfaceBoardService.createBoard(createBoard).subscribe({
       next: (res: IRequestStatus) => this.showAlert('success', res.msg!, 2000),
-      error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.detail, 4000),
+      error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.title, 4000),
     });
   }
 
