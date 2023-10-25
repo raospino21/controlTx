@@ -62,9 +62,9 @@ export class InterfaceBoardComponent implements OnInit {
     this.filters.filterChanges.subscribe(filterOptions => this.handleNavigation(1, this.predicate, this.ascending, filterOptions));
     this.loadRelationshipsOptions();
 
-    this.uploadService.layers$().subscribe(layers => {
-      this.macs = layers.macs;
+    this.uploadService.layersMacs$().subscribe(layers => {
       this.resetData();
+      this.macs = layers.macs;
     });
   }
 
@@ -222,6 +222,10 @@ export class InterfaceBoardComponent implements OnInit {
 
   public openModal(modal: any): void {
     this.cleanformCreateInterfaceBoard();
+    console.log('-------  orden de recepcion  ', this.formCreateInterfaceBoard.get(['receptionOrderOption'])!.value);
+    console.log(' macs con errores ', this.macsWithErros);
+    console.log(' macs con errores ', this.macs);
+
     this.modalService.open(modal, {
       backdrop: 'static',
       keyboard: false,
@@ -252,6 +256,9 @@ export class InterfaceBoardComponent implements OnInit {
 
   protected resetData() {
     this.quantityOfErrors = 0;
+    this.macsWithErros = [];
+    this.macs = [];
+    this.uploadService.setMacsWithErros(this.macsWithErros!);
   }
 
   public createBoardsToCreateForFile(): void {
@@ -303,7 +310,9 @@ export class InterfaceBoardComponent implements OnInit {
     };
   }
 
-  public download(): void {}
+  public download(): void {
+    this.uploadService.setMacsWithErros(this.macsWithErros!);
+  }
 
   protected loadRelationshipsOptions(): void {
     const queryObject: any = {

@@ -4,28 +4,52 @@ import { Subject } from 'rxjs/internal/Subject';
 
 @Injectable({ providedIn: 'root' })
 export class UploadBoardService {
-  private layersSource$ = new BehaviorSubject<Layers>(layers);
+  private layersSourceMacs$ = new BehaviorSubject<Macs>(macs);
+  private layersSourceMacsWithErrors$ = new BehaviorSubject<MacsWithErrors>(macsWithErrors);
 
-  layers$(): Observable<Layers> {
-    return this.layersSource$.asObservable();
+  layersMacs$(): Observable<Macs> {
+    return this.layersSourceMacs$.asObservable();
+  }
+
+  layersMacsWithErrors$(): Observable<MacsWithErrors> {
+    return this.layersSourceMacsWithErrors$.asObservable();
   }
 
   setMacs(macs: string[]): void {
-    this.layersSource$.next({
-      ...this.getLayersCurrentValue(),
+    this.layersSourceMacs$.next({
+      ...this.getMacsCurrentValue(),
       macs,
     });
   }
 
-  private getLayersCurrentValue(): Layers {
-    return this.layersSource$.getValue();
+  setMacsWithErros(macsWithErrors: string[]): void {
+    this.layersSourceMacsWithErrors$.next({
+      ...this.getMacsWithErrorsCurrentValue(),
+      macsWithErrors,
+    });
+  }
+
+  private getMacsCurrentValue(): Macs {
+    return this.layersSourceMacs$.getValue();
+  }
+
+  private getMacsWithErrorsCurrentValue(): MacsWithErrors {
+    return this.layersSourceMacsWithErrors$.getValue();
   }
 }
 
-export interface Layers {
+export interface Macs {
   macs: string[];
 }
 
-export const layers: Layers = {
+export interface MacsWithErrors {
+  macsWithErrors: string[];
+}
+
+export const macs: Macs = {
   macs: [],
+};
+
+export const macsWithErrors: MacsWithErrors = {
+  macsWithErrors: [],
 };

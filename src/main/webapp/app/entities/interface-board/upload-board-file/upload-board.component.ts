@@ -7,7 +7,7 @@ import { UploadBoardService } from './upload-board.service';
   selector: 'jhi-upload-board',
   templateUrl: './upload-board.component.html',
 })
-export class UploadBoardComponent {
+export class UploadBoardComponent implements OnInit {
   public fileName: string = '';
   public mac: string = '';
   public cantidadFilas: number = 0;
@@ -21,8 +21,19 @@ export class UploadBoardComponent {
   public quantityOfErrors = 0;
   public messageCreateBoardTasks = '';
   public currentFile: File | null = null;
+  macsWithError?: string[];
 
   constructor(protected service: UploadBoardService) {}
+  ngOnInit(): void {
+    this.service.layersMacsWithErrors$().subscribe(layers => {
+      this.macsWithError = layers.macsWithErrors;
+      console.log('--------layersMacsWithErrors  ', this.macsWithError);
+
+      if (this.macsWithError.length > 0) {
+        this.download(this.macsWithError!);
+      }
+    });
+  }
 
   handleFileSelect(evt: any): void {
     const files = evt.target.files; // FileList object
@@ -39,7 +50,21 @@ export class UploadBoardComponent {
     };
   }
 
-  public download(): void {}
+  public download(macsWithError: string[]): void {
+    const textEncoder = new TextEncoder();
+    const contenido = textEncoder.encode(macsWithError.join('\n')); // Convierte las cadenas a bytes
+
+    const blob = new Blob([contenido], { type: 'text/csv' });
+
+    const fileName = 'result';
+
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    link.click();
+
+    URL.revokeObjectURL(link.href);
+  }
 
   private extractData(data: any): void {
     this.messageError = '';
