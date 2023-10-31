@@ -90,12 +90,19 @@
                 [routerLink]="['/operator', operator.id, 'edit']"
                 class="btn btn-primary btn-sm"
                 data-cy="entityEditButton"
+                *jhiHasAnyAuthority="'ROLE_ADMIN'"
               >
                 <fa-icon icon="pencil-alt"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
               </button>
 
-              <button type="submit" (click)="delete(operator)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+              <button
+                type="submit"
+                (click)="delete(operator)"
+                class="btn btn-danger btn-sm"
+                data-cy="entityDeleteButton"
+                *jhiHasAnyAuthority="'ROLE_ADMIN'"
+              >
                 <fa-icon icon="times"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
               </button>

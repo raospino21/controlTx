@@ -6,6 +6,8 @@ import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.OperatorDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
+import co.com.ies.smol.service.dto.core.RequestStatusRecord;
+import co.com.ies.smol.web.rest.errors.BadRequestAlertException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -49,7 +51,7 @@ public abstract class ControlTxDomainImpl {
 
     public void validateAvailability(Long boardOrderIes, Long boardHypotheticalTotal) throws ControlTxException {
         if (boardHypotheticalTotal > boardOrderIes) {
-            throw new ControlTxException("El monto a recibir supera al total de la orden compra");
+            throw new ControlTxException("El monto a recibir supera al total de la orden compra (" + boardHypotheticalTotal + ")");
         }
     }
 
@@ -59,17 +61,13 @@ public abstract class ControlTxDomainImpl {
         }
     }
 
-    public String buildResponse(List<InterfaceBoardDTO> existingInterfaces) {
+    public RequestStatusRecord buildResponse(List<InterfaceBoardDTO> existingInterfaces) {
         if (existingInterfaces.isEmpty()) {
-            return "ok process createBoardRegister succesfully!!";
+            return new RequestStatusRecord("CreateBoardRegister", "Proceso Exitoso!!", 200);
         }
-        StringBuilder response = new StringBuilder();
+        String macWithErrors = existingInterfaces.stream().map(InterfaceBoardDTO::getMac).collect(Collectors.joining(", "));
 
-        response.append("Las siguientes mac no fueron registradas debido a que ya se encontraban en el sistema [ ");
-        response.append(existingInterfaces.stream().map(InterfaceBoardDTO::getMac).collect(Collectors.joining(", ")));
-        response.append(" ]");
-
-        return response.toString();
+        return new RequestStatusRecord("Error al registrar tarjeta", macWithErrors, 400);
     }
 
     public OperatorDTO validateExistingOperator(Optional<OperatorDTO> oOperatorDto) throws ControlTxException {
@@ -77,5 +75,16 @@ public abstract class ControlTxDomainImpl {
             throw new ControlTxException(ControlTxException.OPERATOR_NOT_FOUND);
         }
         return oOperatorDto.get();
+    }
+
+    public void isItPossibleToAssociate(Long amountReceptionOrder, int alreadyLinked, Long amountReceived) throws ControlTxException {
+        Long available = amountReceptionOrder - alreadyLinked;
+        if (amountReceived > available) {
+            throw new ControlTxException("El monto a recibir  excedido - disponible " + available);
+        }
+    }
+
+    public boolean isAvailable(Long amountReceptionOrder, int alreadyLinked) {
+        return (amountReceptionOrder - alreadyLinked) > 0;
     }
 }

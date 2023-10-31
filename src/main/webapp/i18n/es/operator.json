@@ -2,25 +2,25 @@
   "controTxApp": {
     "operator": {
       "home": {
-        "title": "Operators",
+        "title": "Operadores",
         "refreshListLabel": "Refrescar lista",
-        "createLabel": "Crear nuevo Operator",
-        "createOrEditLabel": "Crear o editar Operator",
-        "notFound": "Ningún Operators encontrado"
+        "createLabel": "Crear nuevo Operador",
+        "createOrEditLabel": "Crear o editar Operador",
+        "notFound": "Ningún Operador encontrado"
       },
-      "created": "Un nuevo Operator ha sido creado con el identificador {{ param }}",
-      "updated": "Un Operator ha sido actualizado con el identificador {{ param }}",
-      "deleted": "Un Operator ha sido eliminado con el identificador {{ param }}",
+      "created": "Un nuevo Operador ha sido creado con el identificador {{ param }}",
+      "updated": "Un Operador ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Operador ha sido eliminado con el identificador {{ param }}",
       "delete": {
-        "question": "¿Seguro que quiere eliminar Operator {{ id }}?"
+        "question": "¿Seguro que quiere eliminar Operador {{ id }}?"
       },
       "detail": {
-        "title": "Operator"
+        "title": "Operador"
       },
       "id": "Id",
-      "name": "Name",
+      "name": "Nombre",
       "nit": "Nit",
-      "brand": "Brand"
+      "brand": "Marca"
     }
   }
 }

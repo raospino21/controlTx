@@ -94,7 +94,6 @@ export class ContractFormService {
     return {
       id: null,
       startTime: currentTime,
-      finishTime: currentTime,
     };
   }
 

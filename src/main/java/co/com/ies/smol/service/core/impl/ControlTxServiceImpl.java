@@ -14,6 +14,8 @@ import co.com.ies.smol.service.OperatorService;
 import co.com.ies.smol.service.PurchaseOrderService;
 import co.com.ies.smol.service.ReceptionOrderService;
 import co.com.ies.smol.service.core.ControlTxService;
+import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria;
+import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria.StatusInterfaceBoardFilter;
 import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
@@ -23,6 +25,8 @@ import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
+import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
+import co.com.ies.smol.service.dto.core.RequestStatusRecord;
 import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -32,7 +36,11 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import tech.jhipster.service.filter.LongFilter;
+import tech.jhipster.service.filter.ZonedDateTimeFilter;
 
 @Transactional
 @Service
@@ -64,23 +72,14 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     }
 
     @Override
-    public String createBoardRegister(BoardRegisterDTO boardRegisterDTO) throws ControlTxException {
-        Long purchaseOrder = boardRegisterDTO.getIesOrderNumber();
-        Optional<PurchaseOrderDTO> oPurchaseOrderDTO = purchaseOrderService.getPurchaseOrderByIesOrderNumber(purchaseOrder);
-        PurchaseOrderDTO purchaseOrderDTO = validateExistingPurchaseOrderAndGet(oPurchaseOrderDTO);
-
-        List<ReceptionOrderDTO> receptionOrderList = receptionOrderService.getReceptionOrderByIesOrderNumber(purchaseOrder);
-
-        Long boardReceived = receptionOrderList.stream().mapToLong(ReceptionOrderDTO::getAmountReceived).sum();
-        Long boardToRegister = boardRegisterDTO.getAmountReceived();
-
-        Long boardHypotheticalTotal = boardReceived + boardToRegister;
-        Long boardOrderIes = purchaseOrderDTO.getOrderAmount();
-        validateAvailability(boardOrderIes, boardHypotheticalTotal);
-
+    public RequestStatusRecord createBoardRegister(BoardRegisterDTO boardRegisterDTO) throws ControlTxException {
         List<String> macs = boardRegisterDTO.getMacs();
-        validateIncomingBoardSize(boardToRegister, Long.valueOf(macs.size()));
-        ReceptionOrderDTO receptionOrderDTO = createReceptionOrder(boardRegisterDTO, purchaseOrderDTO);
+        ReceptionOrderDTO receptionOrderDTO = boardRegisterDTO.getReceptionOrder();
+
+        List<ControlInterfaceBoardDTO> controlInterfaceBoardList = controlInterfaceBoardService.getControlInterfaceBoardByReceptionOrderIdAndFinishTimeIsNull(
+            receptionOrderDTO.getId()
+        );
+        isItPossibleToAssociate(receptionOrderDTO.getAmountReceived(), controlInterfaceBoardList.size(), Long.valueOf(macs.size()));
 
         List<InterfaceBoardDTO> existingInterfaces = new ArrayList<>();
 
@@ -102,38 +101,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
             controlInterfaceBoardService.save(controlInterfaceBoardDTO);
         }
 
-        if (!existingInterfaces.isEmpty()) {
-            Long trueAmount = receptionOrderDTO.getAmountReceived() - existingInterfaces.size();
-            if (trueAmount == 0) {
-                deleteReceptionOrderById(receptionOrderDTO.getId());
-            } else {
-                receptionOrderDTO.setAmountReceived(trueAmount);
-                updateReceptionOrder(receptionOrderDTO);
-            }
-        }
-
         return buildResponse(existingInterfaces);
-    }
-
-    private void deleteReceptionOrderById(Long receptionOrderId) {
-        receptionOrderService.delete(receptionOrderId);
-    }
-
-    protected ReceptionOrderDTO createReceptionOrder(BoardRegisterDTO boardRegisterDTO, PurchaseOrderDTO purchaseOrderDTO) {
-        ReceptionOrderDTO receptionOrderDTO = new ReceptionOrderDTO();
-        receptionOrderDTO.setProviderLotNumber(boardRegisterDTO.getProviderLotNumber());
-        receptionOrderDTO.setAmountReceived(boardRegisterDTO.getAmountReceived());
-        receptionOrderDTO.setRemission(boardRegisterDTO.getRemission());
-        ZonedDateTime currentTime = ZonedDateTime.now();
-        receptionOrderDTO.setEntryDate(currentTime);
-        receptionOrderDTO.setWarrantyDate(currentTime.plusYears(1));
-        receptionOrderDTO.setPurchaseOrder(purchaseOrderDTO);
-
-        return receptionOrderService.save(receptionOrderDTO);
-    }
-
-    protected ReceptionOrderDTO updateReceptionOrder(ReceptionOrderDTO receptionOrderDTO) {
-        return receptionOrderService.save(receptionOrderDTO);
     }
 
     protected InterfaceBoardDTO createInterfaceBoard(String mac, ReceptionOrderDTO receptionOrder) {
@@ -296,8 +264,30 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     }
 
     @Override
-    public List<InterfaceBoardDTO> getInfoBoardsAvailable() {
-        return controlInterfaceBoardService.getInfoBoardsAvailable().stream().map(ControlInterfaceBoardDTO::getInterfaceBoard).toList();
+    public Page<InterfaceBoardDTO> getInfoBoardsAvailable(String mac, @org.springdoc.api.annotations.ParameterObject Pageable pageable)
+        throws ControlTxException {
+        ControlInterfaceBoardCriteria criteria = new ControlInterfaceBoardCriteria();
+
+        if (Objects.nonNull(mac)) {
+            Optional<InterfaceBoardDTO> oInterfaceBoard = interfaceBoardService.getInterfaceBoardByMac(mac);
+
+            if (oInterfaceBoard.isEmpty()) {
+                throw new ControlTxException("Tarjeta no encontrada " + mac);
+            }
+            LongFilter interfaceBoardFilter = new LongFilter();
+            interfaceBoardFilter.setEquals(oInterfaceBoard.get().getId());
+            criteria.setInterfaceBoardId(interfaceBoardFilter);
+        }
+
+        StatusInterfaceBoardFilter statusFilter = new StatusInterfaceBoardFilter();
+        statusFilter.setEquals(StatusInterfaceBoard.STOCK);
+        criteria.setState(statusFilter);
+
+        ZonedDateTimeFilter finishTimeFilter = new ZonedDateTimeFilter();
+        finishTimeFilter.setEquals(null);
+        criteria.setFinishTime(finishTimeFilter);
+
+        return controlInterfaceBoardService.getInfoBoardsAvailable(criteria, pageable).map(ControlInterfaceBoardDTO::getInterfaceBoard);
     }
 
     @Override
@@ -312,5 +302,120 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         );
 
         return controlInterfaceBoardList.stream().map(ControlInterfaceBoardDTO::getInterfaceBoard).toList();
+    }
+
+    @Override
+    public Page<ControlInterfaceBoardDTO> getControlInterfaceBoardAvailable(FilterControlInterfaceBoard filter, Pageable pageable)
+        throws ControlTxException {
+        ControlInterfaceBoardCriteria criteria = new ControlInterfaceBoardCriteria();
+
+        LongFilter contractFilter = new LongFilter();
+        contractFilter.setNotEquals(null);
+        criteria.setContractId(contractFilter);
+
+        LongFilter interfaceBoardFilter = new LongFilter();
+        interfaceBoardFilter.setNotEquals(null);
+        criteria.setInterfaceBoardId(interfaceBoardFilter);
+
+        if (Objects.nonNull(filter.reference())) {
+            List<ContractDTO> contractList = contractService.getContractByReference(filter.reference());
+
+            if (contractList.isEmpty()) {
+                throw new ControlTxException("Contrato no encontrado (" + filter.reference() + ")");
+            }
+            List<Long> contractIdList = contractList.stream().map(ContractDTO::getId).toList();
+            contractFilter.setIn(contractIdList);
+            criteria.setContractId(contractFilter);
+        }
+
+        if (Objects.nonNull(filter.mac())) {
+            final InterfaceBoardDTO interfaceBoard = interfaceBoardService
+                .getInterfaceBoardByMac(filter.mac())
+                .orElseThrow(() -> new ControlTxException("Tarjeta no encontrada (" + filter.mac() + ")"));
+
+            interfaceBoardFilter.setEquals(interfaceBoard.getId());
+            criteria.setInterfaceBoardId(interfaceBoardFilter);
+        }
+
+        return controlInterfaceBoardService.getControlInterfaceBoardAvailable(criteria, pageable);
+    }
+
+    @Override
+    public List<ContractDTO> getPendingContractsForBoard() {
+        List<ContractDTO> contractList = contractService.findAll();
+
+        List<ContractDTO> pendingContractsForBoard = new ArrayList<>();
+
+        contractList.forEach(contract -> {
+            List<ControlInterfaceBoardDTO> controlInterfaceBoardList = controlInterfaceBoardService.getControlInterfaceBoardByContractId(
+                contract.getId()
+            );
+
+            if ((contract.getAmountInterfaceBoard() - controlInterfaceBoardList.size()) != 0) {
+                pendingContractsForBoard.add(contract);
+            }
+        });
+
+        return pendingContractsForBoard;
+    }
+
+    @Override
+    public List<ReceptionOrderDTO> getPendingReceptionOrderForBoard() {
+        List<ReceptionOrderDTO> receptionOrderList = receptionOrderService.getAllReceptionOrder();
+        List<ReceptionOrderDTO> receptionOrderListAvailable = new ArrayList<>();
+
+        receptionOrderList.forEach(receptionOrder -> {
+            List<ControlInterfaceBoardDTO> controlInterfaceBoardList = controlInterfaceBoardService.getControlInterfaceBoardByReceptionOrderIdAndFinishTimeIsNull(
+                receptionOrder.getId()
+            );
+            boolean isAvailable = isAvailable(receptionOrder.getAmountReceived(), controlInterfaceBoardList.size());
+
+            if (isAvailable) {
+                receptionOrderListAvailable.add(receptionOrder);
+            }
+        });
+
+        return receptionOrderListAvailable;
+    }
+
+    @Override
+    public List<PurchaseOrderDTO> getPendingPurchaseOrderForReceptionOrder() {
+        List<PurchaseOrderDTO> purchaseOrderList = purchaseOrderService.getAllPurchaseOrder();
+        List<PurchaseOrderDTO> purchaseOrderrListAvailable = new ArrayList<>();
+
+        List<ReceptionOrderDTO> receptionOrderList = receptionOrderService.getAllReceptionOrder();
+
+        purchaseOrderList.forEach(purchaseOrder -> {
+            Long totalAmount = receptionOrderList
+                .stream()
+                .filter(receptionOrder -> receptionOrder.getPurchaseOrder().getId().equals(purchaseOrder.getId()))
+                .mapToLong(ReceptionOrderDTO::getAmountReceived)
+                .sum();
+            boolean isAvailable = isAvailable(purchaseOrder.getOrderAmount(), totalAmount.intValue());
+
+            if (isAvailable) {
+                purchaseOrderrListAvailable.add(purchaseOrder);
+            }
+        });
+
+        return purchaseOrderrListAvailable;
+    }
+
+    @Override
+    public ReceptionOrderDTO saveReceptionOrder(ReceptionOrderDTO receptionOrderDTO) throws ControlTxException {
+        PurchaseOrderDTO purchaseOrderDTO = receptionOrderDTO.getPurchaseOrder();
+        Long purchaseOrderId = purchaseOrderDTO.getIesOrderNumber();
+
+        List<ReceptionOrderDTO> receptionOrderList = receptionOrderService.getReceptionOrderByIesOrderNumber(purchaseOrderId);
+
+        Long boardReceived = receptionOrderList.stream().mapToLong(ReceptionOrderDTO::getAmountReceived).sum();
+        Long boardToRegister = receptionOrderDTO.getAmountReceived();
+
+        Long boardHypotheticalTotal = boardReceived + boardToRegister;
+        Long boardOrderIes = purchaseOrderDTO.getOrderAmount();
+
+        validateAvailability(boardOrderIes, boardHypotheticalTotal);
+
+        return receptionOrderService.save(receptionOrderDTO);
     }
 }

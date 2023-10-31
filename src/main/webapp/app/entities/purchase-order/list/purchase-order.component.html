@@ -13,6 +13,7 @@
         data-cy="entityCreateButton"
         class="btn btn-primary jh-create-entity create-purchase-order"
         [routerLink]="['/purchase-order/new']"
+        *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_ACCOUNTING']"
       >
         <fa-icon icon="plus"></fa-icon>
         <span jhiTranslate="controTxApp.purchaseOrder.home.createLabel"> Crear nuevo Purchase Order </span>
@@ -86,12 +87,19 @@
                 [routerLink]="['/purchase-order', purchaseOrder.id, 'edit']"
                 class="btn btn-primary btn-sm"
                 data-cy="entityEditButton"
+                *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_ACCOUNTING']"
               >
                 <fa-icon icon="pencil-alt"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
               </button>
 
-              <button type="submit" (click)="delete(purchaseOrder)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+              <button
+                type="submit"
+                (click)="delete(purchaseOrder)"
+                class="btn btn-danger btn-sm"
+                data-cy="entityDeleteButton"
+                *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_ACCOUNTING']"
+              >
                 <fa-icon icon="times"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
               </button>

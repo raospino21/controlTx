@@ -44,6 +44,8 @@ public interface ContractService {
      */
     Page<ContractDTO> findAll(Pageable pageable);
 
+    List<ContractDTO> findAll();
+
     /**
      * Get all the contracts with eager load of many-to-many relationships.
      *

@@ -2,6 +2,7 @@ package co.com.ies.smol.service;
 
 import co.com.ies.smol.domain.InterfaceBoard;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
+import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import java.util.List;
 import java.util.Optional;
@@ -75,9 +76,18 @@ public interface ControlInterfaceBoardService {
 
     List<ControlInterfaceBoardDTO> getControlInterfaceBoardByContractId(Long contractId);
 
-    List<ControlInterfaceBoardDTO> getInfoBoardsAvailable();
+    Page<ControlInterfaceBoardDTO> getInfoBoardsAvailable(
+        ControlInterfaceBoardCriteria criteria,
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable
+    );
 
     List<ControlInterfaceBoardDTO> getByContractIdInAndState(List<Long> contractIdList, StatusInterfaceBoard state);
 
     List<ControlInterfaceBoardDTO> getByContractIdAndState(Long contractId, StatusInterfaceBoard state);
+
+    Page<ControlInterfaceBoardDTO> getControlInterfaceBoardAvailable(ControlInterfaceBoardCriteria criteria, Pageable pageable);
+
+    List<ControlInterfaceBoardDTO> getControlInterfaceBoardByReceptionOrderIdAndFinishTimeIsNull(Long receptionOrderId);
+
+    List<ControlInterfaceBoardDTO> getControlInterfaceBoardByReceptionOrderIdInAndFinishTimeIsNull(List<Long> receivedOrderIds);
 }

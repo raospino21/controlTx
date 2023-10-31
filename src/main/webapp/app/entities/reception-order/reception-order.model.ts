@@ -8,7 +8,7 @@ export interface IReceptionOrder {
   remission?: string | null;
   entryDate?: dayjs.Dayjs | null;
   warrantyDate?: dayjs.Dayjs | null;
-  purchaseOrder?: Pick<IPurchaseOrder, 'id' | 'iesOrderNumber'> | null;
+  purchaseOrder?: Pick<IPurchaseOrder, 'id' | 'orderAmount' | 'iesOrderNumber'> | null;
 }
 
 export type NewReceptionOrder = Omit<IReceptionOrder, 'id'> & { id: null };

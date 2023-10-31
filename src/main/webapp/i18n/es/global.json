@@ -1,19 +1,19 @@
 {
   "global": {
-    "title": "ControTx",
+    "title": "ControlTx",
     "browsehappy": "Está usando un navegador <strong>no actualizado</strong>. Por favor, <a href=\"http://browsehappy.com/?locale=es\">actualice su navegador</a> para mejorar su experiencia.",
     "menu": {
       "home": "Inicio",
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
         "main": "Entidades",
-        "brand": "Brand",
-        "operator": "Operator",
-        "contract": "Contract",
-        "interfaceBoard": "Interface Board",
-        "controlInterfaceBoard": "Control Interface Board",
-        "purchaseOrder": "Purchase Order",
-        "receptionOrder": "Reception Order",
+        "brand": "Marca",
+        "operator": "Operador",
+        "contract": "Contracto",
+        "interfaceBoard": "Tarjetas",
+        "controlInterfaceBoard": "Historia de la Tarjeta",
+        "purchaseOrder": "Orden de Compra",
+        "receptionOrder": "Orden de Recepción",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
@@ -24,6 +24,37 @@
         "login": "Iniciar sesión",
         "logout": "Cerrar la sesión",
         "register": "Crear una cuenta"
+      },
+      "commercial": {
+        "title": "Comercial",
+        "brand": "Marca",
+        "operator": "Operador",
+        "contract": "Contracto",
+        "interfaceBoard": "Tarjetas",
+        "controlInterfaceBoard": "Control Tx",
+        "purchaseOrder": "Orden de Compra",
+        "receptionOrder": "Orden de Recepcion",
+        "boardInStock": "Tarjetas en Stock",
+        "assingBoard": "Tarjeta Vinculadas a un Contrato",
+        "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
+      },
+      "store": {
+        "main": "Almacén",
+        "createBoard": "Crear Tarjeta",
+        "assingBoard": "Vincular Tarjeta Al Contrato "
+      },
+      "accounting": {
+        "title": "Contabilidad",
+        "purchaseOrder": "Orden de Compra",
+        "receptionOrder": "Orden de Recepcion"
+      },
+      "store-admin": {
+        "board-in-stock": {
+          "title": "Tarjetas en Stock"
+        },
+        "link-contract-board": {
+          "title": "Vinculacion de Tarjetas"
+        }
       },
       "admin": {
         "main": "Administración",

@@ -2,28 +2,28 @@
   "controTxApp": {
     "controlInterfaceBoard": {
       "home": {
-        "title": "Control Interface Boards",
+        "title": "Control de Tarjetas",
         "refreshListLabel": "Refrescar lista",
-        "createLabel": "Crear nuevo Control Interface Board",
-        "createOrEditLabel": "Crear o editar Control Interface Board",
-        "notFound": "Ningún Control Interface Boards encontrado"
+        "createLabel": "Crear nuevo Control de Tarjeta",
+        "createOrEditLabel": "Crear o editar Control de Tarjeta",
+        "notFound": "Ningún Control de Tarjeta encontrado"
       },
-      "created": "Un nuevo Control Interface Board ha sido creado con el identificador {{ param }}",
-      "updated": "Un Control Interface Board ha sido actualizado con el identificador {{ param }}",
-      "deleted": "Un Control Interface Board ha sido eliminado con el identificador {{ param }}",
+      "created": "Nuevo Control de Tarjetas ha sido creado con el identificador {{ param }}",
+      "updated": "Control de Tarjetas ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Control de Tarjetas ha sido eliminado con el identificador {{ param }}",
       "delete": {
-        "question": "¿Seguro que quiere eliminar Control Interface Board {{ id }}?"
+        "question": "¿Seguro que quiere eliminar Control de Tarjetas {{ id }}?"
       },
       "detail": {
-        "title": "Control Interface Board"
+        "title": "Control de Tarjetas"
       },
       "id": "Id",
-      "location": "Location",
-      "state": "State",
-      "startTime": "Start Time",
-      "finishTime": "Finish Time",
-      "contract": "Contract",
-      "interfaceBoard": "Interface Board"
+      "location": "Ubicación",
+      "state": "Estado",
+      "startTime": "Fecha de inicio",
+      "finishTime": "Fecha de finalización",
+      "contract": "Contrato",
+      "interfaceBoard": "Tarjeta"
     }
   }
 }

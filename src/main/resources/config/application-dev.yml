@@ -32,7 +32,8 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/controltx
+    #url: jdbc:postgresql://localhost:5432/smolcentral #controltx
+    url: jdbc:postgresql://localhost:5432/smolcentral
     username: IESGamesService
     password: IESGamesService
     hikari:
@@ -47,6 +48,7 @@ spring:
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev
+    enabled: false
   mail:
     host: localhost
     port: 25

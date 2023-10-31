@@ -6,7 +6,7 @@
         data-cy="ReceptionOrderCreateUpdateHeading"
         jhiTranslate="controTxApp.receptionOrder.home.createOrEditLabel"
       >
-        Crear o editar Reception Order
+        Crear Reception Order
       </h2>
 
       <div>
@@ -64,6 +64,9 @@
             data-cy="amountReceived"
             formControlName="amountReceived"
           />
+          <small *ngIf="editForm.get('amountReceived')!.value! > orderAmount && orderAmount > 0" style="color: red">
+            El valor ingresado supera el monto de la orden de compra {{ orderAmount }}
+          </small>
           <div
             *ngIf="
               editForm.get('amountReceived')!.invalid && (editForm.get('amountReceived')!.dirty || editForm.get('amountReceived')!.touched)
@@ -174,6 +177,7 @@
 
         <div class="row mb-3">
           <label class="form-label" jhiTranslate="controTxApp.receptionOrder.purchaseOrder" for="field_purchaseOrder">Purchase Order</label>
+          <label style="color: red" *ngIf="orderAmount !== 0">La cantidad de la orden es {{ orderAmount }}</label>
           <select
             class="form-control"
             id="field_purchaseOrder"
@@ -181,6 +185,7 @@
             name="purchaseOrder"
             formControlName="purchaseOrder"
             [compareWith]="comparePurchaseOrder"
+            (change)="onSelectOption()"
           >
             <option *ngIf="!editForm.get('purchaseOrder')!.value" [ngValue]="null" selected></option>
             <option [ngValue]="purchaseOrderOption" *ngFor="let purchaseOrderOption of purchaseOrdersSharedCollection">
@@ -212,7 +217,7 @@
           type="submit"
           id="save-entity"
           data-cy="entityCreateSaveButton"
-          [disabled]="editForm.invalid || isSaving"
+          [disabled]="editForm.invalid || isSaving || (editForm.get('amountReceived')!.value! > orderAmount && orderAmount > 0)"
           class="btn btn-primary"
         >
           <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>

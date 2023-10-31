@@ -2,21 +2,38 @@
   <h2 id="page-heading" data-cy="ReceptionOrderHeading">
     <span jhiTranslate="controTxApp.receptionOrder.home.title">Reception Orders</span>
 
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
-        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-        <span jhiTranslate="controTxApp.receptionOrder.home.refreshListLabel">Refrescar lista</span>
-      </button>
+    <div class="d-flex justify-content-between">
+      <form class="form-inline">
+        <input
+          type="number"
+          [(ngModel)]="filter.purchaseOrderId"
+          [ngModelOptions]="{ standalone: true }"
+          class="form-control"
+          id="filterIdSala"
+          placeholder="Orden de compra"
+        />
+        <div>
+          <button type="submit" class="btn btn-primary" (click)="filterBtn()">Realizar Búsqueda</button>
+          <button type="button" class="btn btn-secondary" (click)="cleanFilters()">Limpiar Filtros</button>
+        </div>
+      </form>
 
-      <button
-        id="jh-create-entity"
-        data-cy="entityCreateButton"
-        class="btn btn-primary jh-create-entity create-reception-order"
-        [routerLink]="['/reception-order/new']"
-      >
-        <fa-icon icon="plus"></fa-icon>
-        <span jhiTranslate="controTxApp.receptionOrder.home.createLabel"> Crear nuevo Reception Order </span>
-      </button>
+      <div>
+        <button class="btn btn-info" (click)="load()" [disabled]="isLoading">
+          <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+          <span jhiTranslate="controTxApp.receptionOrder.home.refreshListLabel">Refrescar lista</span>
+        </button>
+        <button
+          id="jh-create-entity"
+          data-cy="entityCreateButton"
+          class="btn btn-primary create-reception-order"
+          [routerLink]="['/reception-order/new']"
+          *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_STORE']"
+        >
+          <fa-icon icon="plus"></fa-icon>
+          <span jhiTranslate="controTxApp.receptionOrder.home.createLabel">Crear nuevo Reception Order</span>
+        </button>
+      </div>
     </div>
   </h2>
 
@@ -72,7 +89,19 @@
           </th>
           <th scope="col" jhiSortBy="purchaseOrder.iesOrderNumber">
             <div class="d-flex">
-              <span jhiTranslate="controTxApp.receptionOrder.purchaseOrder">Purchase Order</span>
+              <span jhiTranslate="controTxApp.receptionOrder.purchaseOrder">Purchase Order Id</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="purchaseOrder.iesOrderNumber">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.purchaseOrder.iesOrderNumber">Order IES</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="entryDate">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.purchaseOrder.orderAmount">Order Amount</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
@@ -82,20 +111,22 @@
       <tbody>
         <tr *ngFor="let receptionOrder of receptionOrders; trackBy: trackId" data-cy="entityTable">
           <td>
-            <a [routerLink]="['/reception-order', receptionOrder.id, 'view']">{{ receptionOrder.id }}</a>
+            <a [routerLink]="['/reception-order', receptionOrder.id, 'view']">{{ receptionOrder.id }} </a>
           </td>
           <td>{{ receptionOrder.providerLotNumber }}</td>
           <td>{{ receptionOrder.amountReceived }}</td>
           <td>{{ receptionOrder.remission }}</td>
           <td>{{ receptionOrder.entryDate | formatMediumDatetime }}</td>
           <td>{{ receptionOrder.warrantyDate | formatMediumDatetime }}</td>
+          <td *ngIf="receptionOrder.purchaseOrder">{{ receptionOrder.purchaseOrder.id }}</td>
           <td>
             <div *ngIf="receptionOrder.purchaseOrder">
-              <a [routerLink]="['/purchase-order', receptionOrder.purchaseOrder.id, 'view']">{{
-                receptionOrder.purchaseOrder.iesOrderNumber
-              }}</a>
+              <a [routerLink]="['/purchase-order', receptionOrder.purchaseOrder.id, 'view']"
+                >{{ receptionOrder.purchaseOrder.iesOrderNumber }}
+              </a>
             </div>
           </td>
+          <td *ngIf="receptionOrder.purchaseOrder">{{ receptionOrder.purchaseOrder.orderAmount }}</td>
           <td class="text-end">
             <div class="btn-group">
               <button
@@ -113,12 +144,19 @@
                 [routerLink]="['/reception-order', receptionOrder.id, 'edit']"
                 class="btn btn-primary btn-sm"
                 data-cy="entityEditButton"
+                *jhiHasAnyAuthority="'ROLE_ADMIN'"
               >
                 <fa-icon icon="pencil-alt"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
               </button>
 
-              <button type="submit" (click)="delete(receptionOrder)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+              <button
+                type="submit"
+                (click)="delete(receptionOrder)"
+                class="btn btn-danger btn-sm"
+                data-cy="entityDeleteButton"
+                *jhiHasAnyAuthority="'ROLE_ADMIN'"
+              >
                 <fa-icon icon="times"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
               </button>

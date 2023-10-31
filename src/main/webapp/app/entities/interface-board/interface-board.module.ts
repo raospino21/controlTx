@@ -5,6 +5,8 @@ import { InterfaceBoardDetailComponent } from './detail/interface-board-detail.c
 import { InterfaceBoardUpdateComponent } from './update/interface-board-update.component';
 import { InterfaceBoardDeleteDialogComponent } from './delete/interface-board-delete-dialog.component';
 import { InterfaceBoardRoutingModule } from './route/interface-board-routing.module';
+import { InterfaceBoardCreateComponent } from './create/interface-board-create.component';
+import { UploadBoardComponent } from './upload-board-file/upload-board.component';
 
 @NgModule({
   imports: [SharedModule, InterfaceBoardRoutingModule],
@@ -12,7 +14,9 @@ import { InterfaceBoardRoutingModule } from './route/interface-board-routing.mod
     InterfaceBoardComponent,
     InterfaceBoardDetailComponent,
     InterfaceBoardUpdateComponent,
+    InterfaceBoardCreateComponent,
     InterfaceBoardDeleteDialogComponent,
+    UploadBoardComponent,
   ],
 })
 export class InterfaceBoardModule {}

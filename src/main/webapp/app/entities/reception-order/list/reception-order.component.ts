@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
-import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, Data, ParamMap, Params, Router, convertToParamMap } from '@angular/router';
 import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -88,6 +88,7 @@ export class ReceptionOrderComponent implements OnInit {
     const sort = (params.get(SORT) ?? data[DEFAULT_SORT_DATA]).split(',');
     this.predicate = sort[0];
     this.ascending = sort[1] === ASC;
+
     this.filters.initializeFromParams(params);
   }
 
@@ -122,7 +123,14 @@ export class ReceptionOrderComponent implements OnInit {
     filterOptions?.forEach(filterOption => {
       queryObject[filterOption.name] = filterOption.values;
     });
+    this.fillOwnFilter(queryObject);
     return this.receptionOrderService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
+  }
+
+  protected fillOwnFilter(queryObject: any): any {
+    if (this.filter.purchaseOrderId != null) {
+      queryObject['purchaseOrderId.equals'] = this.filter.purchaseOrderId;
+    }
   }
 
   protected handleNavigation(page = this.page, predicate?: string, ascending?: boolean, filterOptions?: IFilterOption[]): void {
@@ -150,4 +158,27 @@ export class ReceptionOrderComponent implements OnInit {
       return [predicate + ',' + ascendingQueryParam];
     }
   }
+
+  filterBtn(): void {
+    if (this.filter !== null && this.filter.purchaseOrderId != null) {
+      const queryParamsObj: any = {
+        purchaseOrderId: this.filter!.purchaseOrderId,
+      };
+
+      this.router.navigate(['./'], {
+        relativeTo: this.activatedRoute,
+        queryParams: queryParamsObj,
+      });
+    }
+    this.load();
+  }
+
+  cleanFilters(): void {
+    this.filter.purchaseOrderId = null;
+    this.load();
+  }
+
+  filter = {
+    purchaseOrderId: null,
+  };
 }

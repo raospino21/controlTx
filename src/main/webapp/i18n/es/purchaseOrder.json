@@ -2,25 +2,25 @@
   "controTxApp": {
     "purchaseOrder": {
       "home": {
-        "title": "Purchase Orders",
+        "title": "Orden de Compra",
         "refreshListLabel": "Refrescar lista",
-        "createLabel": "Crear nuevo Purchase Order",
-        "createOrEditLabel": "Crear o editar Purchase Order",
-        "notFound": "Ningún Purchase Orders encontrado"
+        "createLabel": "Crear Orden de Compra",
+        "createOrEditLabel": "Crear o editar Orden de Compra",
+        "notFound": "Ningúna Orden de Compra encontrada"
       },
-      "created": "Un nuevo Purchase Order ha sido creado con el identificador {{ param }}",
-      "updated": "Un Purchase Order ha sido actualizado con el identificador {{ param }}",
-      "deleted": "Un Purchase Order ha sido eliminado con el identificador {{ param }}",
+      "created": "Una nueva Orden de Compra ha sido creada con el identificador {{ param }}",
+      "updated": "Una nueva Orden de Compra ha sido actualizada con el identificador {{ param }}",
+      "deleted": "Una nueva Orden de Compra ha sido eliminada con el identificador {{ param }}",
       "delete": {
-        "question": "¿Seguro que quiere eliminar Purchase Order {{ id }}?"
+        "question": "¿Seguro que quiere eliminar la Orden de Compra {{ id }}?"
       },
       "detail": {
-        "title": "Purchase Order"
+        "title": "Orden de Compra"
       },
       "id": "Id",
-      "orderAmount": "Order Amount",
-      "createAt": "Create At",
-      "iesOrderNumber": "Ies Order Number"
+      "orderAmount": "Total de la Orden",
+      "createAt": "Fecha de creación",
+      "iesOrderNumber": "Número de orden Ies"
     }
   }
 }

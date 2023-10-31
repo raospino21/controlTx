@@ -18,5 +18,6 @@ public interface ReceptionOrderMapper extends EntityMapper<ReceptionOrderDTO, Re
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "iesOrderNumber", source = "iesOrderNumber")
+    @Mapping(target = "orderAmount", source = "orderAmount")
     PurchaseOrderDTO toDtoPurchaseOrderIesOrderNumber(PurchaseOrder purchaseOrder);
 }

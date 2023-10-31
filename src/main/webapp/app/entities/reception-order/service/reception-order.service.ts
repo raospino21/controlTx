@@ -28,6 +28,7 @@ export type EntityArrayResponseType = HttpResponse<IReceptionOrder[]>;
 @Injectable({ providedIn: 'root' })
 export class ReceptionOrderService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/reception-orders');
+  protected urlAlternative = this.applicationConfigService.getEndpointFor('api/controltx');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
@@ -35,6 +36,13 @@ export class ReceptionOrderService {
     const copy = this.convertDateFromClient(receptionOrder);
     return this.http
       .post<RestReceptionOrder>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
+  }
+
+  createAlternative(receptionOrder: NewReceptionOrder): Observable<EntityResponseType> {
+    const copy = this.convertDateFromClient(receptionOrder);
+    return this.http
+      .post<RestReceptionOrder>(this.urlAlternative + '/reception-orders', copy, { observe: 'response' })
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
@@ -62,6 +70,13 @@ export class ReceptionOrderService {
     const options = createRequestOption(req);
     return this.http
       .get<RestReceptionOrder[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map(res => this.convertResponseArrayFromServer(res)));
+  }
+
+  receptionOrderAvailable(req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http
+      .get<RestReceptionOrder[]>(this.urlAlternative + '/info/reception-order', { params: options, observe: 'response' })
       .pipe(map(res => this.convertResponseArrayFromServer(res)));
   }
 

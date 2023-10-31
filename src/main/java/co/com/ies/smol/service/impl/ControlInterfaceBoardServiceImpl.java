@@ -2,9 +2,14 @@ package co.com.ies.smol.service.impl;
 
 import co.com.ies.smol.domain.ControlInterfaceBoard;
 import co.com.ies.smol.domain.InterfaceBoard;
+import co.com.ies.smol.domain.enumeration.Location;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.repository.ControlInterfaceBoardRepository;
+import co.com.ies.smol.service.ControlInterfaceBoardQueryService;
 import co.com.ies.smol.service.ControlInterfaceBoardService;
+import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria;
+import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria.LocationFilter;
+import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria.StatusInterfaceBoardFilter;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.mapper.ControlInterfaceBoardMapper;
 import java.util.List;
@@ -15,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
  * Service Implementation for managing {@link ControlInterfaceBoard}.
@@ -29,12 +35,16 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
 
     private final ControlInterfaceBoardMapper controlInterfaceBoardMapper;
 
+    private final ControlInterfaceBoardQueryService controlInterfaceBoardQueryService;
+
     public ControlInterfaceBoardServiceImpl(
         ControlInterfaceBoardRepository controlInterfaceBoardRepository,
-        ControlInterfaceBoardMapper controlInterfaceBoardMapper
+        ControlInterfaceBoardMapper controlInterfaceBoardMapper,
+        ControlInterfaceBoardQueryService controlInterfaceBoardQueryService
     ) {
         this.controlInterfaceBoardRepository = controlInterfaceBoardRepository;
         this.controlInterfaceBoardMapper = controlInterfaceBoardMapper;
+        this.controlInterfaceBoardQueryService = controlInterfaceBoardQueryService;
     }
 
     @Override
@@ -118,8 +128,11 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
     }
 
     @Override
-    public List<ControlInterfaceBoardDTO> getInfoBoardsAvailable() {
-        return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getByStateAndFinishTimeIsNull(StatusInterfaceBoard.STOCK));
+    public Page<ControlInterfaceBoardDTO> getInfoBoardsAvailable(
+        ControlInterfaceBoardCriteria criteria,
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable
+    ) {
+        return controlInterfaceBoardQueryService.findByCriteria(criteria, pageable);
     }
 
     @Override
@@ -130,5 +143,36 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
     @Override
     public List<ControlInterfaceBoardDTO> getByContractIdInAndState(List<Long> contractIdList, StatusInterfaceBoard state) {
         return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getByContractIdInAndState(contractIdList, state.name()));
+    }
+
+    @Override
+    public Page<ControlInterfaceBoardDTO> getControlInterfaceBoardAvailable(ControlInterfaceBoardCriteria criteria, Pageable pageable) {
+        StatusInterfaceBoardFilter statusFilter = new StatusInterfaceBoardFilter();
+        statusFilter.setEquals(StatusInterfaceBoard.OPERATION);
+        criteria.setState(statusFilter);
+
+        ZonedDateTimeFilter finishTimeFilter = new ZonedDateTimeFilter();
+        finishTimeFilter.setEquals(null);
+        criteria.setFinishTime(finishTimeFilter);
+
+        LocationFilter locationFilter = new LocationFilter();
+        locationFilter.setEquals(Location.CLIENT);
+        criteria.setLocation(locationFilter);
+
+        return controlInterfaceBoardQueryService.findByCriteria(criteria, pageable);
+    }
+
+    @Override
+    public List<ControlInterfaceBoardDTO> getControlInterfaceBoardByReceptionOrderIdAndFinishTimeIsNull(Long receptionOrderId) {
+        return controlInterfaceBoardMapper.toDto(
+            controlInterfaceBoardRepository.getByReceptionOrderIdAndFinishTimeIsNull(receptionOrderId)
+        );
+    }
+
+    @Override
+    public List<ControlInterfaceBoardDTO> getControlInterfaceBoardByReceptionOrderIdInAndFinishTimeIsNull(List<Long> receptionOrderIds) {
+        return controlInterfaceBoardMapper.toDto(
+            controlInterfaceBoardRepository.getByReceptionOrderIdInAndFinishTimeIsNull(receptionOrderIds)
+        );
     }
 }

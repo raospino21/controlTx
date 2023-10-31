@@ -1,6 +1,6 @@
 {
   "global": {
-    "title": "ControTx",
+    "title": "ControlTx",
     "browsehappy": "You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/?locale=en\">upgrade your browser</a> to improve your experience.",
     "menu": {
       "home": "Home",
@@ -24,6 +24,28 @@
         "login": "Sign in",
         "logout": "Sign out",
         "register": "Register"
+      },
+      "store": {
+        "main": "Store",
+        "createBoard": "Create Board",
+        "assingBoard": "Link Board To Contract"
+      },
+      "accounting": {
+        "title": "Accounting",
+        "purchaseOrder": "Purchase Order",
+        "receptionOrder": "Reception Order"
+      },
+      "commercial": {
+        "title": "Comercial",
+        "brand": "Brand",
+        "operator": "Operator",
+        "contract": "Contract",
+        "interfaceBoard": "Interface Board",
+        "controlInterfaceBoard": "Control Interface Board",
+        "purchaseOrder": "Purchase Order",
+        "receptionOrder": "Reception Order",
+        "boardInStock": "Board In Stock",
+        "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "admin": {
         "main": "Administration",

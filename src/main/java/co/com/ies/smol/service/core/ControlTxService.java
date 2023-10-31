@@ -3,14 +3,22 @@ package co.com.ies.smol.service.core;
 import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
+import co.com.ies.smol.service.dto.ContractDTO;
+import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
+import co.com.ies.smol.service.dto.PurchaseOrderDTO;
+import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
+import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
+import co.com.ies.smol.service.dto.core.RequestStatusRecord;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ControlTxService {
-    String createBoardRegister(BoardRegisterDTO boardRegisterDTO) throws ControlTxException;
+    RequestStatusRecord createBoardRegister(BoardRegisterDTO boardRegisterDTO) throws ControlTxException;
 
     void assignInterfaceBoard(AssignBoardDTO assignBoardDTO) throws ControlTxException;
 
@@ -28,7 +36,19 @@ public interface ControlTxService {
 
     BoardAssociationResponseDTO getInfoBoardAssociation(Long operatorId) throws ControlTxException;
 
-    List<InterfaceBoardDTO> getInfoBoardsAvailable();
+    Page<InterfaceBoardDTO> getInfoBoardsAvailable(String mac, @org.springdoc.api.annotations.ParameterObject Pageable pageable)
+        throws ControlTxException;
 
     List<InterfaceBoardDTO> getInfoBoardsByOperatorIdAndState(Long operatorId, StatusInterfaceBoard state);
+
+    Page<ControlInterfaceBoardDTO> getControlInterfaceBoardAvailable(FilterControlInterfaceBoard filter, Pageable pageable)
+        throws ControlTxException;
+
+    List<ContractDTO> getPendingContractsForBoard();
+
+    List<ReceptionOrderDTO> getPendingReceptionOrderForBoard();
+
+    List<PurchaseOrderDTO> getPendingPurchaseOrderForReceptionOrder();
+
+    ReceptionOrderDTO saveReceptionOrder(ReceptionOrderDTO receptionOrderDTO) throws ControlTxException;
 }

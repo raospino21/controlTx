@@ -2,9 +2,9 @@
   "controTxApp": {
     "ContractType": {
       "null": "",
-      "SALE": "SALE",
-      "RENT": "RENT",
-      "LOAN": "LOAN"
+      "SALE": "VENTA",
+      "RENT": "ARRIENDO",
+      "LOAN": "PRESTAMO"
     }
   }
 }

@@ -27,6 +27,7 @@ export type EntityArrayResponseType = HttpResponse<IPurchaseOrder[]>;
 @Injectable({ providedIn: 'root' })
 export class PurchaseOrderService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/purchase-orders');
+  protected urlLoadRelationshipsOptions = this.applicationConfigService.getEndpointFor('api/info/purchase-order');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
@@ -61,6 +62,13 @@ export class PurchaseOrderService {
     const options = createRequestOption(req);
     return this.http
       .get<RestPurchaseOrder[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map(res => this.convertResponseArrayFromServer(res)));
+  }
+
+  purchaseOrderAvailable(req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http
+      .get<RestPurchaseOrder[]>(this.urlLoadRelationshipsOptions, { params: options, observe: 'response' })
       .pipe(map(res => this.convertResponseArrayFromServer(res)));
   }
 

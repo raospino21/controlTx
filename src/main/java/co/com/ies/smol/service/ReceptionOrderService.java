@@ -66,4 +66,6 @@ public interface ReceptionOrderService {
     void delete(Long id);
 
     List<ReceptionOrderDTO> getReceptionOrderByIesOrderNumber(Long purchaseOrder);
+
+    List<ReceptionOrderDTO> getAllReceptionOrder();
 }

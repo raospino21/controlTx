@@ -1,0 +1,77 @@
+<div>
+  <h2 class="text-capitalize text-center">Tarjetas en Stock</h2>
+  <div *ngIf="errorMsg !== ''">
+    <ngb-alert [type]="typeAlertErrorMsg">
+      <strong
+        [ngClass]="{ 'text-dark': typeAlertErrorMsg === 'warning' || typeAlertErrorMsg === 'success' || typeAlertErrorMsg === 'danger' }"
+        class="h5"
+      >
+        {{ errorMsg }}
+      </strong>
+    </ngb-alert>
+  </div>
+  <div class="d-flex justify-content-between">
+    <form class="form-inline">
+      <input
+        type="text"
+        [(ngModel)]="filter.mac"
+        [ngModelOptions]="{ standalone: true }"
+        class="form-control"
+        id="filterMac"
+        placeholder="Ingrese la Mac"
+      />
+      <div>
+        <button type="submit" class="btn btn-primary" (click)="getBoardsInStock()">Realizar Búsqueda</button>
+        <button type="button" class="btn btn-secondary" (click)="cleanFilters()">Limpiar Filtros</button>
+      </div>
+    </form>
+
+    <div>
+      <button class="btn btn-info me-2" (click)="getBoardsInStock()">
+        <fa-icon icon="sync"></fa-icon>
+        <span jhiTranslate="controTxApp.interfaceBoard.home.refreshListLabel">Refrescar lista</span>
+      </button>
+    </div>
+  </div>
+  <hr />
+  <div class="table-responsive table-entities" *ngIf="interfaceBoards && interfaceBoards.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.interfaceBoard.mac">Mac</span>
+            </div>
+          </th>
+          <th scope="col">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.interfaceBoard.receptionOrder">Reception Order</span>
+            </div>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let interfaceBoard of interfaceBoards" data-cy="entityTable">
+          <td>{{ interfaceBoard.mac }}</td>
+          <td>
+            <div *ngIf="interfaceBoard.receptionOrder">
+              <a [routerLink]="['/reception-order', interfaceBoard.receptionOrder.id, 'view']">{{
+                interfaceBoard.receptionOrder.providerLotNumber
+              }}</a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="interfaceBoards && interfaceBoards.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: pageSize }"></jhi-item-count>
+    </div>
+    <button [disabled]="page === 0" (click)="prevPage()">Anterior</button>
+    <span>{{ page }} / {{ totalPages }}</span>
+    <button [disabled]="page === totalPages" (click)="nextPage()">Siguiente</button>
+  </div>
+</div>

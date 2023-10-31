@@ -20,6 +20,8 @@ export class ReceptionOrderUpdateComponent implements OnInit {
 
   purchaseOrdersSharedCollection: IPurchaseOrder[] = [];
 
+  orderAmount: number = 0;
+
   editForm: ReceptionOrderFormGroup = this.receptionOrderFormService.createReceptionOrderFormGroup();
 
   constructor(
@@ -53,7 +55,7 @@ export class ReceptionOrderUpdateComponent implements OnInit {
     if (receptionOrder.id !== null) {
       this.subscribeToSaveResponse(this.receptionOrderService.update(receptionOrder));
     } else {
-      this.subscribeToSaveResponse(this.receptionOrderService.create(receptionOrder));
+      this.subscribeToSaveResponse(this.receptionOrderService.createAlternative(receptionOrder));
     }
   }
 
@@ -88,7 +90,7 @@ export class ReceptionOrderUpdateComponent implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     this.purchaseOrderService
-      .query()
+      .purchaseOrderAvailable()
       .pipe(map((res: HttpResponse<IPurchaseOrder[]>) => res.body ?? []))
       .pipe(
         map((purchaseOrders: IPurchaseOrder[]) =>
@@ -99,5 +101,10 @@ export class ReceptionOrderUpdateComponent implements OnInit {
         )
       )
       .subscribe((purchaseOrders: IPurchaseOrder[]) => (this.purchaseOrdersSharedCollection = purchaseOrders));
+  }
+
+  onSelectOption() {
+    const selected = this.editForm.get('purchaseOrder')!.value as IPurchaseOrder;
+    this.orderAmount = selected.orderAmount!;
   }
 }

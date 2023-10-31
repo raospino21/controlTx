@@ -6,6 +6,8 @@ import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IInterfaceBoard, NewInterfaceBoard } from '../interface-board.model';
+import { ICreateBoard } from '../create/create-board.model';
+import { IRequestStatus } from 'app/shared/request-status.model';
 
 export type PartialUpdateInterfaceBoard = Partial<IInterfaceBoard> & Pick<IInterfaceBoard, 'id'>;
 
@@ -16,10 +18,16 @@ export type EntityArrayResponseType = HttpResponse<IInterfaceBoard[]>;
 export class InterfaceBoardService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/interface-boards');
 
+  protected createBoardUrl = this.applicationConfigService.getEndpointFor('api');
+
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
   create(interfaceBoard: NewInterfaceBoard): Observable<EntityResponseType> {
     return this.http.post<IInterfaceBoard>(this.resourceUrl, interfaceBoard, { observe: 'response' });
+  }
+
+  createBoard(request: ICreateBoard): Observable<IRequestStatus> {
+    return this.http.post<IRequestStatus>(this.createBoardUrl + '/board/register', request);
   }
 
   update(interfaceBoard: IInterfaceBoard): Observable<EntityResponseType> {

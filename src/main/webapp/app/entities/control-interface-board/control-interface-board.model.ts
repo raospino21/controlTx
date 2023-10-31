@@ -10,7 +10,7 @@ export interface IControlInterfaceBoard {
   state?: StatusInterfaceBoard | null;
   startTime?: dayjs.Dayjs | null;
   finishTime?: dayjs.Dayjs | null;
-  contract?: Pick<IContract, 'id' | 'reference'> | null;
+  contract?: Pick<IContract, 'id' | 'reference' | 'type' | 'operator'> | null;
   interfaceBoard?: Pick<IInterfaceBoard, 'id' | 'mac'> | null;
 }
 

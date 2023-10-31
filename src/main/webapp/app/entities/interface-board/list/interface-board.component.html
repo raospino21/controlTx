@@ -2,25 +2,111 @@
   <h2 id="page-heading" data-cy="InterfaceBoardHeading">
     <span jhiTranslate="controTxApp.interfaceBoard.home.title">Interface Boards</span>
 
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
-        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-        <span jhiTranslate="controTxApp.interfaceBoard.home.refreshListLabel">Refrescar lista</span>
-      </button>
+    <div class="d-flex justify-content-between">
+      <form class="form-inline">
+        <input
+          type="text"
+          [(ngModel)]="filter.mac"
+          [ngModelOptions]="{ standalone: true }"
+          class="form-control"
+          id="filterMac"
+          placeholder="Ingrese la Mac"
+        />
+        <div class="mt-2">
+          <button type="submit" class="btn btn-primary" (click)="filterBtn()">Realizar Búsqueda</button>
+          <button type="button" class="btn btn-secondary" (click)="cleanFilters()">Limpiar Filtros</button>
+        </div>
+      </form>
 
-      <button
-        id="jh-create-entity"
-        data-cy="entityCreateButton"
-        class="btn btn-primary jh-create-entity create-interface-board"
-        [routerLink]="['/interface-board/new']"
-      >
-        <fa-icon icon="plus"></fa-icon>
-        <span jhiTranslate="controTxApp.interfaceBoard.home.createLabel"> Crear nuevo Interface Board </span>
-      </button>
+      <div>
+        <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+          <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+          <span jhiTranslate="controTxApp.interfaceBoard.home.refreshListLabel">Refrescar lista</span>
+        </button>
+
+        <button
+          id="jh-create-entity"
+          data-cy="entityCreateButton"
+          class="btn btn-primary jh-create-entity create-interface-board"
+          [routerLink]="['/interface-board/create']"
+        >
+          <fa-icon icon="plus"></fa-icon>
+          <span jhiTranslate="controTxApp.interfaceBoard.home.createLabel"> Crear nuevo Interface Board </span>
+        </button>
+
+        <button class="btn btn-primary jh-create-entity create-bonus" (click)="openModal(createBoardModalTpl)">
+          <fa-icon icon="plus"></fa-icon>
+          <span> Crear Tarjetas Por Archivo </span>
+        </button>
+      </div>
     </div>
   </h2>
 
-  <jhi-alert-error></jhi-alert-error>
+  <ng-template #createBoardModalTpl let-modal>
+    <div class="mt-5 mx-5" *ngIf="errorMsg !== ''">
+      <ngb-alert [type]="typeAlertErrorMsg">
+        <strong
+          [ngClass]="{ 'text-dark': typeAlertErrorMsg === 'warning' || typeAlertErrorMsg === 'success' || typeAlertErrorMsg === 'danger' }"
+          class="h5"
+        >
+          {{ errorMsg }}
+        </strong>
+      </ngb-alert>
+    </div>
+
+    <form
+      class="p-5"
+      name="formCreateInterfaceBoard"
+      role="form"
+      novalidate
+      [formGroup]="formCreateInterfaceBoard"
+      aria-label="assgin boards"
+    >
+      <h3 class="pb-3" data-cy="AssingBoardHeading">Crear Tarjetas en Lotes</h3>
+      <div class="content">
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="controTxApp.interfaceBoard.receptionOrder" for="field_receptionOrder"
+            >Reception Order</label
+          >
+          <select class="form-control" id="field_receptionOrder" formControlName="receptionOrderOption" (change)="onSelectOption()">
+            <option *ngIf="!formCreateInterfaceBoard.get('receptionOrderOption')!.value" [ngValue]="null" selected></option>
+            <option [ngValue]="receptionOrderOption" *ngFor="let receptionOrderOption of receptionOrdersSharedCollection">
+              {{ receptionOrderOption.providerLotNumber }}
+            </option>
+          </select>
+        </div>
+
+        <jhi-upload-board *ngIf="formCreateInterfaceBoard.get('receptionOrderOption')!.value"> </jhi-upload-board>
+
+        <div class="container p-3 d-flex justify-content-between" *ngIf="quantityOfErrors > 0">
+          <button type="submit" class="btn btn-primary" (click)="download()">
+            <fa-icon icon="save"></fa-icon>
+            Descargar archivo
+          </button>
+          <p class="text-danger">{{ quantityOfErrors }} Errores en la creacion de los tarjetas</p>
+        </div>
+        <hr />
+
+        <div class="d-flex justify-content-between">
+          <button
+            [disabled]="formCreateInterfaceBoard.get('receptionOrderOption')!.invalid || macs!.length == 0"
+            type="submit"
+            id="save-entity"
+            data-cy="entityCreateSaveButton"
+            class="btn btn-success btn-block"
+            (click)="createBoardsToCreateForFile()"
+          >
+            <fa-icon icon="save"></fa-icon>
+            &nbsp;<span jhiTranslate="entity.action.save">Save</span>
+          </button>
+
+          <button type="button" (click)="cleanformCreateInterfaceBoard()" (click)="modal.close()" class="btn btn-danger btn-block">
+            <fa-icon icon="ban"></fa-icon>&nbsp;<span>Finalizar</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </ng-template>
 
   <jhi-alert></jhi-alert>
 
@@ -40,13 +126,13 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="ipAddress">
+          <th scope="col" jhiSortBy="ipAddress" *ngIf="canView(['ROLE_ADMIN'])">
             <div class="d-flex">
               <span jhiTranslate="controTxApp.interfaceBoard.ipAddress">Ip Address</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="hash">
+          <th scope="col" jhiSortBy="hash" *ngIf="canView(['ROLE_ADMIN'])">
             <div class="d-flex">
               <span jhiTranslate="controTxApp.interfaceBoard.hash">Hash</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
@@ -72,8 +158,8 @@
           <td>
             <a [routerLink]="['/interface-board', interfaceBoard.id, 'view']">{{ interfaceBoard.id }}</a>
           </td>
-          <td>{{ interfaceBoard.ipAddress }}</td>
-          <td>{{ interfaceBoard.hash }}</td>
+          <td *ngIf="canView(['ROLE_ADMIN'])">{{ interfaceBoard.ipAddress }}</td>
+          <td *ngIf="canView(['ROLE_ADMIN'])">{{ interfaceBoard.hash }}</td>
           <td>{{ interfaceBoard.mac }}</td>
           <td>
             <div *ngIf="interfaceBoard.receptionOrder">
@@ -99,12 +185,19 @@
                 [routerLink]="['/interface-board', interfaceBoard.id, 'edit']"
                 class="btn btn-primary btn-sm"
                 data-cy="entityEditButton"
+                *jhiHasAnyAuthority="'ROLE_ADMIN'"
               >
                 <fa-icon icon="pencil-alt"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
               </button>
 
-              <button type="submit" (click)="delete(interfaceBoard)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+              <button
+                type="submit"
+                (click)="delete(interfaceBoard)"
+                class="btn btn-danger btn-sm"
+                data-cy="entityDeleteButton"
+                *jhiHasAnyAuthority="'ROLE_ADMIN'"
+              >
                 <fa-icon icon="times"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
               </button>
