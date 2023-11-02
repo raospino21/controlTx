@@ -4,7 +4,7 @@
       "home": {
         "title": "Tarjetas",
         "refreshListLabel": "Refrescar lista",
-        "createLabel": "Crear nueva Tarjeta",
+        "createLabel": "Validar Tarjeta",
         "createOrEditLabel": "Crear o editar Tarjeta",
         "notFound": "Ningúna Tarjeta encontrada"
       },
@@ -21,7 +21,8 @@
       "ipAddress": "Dirección IP",
       "hash": "Hash",
       "mac": "Mac",
-      "receptionOrder": "Orden de recepción"
+      "receptionOrder": "Orden de recepción",
+      "validateInterface": "Tarjeta válida"
     }
   }
 }

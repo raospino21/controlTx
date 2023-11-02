@@ -28,7 +28,8 @@
       "store": {
         "main": "Store",
         "createBoard": "Create Board",
-        "assingBoard": "Link Board To Contract"
+        "assingBoard": "Link Board To Contract",
+        "validateInterface": "Validate interface Board"
       },
       "accounting": {
         "title": "Accounting",

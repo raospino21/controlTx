@@ -4,7 +4,7 @@
       "home": {
         "title": "Interface Boards",
         "refreshListLabel": "Refresh list",
-        "createLabel": "Create a new Interface Board",
+        "createLabel": "Validate a new Interface Board",
         "createOrEditLabel": "Create or edit a Interface Board",
         "notFound": "No Interface Boards found"
       },
@@ -21,7 +21,8 @@
       "ipAddress": "Ip Address",
       "hash": "Hash",
       "mac": "Mac",
-      "receptionOrder": "Reception Order"
+      "receptionOrder": "Reception Order",
+      "validateInterface": "validate interface Board"
     }
   }
 }

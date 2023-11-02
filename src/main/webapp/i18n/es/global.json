@@ -41,7 +41,8 @@
       "store": {
         "main": "Almacén",
         "createBoard": "Crear Tarjeta",
-        "assingBoard": "Vincular Tarjeta Al Contrato "
+        "assingBoard": "Vincular Tarjeta Al Contrato ",
+        "validateInterface": "Tarjeta valida"
       },
       "accounting": {
         "title": "Contabilidad",
