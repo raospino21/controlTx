@@ -22,7 +22,7 @@ export class ManagerStoreComponent implements OnInit {
 
   purchaseOrderComplete?: IPurchaseOrderCompleteResponse[];
   receptionOrderListSelected?: IReceptionOrder[];
-  pageSize: number = ITEMS_PER_PAGE;
+  pageSize: number = 4;
   page = 1;
   totalItems = 0;
   public errorMsg = '';
