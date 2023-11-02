@@ -3,10 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ITEMS_PER_PAGE, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { IInterfaceBoard } from 'app/entities/interface-board/interface-board.model';
-import { ManagerStoreService } from '../manager-store.service';
-import { IPurchaseOrderCompleteResponse } from '../purchaseorder-complete-response.model';
 import { IReceptionOrder } from 'app/entities/reception-order/reception-order.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ManagerStoreService } from './manager-store.service';
+import { IPurchaseOrderCompleteResponse } from './purchaseorder-complete-response.model';
 
 @Component({
   selector: 'jhi-manager-store',

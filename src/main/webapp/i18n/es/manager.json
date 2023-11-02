@@ -1,0 +1,13 @@
+{
+  "controTxApp": {
+    "manager": {
+      "home": {
+        "title": "Gerencia"
+      },
+      "list": {
+        "general": "General",
+        "store": "Almacen"
+      }
+    }
+  }
+}
