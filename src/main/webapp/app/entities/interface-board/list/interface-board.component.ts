@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 import { NgbModal, NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, combineLatest, filter, map, switchMap, tap } from 'rxjs';
+import swal from 'sweetalert2';
 
 import { IInterfaceBoard } from '../interface-board.model';
 
@@ -97,12 +98,44 @@ export class InterfaceBoardComponent implements OnInit {
   }
 
   update(interfaceBoard: IInterfaceBoard): void {
-    interfaceBoard.isValidated = true;
+    // interfaceBoard.isValidated = true;
 
-    this.interfaceBoardService.update(interfaceBoard).subscribe({
-      next: () => this.showAlert('success', 'success', 2000, false),
-      error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.title, 4000, false),
+    // this.interfaceBoardService.update(interfaceBoard).subscribe({
+    //   next: () => this.showAlert('success', 'success', 2000, false),
+    //   error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.title, 4000, false),
+    // });
+
+    const swalWithBootstrapButtons = swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger',
+      },
+      buttonsStyling: false,
     });
+
+    swalWithBootstrapButtons
+      .fire({
+        title: 'Estas seguro?',
+        text: `¿Seguro que deseas validar la tarjeta?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, validar!',
+        cancelButtonText: 'No, cancelar!',
+        reverseButtons: true,
+      })
+      .then((result: { isConfirmed: any }) => {
+        if (result.isConfirmed) {
+          interfaceBoard.isValidated = true;
+          this.interfaceBoardService.update(interfaceBoard).subscribe({
+            next: () => this.showAlert('success', 'success', 2000, false),
+            error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.title, 4000, false),
+          });
+        }
+      });
+  }
+
+  technicalSupport(): void {
+    swal.fire('No se puede retroceder el cambio ¡Comuníquese con el administrador!');
   }
 
   navigateToWithComponentValues(): void {

@@ -176,15 +176,12 @@
           </td>
           <td>
             <ng-container *ngIf="interfaceBoard.isValidated; else notValidated">
-              <!-- <a>Validado</a> -->
-
-              <button type="submit" class="btn btn-success btn-sm">
+              <button type="submit" class="btn btn-success btn-sm" (click)="technicalSupport()">
                 <fa-icon icon="check"></fa-icon>
                 <span class="d-none d-md-inline"></span>
               </button>
             </ng-container>
             <ng-template #notValidated>
-              <!-- <a>No validado</a> -->
               <button type="submit" class="btn btn-danger btn-sm" (click)="update(interfaceBoard)">
                 <fa-icon icon="times"></fa-icon>
                 <span class="d-none d-md-inline"></span>
