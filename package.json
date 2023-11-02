@@ -94,6 +94,7 @@
     "ngx-webstorage": "10.0.1",
     "rxjs": "7.5.6",
     "sockjs-client": "1.5.0",
+    "sweetalert2": "^11.9.0",
     "tslib": "2.4.0",
     "webstomp-client": "1.2.6",
     "zone.js": "0.11.6"
