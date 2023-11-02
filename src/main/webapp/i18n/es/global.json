@@ -43,6 +43,10 @@
         "createBoard": "Crear Tarjeta",
         "assingBoard": "Vincular Tarjeta Al Contrato "
       },
+      "manager": {
+        "title": "Gerencia",
+        "store": "Almacen"
+      },
       "accounting": {
         "title": "Contabilidad",
         "purchaseOrder": "Orden de Compra",

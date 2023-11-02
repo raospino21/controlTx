@@ -26,6 +26,7 @@ import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ActiveMenuDirective } from './layouts/navbar/active-menu.directive';
 import { ErrorComponent } from './layouts/error/error.component';
 import { StoreAdminModule } from './store-admin/store-admin.module';
+import { ManagerAdminModule } from './manager-admin/manager-admin.module';
 
 @NgModule({
   imports: [
@@ -33,6 +34,7 @@ import { StoreAdminModule } from './store-admin/store-admin.module';
     SharedModule,
     HomeModule,
     StoreAdminModule,
+    ManagerAdminModule,
     // jhipster-needle-angular-add-module JHipster will add new module here
     AppRoutingModule,
     // Set this to true to enable service worker (PWA)
