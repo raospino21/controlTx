@@ -26,6 +26,7 @@ import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
+import co.com.ies.smol.service.dto.core.PurchaseOrderCompleteResponse;
 import co.com.ies.smol.service.dto.core.RequestStatusRecord;
 import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
 import java.time.ZonedDateTime;
@@ -37,6 +38,8 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import tech.jhipster.service.filter.LongFilter;
@@ -417,5 +420,19 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         validateAvailability(boardOrderIes, boardHypotheticalTotal);
 
         return receptionOrderService.save(receptionOrderDTO);
+    }
+
+    @Override
+    public Page<PurchaseOrderCompleteResponse> getAllPurchaseOrdersComplete(Pageable pageable) {
+        Page<PurchaseOrderDTO> purchaseOrderPage = purchaseOrderService.findAll(pageable);
+        List<PurchaseOrderDTO> purchaseOrderList = purchaseOrderPage.getContent();
+        List<PurchaseOrderCompleteResponse> response = new ArrayList<>();
+
+        purchaseOrderList.forEach(purchaseOrder -> {
+            List<ReceptionOrderDTO> receptionOrderList = receptionOrderService.getReceptionOrderByPurchaseOrderId(purchaseOrder.getId());
+            response.add(new PurchaseOrderCompleteResponse(purchaseOrder, receptionOrderList));
+        });
+
+        return new PageImpl<>(response, pageable, purchaseOrderPage.getTotalElements());
     }
 }

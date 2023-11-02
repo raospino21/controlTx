@@ -12,6 +12,7 @@ import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
+import co.com.ies.smol.service.dto.core.PurchaseOrderCompleteResponse;
 import co.com.ies.smol.service.dto.core.RequestStatusRecord;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -51,4 +52,6 @@ public interface ControlTxService {
     List<PurchaseOrderDTO> getPendingPurchaseOrderForReceptionOrder();
 
     ReceptionOrderDTO saveReceptionOrder(ReceptionOrderDTO receptionOrderDTO) throws ControlTxException;
+
+    Page<PurchaseOrderCompleteResponse> getAllPurchaseOrdersComplete(Pageable pageable);
 }

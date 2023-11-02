@@ -4,6 +4,7 @@ import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.service.core.ControlTxService;
+import co.com.ies.smol.service.criteria.ReceptionOrderCriteria;
 import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
@@ -13,6 +14,7 @@ import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
+import co.com.ies.smol.service.dto.core.PurchaseOrderCompleteResponse;
 import co.com.ies.smol.service.dto.core.RequestStatusRecord;
 import co.com.ies.smol.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -270,5 +272,17 @@ public class ControlTxController {
             .created(new URI("/api/reception-orders/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    @GetMapping("/purchase-orders/complete")
+    public ResponseEntity<List<PurchaseOrderCompleteResponse>> getAllPurchaseOrdersComplete(
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable
+    ) {
+        log.debug("REST request to get getAllPurchaseOrdersComplete by pag: {}", pageable);
+
+        Page<PurchaseOrderCompleteResponse> page = controlTxService.getAllPurchaseOrdersComplete(pageable);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 }
