@@ -2,31 +2,29 @@ import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/ht
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ITEMS_PER_PAGE, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
-import { IInterfaceBoard } from 'app/entities/interface-board/interface-board.model';
 import { IReceptionOrder } from 'app/entities/reception-order/reception-order.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ManagerStoreService } from './manager-store.service';
-import { IPurchaseOrderCompleteResponse } from './purchaseorder-complete-response.model';
+import { ManagerGeneralService } from './manager-general.service';
+import { IBrand } from 'app/entities/brand/brand.model';
 
 @Component({
-  selector: 'jhi-manager-store',
-  templateUrl: './store.component.html',
+  selector: 'jhi-manager-general',
+  templateUrl: './general.component.html',
 })
-export class ManagerStoreComponent implements OnInit {
+export class ManagerGeneralComponent implements OnInit {
   constructor(
     protected activatedRoute: ActivatedRoute,
     protected router: Router,
-    protected service: ManagerStoreService,
+    protected service: ManagerGeneralService,
     private modalService: NgbModal
   ) {}
 
-  purchaseOrderComplete?: IPurchaseOrderCompleteResponse[];
-  receptionOrderListSelected?: IReceptionOrder[];
-  pageSize: number = 4;
+  pageSize: number = 10;
   page = 1;
   totalItems = 0;
   public errorMsg = '';
   public typeAlertErrorMsg = 'danger';
+  brands?: IBrand[];
 
   ngOnInit(): void {
     this.load();
@@ -37,19 +35,16 @@ export class ManagerStoreComponent implements OnInit {
       page: this.page - 1,
       size: this.pageSize,
     };
-    this.service.getPurchaseOrderComplete(queryObject).subscribe({
-      next: (res: HttpResponse<IPurchaseOrderCompleteResponse[]>) => this.onSuccess(res.body!, res.headers),
+
+    this.service.getBrands(queryObject).subscribe({
+      next: (res: HttpResponse<IBrand[]>) => this.onSuccess(res.body!, res.headers),
       error: (error: HttpErrorResponse) => this.onError(error),
     });
   }
 
-  private onSuccess(response: IPurchaseOrderCompleteResponse[], headers: HttpHeaders): void {
+  private onSuccess(response: IBrand[], headers: HttpHeaders): void {
     this.totalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
-
-    this.purchaseOrderComplete = response.map(item => {
-      item.purchaseOrder!.amountReceived = this.calculateTotalAmount(item.receptionOrderList!);
-      return item;
-    });
+    this.brands = response;
     this.showAlert('success', 'Exito!', 2000);
   }
 
@@ -57,13 +52,6 @@ export class ManagerStoreComponent implements OnInit {
     return receptionOrderList?.reduce((accumulator, receptionOrder) => {
       return accumulator + receptionOrder.amountReceived!;
     }, 0);
-  }
-
-  public showReceptionOrder(receptionOrderId: number, modal: any) {
-    this.receptionOrderListSelected = this.purchaseOrderComplete!.find(
-      item => item.purchaseOrder!.id === receptionOrderId
-    )?.receptionOrderList;
-    this.openModal(modal);
   }
 
   private openModal(modal: any): void {
