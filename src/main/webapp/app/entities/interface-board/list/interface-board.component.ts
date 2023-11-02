@@ -96,6 +96,15 @@ export class InterfaceBoardComponent implements OnInit {
     });
   }
 
+  update(interfaceBoard: IInterfaceBoard): void {
+    interfaceBoard.isValidated = true;
+
+    this.interfaceBoardService.update(interfaceBoard).subscribe({
+      next: () => this.showAlert('success', 'success', 2000, false),
+      error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.title, 4000, false),
+    });
+  }
+
   navigateToWithComponentValues(): void {
     this.handleNavigation(this.page, this.predicate, this.ascending, this.filters.filterOptions);
   }
