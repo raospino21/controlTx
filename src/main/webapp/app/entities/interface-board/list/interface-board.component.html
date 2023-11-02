@@ -150,6 +150,12 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
+          <th scope="col" jhiSortBy="receptionOrder.providerLotNumber">
+            <div class="d-flex">
+              <span jhiTranslate="controTxApp.interfaceBoard.validateInterface">Tarjeta validada</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -167,6 +173,20 @@
                 interfaceBoard.receptionOrder.providerLotNumber
               }}</a>
             </div>
+          </td>
+          <td>
+            <ng-container *ngIf="interfaceBoard.isValidated; else notValidated">
+              <button type="submit" class="btn btn-success btn-sm" (click)="technicalSupport()">
+                <fa-icon icon="check"></fa-icon>
+                <span class="d-none d-md-inline"></span>
+              </button>
+            </ng-container>
+            <ng-template #notValidated>
+              <button type="submit" class="btn btn-danger btn-sm" (click)="update(interfaceBoard)">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline"></span>
+              </button>
+            </ng-template>
           </td>
           <td class="text-end">
             <div class="btn-group">

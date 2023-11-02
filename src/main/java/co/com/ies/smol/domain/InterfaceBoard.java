@@ -39,6 +39,9 @@ public class InterfaceBoard implements Serializable {
     @JsonIgnoreProperties(value = { "purchaseOrder" }, allowSetters = true)
     private ReceptionOrder receptionOrder;
 
+    @Column(name = "is_validated")
+    private Boolean isValidated;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -106,6 +109,20 @@ public class InterfaceBoard implements Serializable {
         return this;
     }
 
+    /**
+     * @return Boolean return the isValidated
+     */
+    public Boolean getIsValidated() {
+        return isValidated;
+    }
+
+    /**
+     * @param isValidated the isValidated to set
+     */
+    public void setIsValidated(Boolean isValidated) {
+        this.isValidated = isValidated;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -125,14 +142,29 @@ public class InterfaceBoard implements Serializable {
         return getClass().hashCode();
     }
 
-    // prettier-ignore
     @Override
     public String toString() {
-        return "InterfaceBoard{" +
-            "id=" + getId() +
-            ", ipAddress='" + getIpAddress() + "'" +
-            ", hash='" + getHash() + "'" +
-            ", mac='" + getMac() + "'" +
-            "}";
+        return (
+            "{" +
+            " id='" +
+            getId() +
+            "'" +
+            ", ipAddress='" +
+            getIpAddress() +
+            "'" +
+            ", hash='" +
+            getHash() +
+            "'" +
+            ", mac='" +
+            getMac() +
+            "'" +
+            ", receptionOrder='" +
+            getReceptionOrder() +
+            "'" +
+            ", isValidated='" +
+            getIsValidated() +
+            "'" +
+            "}"
+        );
     }
 }

@@ -19,6 +19,8 @@ public class InterfaceBoardDTO implements Serializable {
     @NotNull
     private String mac;
 
+    private Boolean isValidated;
+
     private ReceptionOrderDTO receptionOrder;
 
     public Long getId() {
@@ -77,6 +79,14 @@ public class InterfaceBoardDTO implements Serializable {
         return Objects.equals(this.id, interfaceBoardDTO.id);
     }
 
+    public Boolean getIsValidated() {
+        return isValidated;
+    }
+
+    public void setIsValidated(Boolean isValidated) {
+        this.isValidated = isValidated;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(this.id);
@@ -86,11 +96,12 @@ public class InterfaceBoardDTO implements Serializable {
     @Override
     public String toString() {
         return "InterfaceBoardDTO{" +
-            "id=" + getId() +
+            "  id=" + getId() +
             ", ipAddress='" + getIpAddress() + "'" +
             ", hash='" + getHash() + "'" +
             ", mac='" + getMac() + "'" +
+            ", isValidated=" + getIsValidated() +
             ", receptionOrder=" + getReceptionOrder() +
-            "}";
+        "}";
     }
 }

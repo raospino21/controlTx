@@ -6,6 +6,7 @@ export interface IInterfaceBoard {
   hash?: string | null;
   mac?: string | null;
   receptionOrder?: Pick<IReceptionOrder, 'id' | 'providerLotNumber'> | null;
+  isValidated?: boolean;
 }
 
 export type NewInterfaceBoard = Omit<IInterfaceBoard, 'id'> & { id: null };
