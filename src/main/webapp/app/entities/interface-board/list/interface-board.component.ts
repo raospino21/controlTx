@@ -4,6 +4,7 @@ import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 import { NgbModal, NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, combineLatest, filter, map, switchMap, tap } from 'rxjs';
 import swal from 'sweetalert2';
+import dayjs from 'dayjs/esm';
 
 import { IInterfaceBoard } from '../interface-board.model';
 
@@ -19,6 +20,10 @@ import { CreateBoard, ICreateBoard } from '../create/create-board.model';
 import { InterfaceBoardDeleteDialogComponent } from '../delete/interface-board-delete-dialog.component';
 import { EntityArrayResponseType, InterfaceBoardService } from '../service/interface-board.service';
 import { UploadBoardService } from '../upload-board-file/upload-board.service';
+import { ControlInterfaceBoardService } from '../../control-interface-board/service/control-interface-board.service';
+import { NewControlInterfaceBoard } from '../../control-interface-board/control-interface-board.model';
+import { Location } from 'app/entities/enumerations/location.model';
+import { StatusInterfaceBoard } from 'app/entities/enumerations/status-interface-board.model';
 
 @Component({
   selector: 'jhi-interface-board',
@@ -47,6 +52,7 @@ export class InterfaceBoardComponent implements OnInit {
 
   constructor(
     protected interfaceBoardService: InterfaceBoardService,
+    protected controlInterfaceBoardService: ControlInterfaceBoardService,
     protected activatedRoute: ActivatedRoute,
     public router: Router,
     protected modalService: NgbModal,
@@ -98,13 +104,6 @@ export class InterfaceBoardComponent implements OnInit {
   }
 
   update(interfaceBoard: IInterfaceBoard): void {
-    // interfaceBoard.isValidated = true;
-
-    // this.interfaceBoardService.update(interfaceBoard).subscribe({
-    //   next: () => this.showAlert('success', 'success', 2000, false),
-    //   error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.title, 4000, false),
-    // });
-
     const swalWithBootstrapButtons = swal.mixin({
       customClass: {
         confirmButton: 'btn btn-success',
@@ -127,6 +126,19 @@ export class InterfaceBoardComponent implements OnInit {
         if (result.isConfirmed) {
           interfaceBoard.isValidated = true;
           this.interfaceBoardService.update(interfaceBoard).subscribe({
+            next: () => this.showAlert('success', 'success', 2000, false),
+            error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.title, 4000, false),
+          });
+          const controlInterfaceBoard: NewControlInterfaceBoard = {
+            id: null,
+            location: Location.IES,
+            state: StatusInterfaceBoard.STOCK,
+            startTime: dayjs().subtract(5, 'hour'),
+            interfaceBoard: interfaceBoard,
+            contract: null,
+          };
+
+          this.controlInterfaceBoardService.create(controlInterfaceBoard).subscribe({
             next: () => this.showAlert('success', 'success', 2000, false),
             error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.title, 4000, false),
           });

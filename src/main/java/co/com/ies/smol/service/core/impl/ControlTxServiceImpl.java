@@ -90,15 +90,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
                 existingInterfaces.add(oInterfaceBoardDTO.get());
                 continue;
             }
-            InterfaceBoardDTO interfaceBoardDTO = createInterfaceBoard(mac, receptionOrderDTO);
-
-            ControlInterfaceBoardDTO controlInterfaceBoardDTO = createControlInterfaceBoard(
-                Location.IES,
-                StatusInterfaceBoard.STOCK,
-                interfaceBoardDTO,
-                null
-            );
-            controlInterfaceBoardService.save(controlInterfaceBoardDTO);
+            createInterfaceBoard(mac, receptionOrderDTO);
         }
 
         return buildResponse(existingInterfaces);
@@ -107,6 +99,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     protected InterfaceBoardDTO createInterfaceBoard(String mac, ReceptionOrderDTO receptionOrder) {
         InterfaceBoardDTO interfaceBoardDTO = new InterfaceBoardDTO();
         interfaceBoardDTO.setMac(mac);
+        interfaceBoardDTO.setIsValidated(false);
         interfaceBoardDTO.setReceptionOrder(receptionOrder);
 
         interfaceBoardDTO = interfaceBoardService.save(interfaceBoardDTO);
