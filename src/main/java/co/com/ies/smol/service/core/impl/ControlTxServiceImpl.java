@@ -28,6 +28,7 @@ import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
 import co.com.ies.smol.service.dto.core.RequestStatusRecord;
 import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
+import java.io.Console;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -280,7 +281,15 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         finishTimeFilter.setEquals(null);
         criteria.setFinishTime(finishTimeFilter);
 
-        return controlInterfaceBoardService.getInfoBoardsAvailable(criteria, pageable).map(ControlInterfaceBoardDTO::getInterfaceBoard);
+        Page<InterfaceBoardDTO> controlInterfaceBoard = controlInterfaceBoardService
+            .getInfoBoardsAvailable(criteria, pageable)
+            .map(ControlInterfaceBoardDTO::getInterfaceBoard);
+
+        if (Objects.nonNull(mac) && controlInterfaceBoard.getContent().isEmpty()) {
+            throw new ControlTxException("Tarjeta " + mac + " no se encuentra en stock");
+        }
+
+        return controlInterfaceBoard;
     }
 
     @Override

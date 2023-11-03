@@ -21,7 +21,7 @@
         placeholder="Ingrese la Mac"
       />
       <div>
-        <button type="submit" class="btn btn-primary" (click)="getBoardsInStock()">Realizar Búsqueda</button>
+        <button type="submit" [disabled]="!containsFilter()" class="btn btn-primary" (click)="getBoardsInStock()">Realizar Búsqueda</button>
         <button type="button" class="btn btn-secondary" (click)="cleanFilters()">Limpiar Filtros</button>
       </div>
     </form>

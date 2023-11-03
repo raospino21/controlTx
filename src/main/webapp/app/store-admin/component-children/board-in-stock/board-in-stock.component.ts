@@ -21,8 +21,7 @@ export class BoardInStockComponent implements OnInit {
   public typeAlertErrorMsg = 'danger';
 
   ngOnInit(): void {
-    console.log('.... init');
-
+    console.log('------------------- init ', this.filter.mac);
     this.getBoardsInStock();
   }
 
@@ -32,6 +31,7 @@ export class BoardInStockComponent implements OnInit {
       size: this.pageSize,
       mac: this.filter!.mac,
     };
+
     this.service.getBoardsInStock(queryObject).subscribe({
       next: (res: HttpResponse<IInterfaceBoard[]>) => this.onSuccess(res.body!, res.headers),
       error: (error: HttpErrorResponse) => this.onError(error),
@@ -83,8 +83,14 @@ export class BoardInStockComponent implements OnInit {
   }
 
   cleanFilters(): void {
-    this.filter.mac = null;
-    this.getBoardsInStock();
+    if (this.containsFilter()) {
+      this.filter.mac = null;
+      this.getBoardsInStock();
+    }
+  }
+
+  public containsFilter(): boolean {
+    return this.filter.mac !== null && this.filter.mac !== '';
   }
 
   filter = {
