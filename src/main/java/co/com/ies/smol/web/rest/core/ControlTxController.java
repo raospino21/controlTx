@@ -10,12 +10,7 @@ import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
-import co.com.ies.smol.service.dto.core.AssignBoardDTO;
-import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
-import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
-import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
-import co.com.ies.smol.service.dto.core.PurchaseOrderCompleteResponse;
-import co.com.ies.smol.service.dto.core.RequestStatusRecord;
+import co.com.ies.smol.service.dto.core.*;
 import co.com.ies.smol.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -281,6 +276,18 @@ public class ControlTxController {
         log.debug("REST request to get getAllPurchaseOrdersComplete by pag: {}", pageable);
 
         Page<PurchaseOrderCompleteResponse> page = controlTxService.getAllPurchaseOrdersComplete(pageable);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/brand/complete/info")
+    public ResponseEntity<List<BrandCompleteInfoResponse>> getCompleteInfoBrands(
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable
+    ) {
+        log.debug("REST request to get getCompleteInfoBrands by pag: {}", pageable);
+
+        Page<BrandCompleteInfoResponse> page = controlTxService.getCompleteInfoBrands(pageable);
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());

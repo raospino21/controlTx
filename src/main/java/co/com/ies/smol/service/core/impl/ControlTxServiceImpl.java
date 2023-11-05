@@ -7,27 +7,12 @@ import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.domain.enumeration.Location;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
-import co.com.ies.smol.service.ContractService;
-import co.com.ies.smol.service.ControlInterfaceBoardService;
-import co.com.ies.smol.service.InterfaceBoardService;
-import co.com.ies.smol.service.OperatorService;
-import co.com.ies.smol.service.PurchaseOrderService;
-import co.com.ies.smol.service.ReceptionOrderService;
+import co.com.ies.smol.service.*;
 import co.com.ies.smol.service.core.ControlTxService;
 import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria;
 import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria.StatusInterfaceBoardFilter;
-import co.com.ies.smol.service.dto.ContractDTO;
-import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
-import co.com.ies.smol.service.dto.InterfaceBoardDTO;
-import co.com.ies.smol.service.dto.OperatorDTO;
-import co.com.ies.smol.service.dto.PurchaseOrderDTO;
-import co.com.ies.smol.service.dto.ReceptionOrderDTO;
-import co.com.ies.smol.service.dto.core.AssignBoardDTO;
-import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
-import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
-import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
-import co.com.ies.smol.service.dto.core.PurchaseOrderCompleteResponse;
-import co.com.ies.smol.service.dto.core.RequestStatusRecord;
+import co.com.ies.smol.service.dto.*;
+import co.com.ies.smol.service.dto.core.*;
 import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -38,7 +23,6 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -56,6 +40,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     private final ControlInterfaceBoardService controlInterfaceBoardService;
     private final ContractService contractService;
     private final OperatorService operatorService;
+    private final BrandService brandService;
     private final PurchaseOrderService purchaseOrderService;
 
     public ControlTxServiceImpl(
@@ -64,7 +49,8 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         ControlInterfaceBoardService controlInterfaceBoardService,
         ContractService contractService,
         OperatorService operatorService,
-        PurchaseOrderService purchaseOrderService
+        PurchaseOrderService purchaseOrderService,
+        BrandService brandService
     ) {
         this.receptionOrderService = receptionOrderService;
         this.interfaceBoardService = interfaceBoardService;
@@ -72,6 +58,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         this.contractService = contractService;
         this.operatorService = operatorService;
         this.purchaseOrderService = purchaseOrderService;
+        this.brandService = brandService;
     }
 
     @Override
@@ -434,5 +421,21 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         });
 
         return new PageImpl<>(response, pageable, purchaseOrderPage.getTotalElements());
+    }
+
+    @Override
+    public Page<BrandCompleteInfoResponse> getCompleteInfoBrands(Pageable pageable) {
+        Page<BrandDTO> brandsPage = brandService.findAll(pageable);
+        List<BrandDTO> brandList = brandsPage.getContent();
+        List<BrandCompleteInfoResponse> response = new ArrayList<>();
+
+        brandList.forEach(brand -> {
+            Long totalAmountBoardcontracted = getCountInterfaceBoardByBrand(brand.getName());
+            Long totalAmountBoardAssigned = Long.valueOf(getInterfaceBoardByBrand(brand.getName()).size());
+
+            response.add(new BrandCompleteInfoResponse(brand, totalAmountBoardcontracted, totalAmountBoardAssigned));
+        });
+
+        return new PageImpl<>(response, pageable, brandsPage.getTotalElements());
     }
 }

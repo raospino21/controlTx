@@ -4,14 +4,15 @@ import { ApplicationConfigService } from 'app/core/config/application-config.ser
 import { createRequestOption } from 'app/core/request/request-util';
 import { IBrand } from 'app/entities/brand/brand.model';
 import { Observable } from 'rxjs';
+import { IBrandCompleteInfo } from './brand-complete-info.model';
 
 @Injectable({ providedIn: 'root' })
 export class ManagerGeneralService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api');
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
-  getBrands(req?: any): Observable<HttpResponse<IBrand[]>> {
+  getBrands(req?: any): Observable<HttpResponse<IBrandCompleteInfo[]>> {
     const options = createRequestOption(req);
-    return this.http.get<IBrand[]>(this.resourceUrl + '/brands', { params: options, observe: 'response' });
+    return this.http.get<IBrandCompleteInfo[]>(this.resourceUrl + '/brand/complete/info', { params: options, observe: 'response' });
   }
 }

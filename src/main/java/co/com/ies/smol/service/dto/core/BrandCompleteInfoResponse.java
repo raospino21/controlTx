@@ -6,13 +6,5 @@ import java.io.Serializable;
 import java.util.List;
 
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class BrandCompleteInfoResponse implements Serializable {
-
-    private BrandDTO brand;
-
-    private Long totalAmountBoardcontracted;
-
-    private Long totalAmountBoardAssigned;
-
-    List<OperatorDTO> operators;
-}
+public record BrandCompleteInfoResponse(BrandDTO brand, Long totalAmountBoardcontracted, Long totalAmountBoardAssigned)
+    implements Serializable {}

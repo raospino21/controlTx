@@ -1,7 +1,7 @@
 <ngb-accordion #acc="ngbAccordion">
   <ngb-panel id="toggle-1" title="Marcas">
     <ng-template ngbPanelContent>
-      <div class="table-responsive table-entities" id="entities" *ngIf="brands && brands.length > 0">
+      <div class="table-responsive table-entities" id="entities" *ngIf="brandsCompleteInfo && brandsCompleteInfo.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
           <thead>
             <tr>
@@ -17,18 +17,28 @@
                   <fa-icon class="p-1" icon="sort"></fa-icon>
                 </div>
               </th>
-              <th scope="col"></th>
+              <th scope="col">
+                <span>Total Tarjetas Contratadas</span>
+              </th>
+              <th scope="col">
+                <span>Total Tarjetas Asignadas</span>
+              </th>
+              <th scope="col">
+                <span>Detalles</span>
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let brand of brands" data-cy="entityTable">
-              <td>{{ brand.id }}</td>
-              <td>{{ brand.name }}</td>
+            <tr *ngFor="let brandComplete of brandsCompleteInfo" data-cy="entityTable">
+              <td>{{ brandComplete.brand!.id }}</td>
+              <td>{{ brandComplete.brand!.name }}</td>
+              <td>{{ brandComplete.totalAmountBoardcontracted }}</td>
+              <td>{{ brandComplete.totalAmountBoardAssigned }}</td>
               <td class="d-flex">
                 <div class="btn-group">
                   <button type="submit" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
                     <fa-icon icon="eye"></fa-icon>
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+                    <span class="d-none d-md-inline">Ver Operadores</span>
                   </button>
                 </div>
               </td>

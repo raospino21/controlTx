@@ -6,6 +6,7 @@ import { IReceptionOrder } from 'app/entities/reception-order/reception-order.mo
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ManagerGeneralService } from './manager-general.service';
 import { IBrand } from 'app/entities/brand/brand.model';
+import { IBrandCompleteInfo } from './brand-complete-info.model';
 
 @Component({
   selector: 'jhi-manager-general',
@@ -24,7 +25,7 @@ export class ManagerGeneralComponent implements OnInit {
   totalItems = 0;
   public errorMsg = '';
   public typeAlertErrorMsg = 'danger';
-  brands?: IBrand[];
+  brandsCompleteInfo?: IBrandCompleteInfo[];
 
   ngOnInit(): void {
     this.load();
@@ -37,14 +38,14 @@ export class ManagerGeneralComponent implements OnInit {
     };
 
     this.service.getBrands(queryObject).subscribe({
-      next: (res: HttpResponse<IBrand[]>) => this.onSuccess(res.body!, res.headers),
+      next: (res: HttpResponse<IBrandCompleteInfo[]>) => this.onSuccess(res, res.headers),
       error: (error: HttpErrorResponse) => this.onError(error),
     });
   }
 
-  private onSuccess(response: IBrand[], headers: HttpHeaders): void {
+  private onSuccess(response: HttpResponse<IBrandCompleteInfo[]>, headers: HttpHeaders): void {
     this.totalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
-    this.brands = response;
+    this.brandsCompleteInfo = response.body!;
     this.showAlert('success', 'Exito!', 2000);
   }
 
