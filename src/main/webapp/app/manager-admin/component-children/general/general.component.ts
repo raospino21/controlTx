@@ -11,6 +11,7 @@ import { IBrandCompleteInfo } from './brand-complete-info.model';
 @Component({
   selector: 'jhi-manager-general',
   templateUrl: './general.component.html',
+  styleUrls: ['./general.component.scss'],
 })
 export class ManagerGeneralComponent implements OnInit {
   constructor(
@@ -26,6 +27,7 @@ export class ManagerGeneralComponent implements OnInit {
   public errorMsg = '';
   public typeAlertErrorMsg = 'danger';
   brandsCompleteInfo?: IBrandCompleteInfo[];
+  operators?: any[];
 
   ngOnInit(): void {
     this.load();
@@ -41,6 +43,21 @@ export class ManagerGeneralComponent implements OnInit {
       next: (res: HttpResponse<IBrandCompleteInfo[]>) => this.onSuccess(res, res.headers),
       error: (error: HttpErrorResponse) => this.onError(error),
     });
+
+    this.operators = [
+      {
+        nombre: 'Operador 1',
+        contratos: [
+          { tipo: 'Tipo A', cantidad: 10 },
+          { tipo: 'Tipo B', cantidad: 5 },
+        ],
+      },
+      {
+        nombre: 'Operador 2',
+        contratos: [{ tipo: 'Tipo C', cantidad: 8 }],
+      },
+      // Otros operadores y contratos
+    ];
   }
 
   private onSuccess(response: HttpResponse<IBrandCompleteInfo[]>, headers: HttpHeaders): void {

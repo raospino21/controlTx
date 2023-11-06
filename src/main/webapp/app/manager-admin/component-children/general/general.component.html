@@ -56,5 +56,29 @@
       </div>
     </ng-template>
   </ngb-panel>
-  <ngb-panel id="toggle-1" title="Operadores"> </ngb-panel>
+
+  <ngb-panel id="toggle-2" title="Operadores">
+    <ng-template ngbPanelContent>
+      <div class="table-responsive table-entities" id="entities" data-cy="entityTable" *ngIf="operators && operators.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+          <thead>
+            <tr>
+              <th scope="col">Nombre del Operador</th>
+              <th scope="col">Tipo de Contrato</th>
+              <th scope="col">Cantidad Asociada</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let operador of operators">
+              <tr *ngFor="let contrato of operador.contratos; let first = first">
+                <td *ngIf="first" [attr.rowspan]="operador.contratos.length" class="centered-name">{{ operador.nombre }}</td>
+                <td>{{ contrato.tipo }}</td>
+                <td>{{ contrato.cantidad }}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </ng-template>
+  </ngb-panel>
 </ngb-accordion>
