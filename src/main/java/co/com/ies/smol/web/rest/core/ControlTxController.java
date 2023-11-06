@@ -4,6 +4,7 @@ import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.service.core.ControlTxService;
+import co.com.ies.smol.service.criteria.OperatorCriteria;
 import co.com.ies.smol.service.criteria.ReceptionOrderCriteria;
 import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
@@ -288,6 +289,19 @@ public class ControlTxController {
         log.debug("REST request to get getCompleteInfoBrands by pag: {}", pageable);
 
         Page<BrandCompleteInfoResponse> page = controlTxService.getCompleteInfoBrands(pageable);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/operator/complete/info")
+    public ResponseEntity<List<OperatorCompleteInfoResponse>> getCompleteInfoOperators(
+        OperatorCriteria criteria,
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable
+    ) {
+        log.debug("REST request to get getCompleteInfoOperators by pag: {}", pageable);
+
+        Page<OperatorCompleteInfoResponse> page = controlTxService.getCompleteInfoOperators(criteria, pageable);
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());

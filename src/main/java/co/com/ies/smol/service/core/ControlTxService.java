@@ -3,6 +3,7 @@ package co.com.ies.smol.service.core;
 import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
+import co.com.ies.smol.service.criteria.OperatorCriteria;
 import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
@@ -51,4 +52,6 @@ public interface ControlTxService {
     Page<PurchaseOrderCompleteResponse> getAllPurchaseOrdersComplete(Pageable pageable);
 
     Page<BrandCompleteInfoResponse> getCompleteInfoBrands(Pageable pageable);
+
+    Page<OperatorCompleteInfoResponse> getCompleteInfoOperators(OperatorCriteria criteria, Pageable pageable);
 }

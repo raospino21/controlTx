@@ -2,7 +2,9 @@ package co.com.ies.smol.service.impl;
 
 import co.com.ies.smol.domain.Operator;
 import co.com.ies.smol.repository.OperatorRepository;
+import co.com.ies.smol.service.OperatorQueryService;
 import co.com.ies.smol.service.OperatorService;
+import co.com.ies.smol.service.criteria.OperatorCriteria;
 import co.com.ies.smol.service.dto.OperatorDTO;
 import co.com.ies.smol.service.mapper.OperatorMapper;
 import java.util.List;
@@ -28,9 +30,16 @@ public class OperatorServiceImpl implements OperatorService {
 
     private final OperatorMapper operatorMapper;
 
-    public OperatorServiceImpl(OperatorRepository operatorRepository, OperatorMapper operatorMapper) {
+    private final OperatorQueryService operatorQueryService;
+
+    public OperatorServiceImpl(
+        OperatorRepository operatorRepository,
+        OperatorQueryService operatorQueryService,
+        OperatorMapper operatorMapper
+    ) {
         this.operatorRepository = operatorRepository;
         this.operatorMapper = operatorMapper;
+        this.operatorQueryService = operatorQueryService;
     }
 
     @Override
@@ -96,5 +105,10 @@ public class OperatorServiceImpl implements OperatorService {
     @Override
     public Optional<Operator> findOperatorByName(String operatorName) {
         return operatorRepository.findByName(operatorName);
+    }
+
+    @Override
+    public Page<OperatorDTO> findByCriteria(OperatorCriteria criteria, Pageable pageable) {
+        return operatorQueryService.findByCriteria(criteria, pageable);
     }
 }

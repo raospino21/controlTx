@@ -11,6 +11,7 @@ import co.com.ies.smol.service.*;
 import co.com.ies.smol.service.core.ControlTxService;
 import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria;
 import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria.StatusInterfaceBoardFilter;
+import co.com.ies.smol.service.criteria.OperatorCriteria;
 import co.com.ies.smol.service.dto.*;
 import co.com.ies.smol.service.dto.core.*;
 import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
@@ -228,6 +229,12 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     public BoardAssociationResponseDTO getInfoBoardAssociation(Long operatorId) throws ControlTxException {
         Optional<OperatorDTO> oOperator = operatorService.findOne(operatorId);
         validateExistingOperator(oOperator);
+        List<ContractSubDTO> contractSubList = getContractSubListByOperatorId(operatorId);
+
+        return new BoardAssociationResponseDTO(contractSubList);
+    }
+
+    protected List<ContractSubDTO> getContractSubListByOperatorId(Long operatorId) {
         List<ContractDTO> contractList = contractService.getContractByOperatorId(operatorId);
 
         List<ContractSubDTO> contractSubList = new ArrayList<>();
@@ -245,12 +252,12 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
             ContractSubDTO contractSub = new ContractSubDTO(
                 contract.getAmountInterfaceBoard(),
                 controlInterfaceBoardList.size(),
-                contract.getType()
+                contract.getType(),
+                contract.getReference()
             );
             contractSubList.add(contractSub);
         });
-
-        return new BoardAssociationResponseDTO(contractSubList);
+        return contractSubList;
     }
 
     @Override
@@ -437,5 +444,22 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         });
 
         return new PageImpl<>(response, pageable, brandsPage.getTotalElements());
+    }
+
+    @Override
+    public Page<OperatorCompleteInfoResponse> getCompleteInfoOperators(OperatorCriteria criteria, Pageable pageable) {
+        Page<OperatorDTO> operatorsPage = operatorService.findByCriteria(criteria, pageable);
+        List<OperatorDTO> operatorList = operatorsPage.getContent();
+        List<OperatorCompleteInfoResponse> response = new ArrayList<>();
+
+        System.out.println("------ operatorList " + operatorList);
+
+        operatorList.forEach(operator -> {
+            Long operatorId = operator.getId();
+            List<ContractSubDTO> contractSubList = getContractSubListByOperatorId(operatorId);
+            response.add(new OperatorCompleteInfoResponse(operator, contractSubList));
+        });
+
+        return new PageImpl<>(response, pageable, operatorsPage.getTotalElements());
     }
 }

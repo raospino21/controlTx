@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ManagerGeneralService } from './manager-general.service';
 import { IBrand } from 'app/entities/brand/brand.model';
 import { IBrandCompleteInfo } from './brand-complete-info.model';
+import { IOperatorCompleteInfo } from './operator-complete-info.model';
 
 @Component({
   selector: 'jhi-manager-general',
@@ -27,7 +28,8 @@ export class ManagerGeneralComponent implements OnInit {
   public errorMsg = '';
   public typeAlertErrorMsg = 'danger';
   brandsCompleteInfo?: IBrandCompleteInfo[];
-  operators?: any[];
+  operators?: IOperatorCompleteInfo[];
+  isSecondSectionOpen?: boolean = false;
 
   ngOnInit(): void {
     this.load();
@@ -43,21 +45,6 @@ export class ManagerGeneralComponent implements OnInit {
       next: (res: HttpResponse<IBrandCompleteInfo[]>) => this.onSuccess(res, res.headers),
       error: (error: HttpErrorResponse) => this.onError(error),
     });
-
-    this.operators = [
-      {
-        nombre: 'Operador 1',
-        contratos: [
-          { tipo: 'Tipo A', cantidad: 10 },
-          { tipo: 'Tipo B', cantidad: 5 },
-        ],
-      },
-      {
-        nombre: 'Operador 2',
-        contratos: [{ tipo: 'Tipo C', cantidad: 8 }],
-      },
-      // Otros operadores y contratos
-    ];
   }
 
   private onSuccess(response: HttpResponse<IBrandCompleteInfo[]>, headers: HttpHeaders): void {
@@ -108,5 +95,21 @@ export class ManagerGeneralComponent implements OnInit {
     setTimeout(() => {
       this.errorMsg = '';
     }, showTime);
+  }
+
+  showOperatorsBtn(brand: IBrand): void {
+    const queryObject: any = {
+      'brandId.equals': brand.id,
+    };
+    this.service.getOperators(queryObject).subscribe({
+      next: (res: HttpResponse<IOperatorCompleteInfo[]>) => this.onSuccessOperators(res, res.headers),
+      error: (error: HttpErrorResponse) => this.onError(error),
+    });
+  }
+
+  private onSuccessOperators(response: HttpResponse<IOperatorCompleteInfo[]>, headers: HttpHeaders): void {
+    this.operators = response.body!;
+    this.isSecondSectionOpen = true;
+    this.showAlert('success', 'Exito!', 2000);
   }
 }

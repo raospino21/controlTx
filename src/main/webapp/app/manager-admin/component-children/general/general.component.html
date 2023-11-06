@@ -36,7 +36,12 @@
               <td>{{ brandComplete.totalAmountBoardAssigned }}</td>
               <td class="d-flex">
                 <div class="btn-group">
-                  <button type="submit" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                  <button
+                    type="submit"
+                    (click)="showOperatorsBtn(brandComplete.brand!)"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
                     <fa-icon icon="eye"></fa-icon>
                     <span class="d-none d-md-inline">Ver Operadores</span>
                   </button>
@@ -57,23 +62,29 @@
     </ng-template>
   </ngb-panel>
 
-  <ngb-panel id="toggle-2" title="Operadores">
+  <ngb-panel id="toggle-2" title="Operadores" [ngbPanelExpanded]="isSecondSectionOpen">
     <ng-template ngbPanelContent>
       <div class="table-responsive table-entities" id="entities" data-cy="entityTable" *ngIf="operators && operators.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
           <thead>
             <tr>
+              <th scope="col">Marca</th>
               <th scope="col">Nombre del Operador</th>
+              <th scope="col">Número de Contrato</th>
               <th scope="col">Tipo de Contrato</th>
-              <th scope="col">Cantidad Asociada</th>
+              <th scope="col">Total Tarjetas Contratadas</th>
+              <th scope="col">Total Tarjetas Asignadas</th>
             </tr>
           </thead>
           <tbody>
             <ng-container *ngFor="let operador of operators">
-              <tr *ngFor="let contrato of operador.contratos; let first = first">
-                <td *ngIf="first" [attr.rowspan]="operador.contratos.length" class="centered-name">{{ operador.nombre }}</td>
-                <td>{{ contrato.tipo }}</td>
-                <td>{{ contrato.cantidad }}</td>
+              <tr *ngFor="let contrato of operador.contractSubList; let first = first">
+                <td>{{ operador.operator?.brand?.name }}</td>
+                <td *ngIf="first" [attr.rowspan]="operador.contractSubList!.length" class="centered-name">{{ operador.operator?.name }}</td>
+                <td>{{ contrato.reference }}</td>
+                <td jhiTranslate="{{ 'controTxApp.ContractType.' + contrato.contractType }}"></td>
+                <td>{{ contrato.amountInterfaceBoardContracted }}</td>
+                <td>{{ contrato.amountInterfaceBoardAssigned }}</td>
               </tr>
             </ng-container>
           </tbody>
