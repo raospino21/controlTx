@@ -1,5 +1,5 @@
 <ngb-accordion #acc="ngbAccordion">
-  <ngb-panel id="toggle-1" title="Marcas">
+  <ngb-panel id="panel1" title="Marcas">
     <ng-template ngbPanelContent>
       <div class="table-responsive table-entities" id="entities" *ngIf="brandsCompleteInfo && brandsCompleteInfo.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
@@ -62,7 +62,7 @@
     </ng-template>
   </ngb-panel>
 
-  <ngb-panel id="toggle-2" title="Operadores" [ngbPanelExpanded]="isSecondSectionOpen">
+  <ngb-panel id="panel2" title="Operadores">
     <ng-template ngbPanelContent>
       <div class="table-responsive table-entities" id="entities" data-cy="entityTable" *ngIf="operators && operators.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">

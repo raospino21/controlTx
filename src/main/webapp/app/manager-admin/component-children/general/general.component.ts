@@ -1,9 +1,9 @@
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ITEMS_PER_PAGE, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { IReceptionOrder } from 'app/entities/reception-order/reception-order.model';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordion, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ManagerGeneralService } from './manager-general.service';
 import { IBrand } from 'app/entities/brand/brand.model';
 import { IBrandCompleteInfo } from './brand-complete-info.model';
@@ -22,6 +22,7 @@ export class ManagerGeneralComponent implements OnInit {
     private modalService: NgbModal
   ) {}
 
+  @ViewChild('acc') acc: NgbAccordion | undefined;
   pageSize: number = 10;
   page = 1;
   totalItems = 0;
@@ -29,7 +30,6 @@ export class ManagerGeneralComponent implements OnInit {
   public typeAlertErrorMsg = 'danger';
   brandsCompleteInfo?: IBrandCompleteInfo[];
   operators?: IOperatorCompleteInfo[];
-  isSecondSectionOpen?: boolean = false;
 
   ngOnInit(): void {
     this.load();
@@ -109,7 +109,29 @@ export class ManagerGeneralComponent implements OnInit {
 
   private onSuccessOperators(response: HttpResponse<IOperatorCompleteInfo[]>, headers: HttpHeaders): void {
     this.operators = response.body!;
-    this.isSecondSectionOpen = true;
+    this.togglePanel2(this.operators);
     this.showAlert('success', 'Exito!', 2000);
+  }
+
+  private togglePanel2(operators: IOperatorCompleteInfo[]) {
+    if (this.hasValidOperators(operators)) {
+      this.expandPanel2();
+    } else {
+      this.collapsePanel2();
+    }
+  }
+
+  private hasValidOperators(operators: IOperatorCompleteInfo[]): boolean {
+    return operators.some(operator => {
+      return operator.contractSubList?.length! > 0;
+    });
+  }
+
+  private expandPanel2() {
+    this.acc!.expand('panel2');
+  }
+
+  private collapsePanel2() {
+    this.acc!.collapse('panel2');
   }
 }
