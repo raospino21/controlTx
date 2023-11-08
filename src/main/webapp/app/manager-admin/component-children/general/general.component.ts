@@ -8,6 +8,10 @@ import { ManagerGeneralService } from './manager-general.service';
 import { IBrand } from 'app/entities/brand/brand.model';
 import { IBrandCompleteInfo } from './brand-complete-info.model';
 import { IOperatorCompleteInfo } from './operator-complete-info.model';
+import { ContractType } from 'app/entities/enumerations/contract-type.model';
+import { IInterfaceBoard } from 'app/entities/interface-board/interface-board.model';
+import { IOperator } from 'app/entities/operator/operator.model';
+import { IOperatorSelected, OperatorSelected } from './operator-selected.model';
 
 @Component({
   selector: 'jhi-manager-general',
@@ -30,7 +34,8 @@ export class ManagerGeneralComponent implements OnInit {
   public typeAlertErrorMsg = 'danger';
   brandsCompleteInfo?: IBrandCompleteInfo[];
   operators?: IOperatorCompleteInfo[];
-
+  interfaceBoards?: IInterfaceBoard[];
+  operatorSelected?: IOperatorSelected;
   ngOnInit(): void {
     this.load();
   }
@@ -133,5 +138,44 @@ export class ManagerGeneralComponent implements OnInit {
 
   private collapsePanel2() {
     this.acc!.collapse('panel2');
+  }
+
+  loadMac(operator?: IOperator, reference?: string, type?: ContractType): void {
+    this.operatorSelected = new OperatorSelected(operator, type, reference);
+    const queryObject: any = {
+      page: this.page - 1,
+      size: this.pageSize,
+    };
+
+    this.service.getMacByContracTypeReference(reference, type).subscribe({
+      next: (res: HttpResponse<IInterfaceBoard[]>) => this.onSuccessMacByContracType(res, res.headers),
+      error: (error: HttpErrorResponse) => this.onError(error),
+    });
+  }
+
+  private onSuccessMacByContracType(response: HttpResponse<IInterfaceBoard[]>, headers: HttpHeaders): void {
+    this.interfaceBoards = response.body!;
+    this.togglePanel3(this.interfaceBoards);
+    this.showAlert('success', 'Exito!', 2000);
+  }
+
+  private togglePanel3(interfaceBoards: IInterfaceBoard[]) {
+    if (this.hasValidInterfaceBoard(interfaceBoards)) {
+      this.expandPanel3();
+    } else {
+      this.collapsePanel3();
+    }
+  }
+
+  private hasValidInterfaceBoard(interfaceBoards: IInterfaceBoard[]): boolean {
+    return interfaceBoards.length > 0;
+  }
+
+  private expandPanel3() {
+    this.acc!.expand('panel3');
+  }
+
+  private collapsePanel3() {
+    this.acc!.collapse('panel3');
   }
 }

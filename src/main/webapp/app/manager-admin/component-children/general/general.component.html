@@ -61,7 +61,6 @@
       </div>
     </ng-template>
   </ngb-panel>
-
   <ngb-panel id="panel2" title="Operadores">
     <ng-template ngbPanelContent>
       <div class="table-responsive table-entities" id="entities" data-cy="entityTable" *ngIf="operators && operators.length > 0">
@@ -74,6 +73,7 @@
               <th scope="col">Tipo de Contrato</th>
               <th scope="col">Total Tarjetas Contratadas</th>
               <th scope="col">Total Tarjetas Asignadas</th>
+              <th scope="col">Detalles de tarjetas</th>
             </tr>
           </thead>
           <tbody>
@@ -85,8 +85,45 @@
                 <td jhiTranslate="{{ 'controTxApp.ContractType.' + contrato.contractType }}"></td>
                 <td>{{ contrato.amountInterfaceBoardContracted }}</td>
                 <td>{{ contrato.amountInterfaceBoardAssigned }}</td>
+                <td class="d-flex">
+                  <div class="btn-group">
+                    <button
+                      type="submit"
+                      (click)="loadMac(operador.operator, contrato.reference, contrato.contractType)"
+                      class="btn btn-info btn-sm"
+                      data-cy="entityDetailsButton"
+                    >
+                      <fa-icon icon="eye"></fa-icon>
+                      <span class="d-none d-md-inline">Ver Tarjetas</span>
+                    </button>
+                  </div>
+                </td>
               </tr>
             </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </ng-template>
+  </ngb-panel>
+  <ngb-panel id="panel3" title="Tarjetas">
+    <ng-template ngbPanelContent>
+      <div class="table-responsive table-entities" id="entities" *ngIf="interfaceBoards && interfaceBoards.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+          <thead>
+            <tr>
+              <th scope="col">Nombre del Operador</th>
+              <th scope="col">Número de Contrato</th>
+              <th scope="col">Tipo de Contrato</th>
+              <th scope="col">Mac</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let interfaceBoard of interfaceBoards" data-cy="entityTable">
+              <td>{{ operatorSelected?.operator?.name }}</td>
+              <td>{{ operatorSelected?.reference }}</td>
+              <td jhiTranslate="{{ 'controTxApp.ContractType.' + operatorSelected?.contractType }}"></td>
+              <td>{{ interfaceBoard.mac }}</td>
+            </tr>
           </tbody>
         </table>
       </div>
