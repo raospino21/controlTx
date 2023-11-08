@@ -17,6 +17,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -128,11 +129,8 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
     }
 
     @Override
-    public Page<ControlInterfaceBoardDTO> getInfoBoardsAvailable(
-        ControlInterfaceBoardCriteria criteria,
-        @org.springdoc.api.annotations.ParameterObject Pageable pageable
-    ) {
-        return controlInterfaceBoardQueryService.findByCriteria(criteria, pageable);
+    public Page<ControlInterfaceBoardDTO> getInfoBoardsAvailable(Pageable pageable) {
+        return pageToDto(controlInterfaceBoardRepository.getByStateAndFinishTimeIsNull(pageable, StatusInterfaceBoard.STOCK), pageable);
     }
 
     @Override
@@ -174,5 +172,23 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
         return controlInterfaceBoardMapper.toDto(
             controlInterfaceBoardRepository.getByReceptionOrderIdInAndFinishTimeIsNull(receptionOrderIds)
         );
+    }
+
+    @Override
+    public Page<ControlInterfaceBoardDTO> getInfoBoardsAvailableByinterfaceBoardId(Long interfaceBoardId, Pageable pageable) {
+        return pageToDto(
+            controlInterfaceBoardRepository.getByInterfaceBoardIdAndStateAndFinishTimeIsNull(
+                pageable,
+                StatusInterfaceBoard.STOCK,
+                interfaceBoardId
+            ),
+            pageable
+        );
+    }
+
+    protected Page<ControlInterfaceBoardDTO> pageToDto(Page<ControlInterfaceBoard> pageControlInterfaceBoard, Pageable pageable) {
+        List<ControlInterfaceBoardDTO> controlInterfaceBoard = controlInterfaceBoardMapper.toDto(pageControlInterfaceBoard.getContent());
+
+        return new PageImpl<>(controlInterfaceBoard, pageable, pageControlInterfaceBoard.getTotalElements());
     }
 }

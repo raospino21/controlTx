@@ -44,6 +44,9 @@
         "assingBoard": "Vincular Tarjeta Al Contrato ",
         "validateInterface": "Tarjeta valida"
       },
+      "manager": {
+        "title": "Gerencia"
+      },
       "accounting": {
         "title": "Contabilidad",
         "purchaseOrder": "Orden de Compra",

@@ -88,12 +88,17 @@ public class ReceptionOrderServiceImpl implements ReceptionOrderService {
     }
 
     @Override
-    public List<ReceptionOrderDTO> getReceptionOrderByIesOrderNumber(Long purchaseOrder) {
-        return receptionOrderMapper.toDto(receptionOrderRepository.getByIesOrderNumber(purchaseOrder));
+    public List<ReceptionOrderDTO> getReceptionOrderByIesOrderNumber(Long iesOrderNumber) {
+        return receptionOrderMapper.toDto(receptionOrderRepository.getByIesOrderNumber(iesOrderNumber));
     }
 
     @Override
     public List<ReceptionOrderDTO> getAllReceptionOrder() {
         return receptionOrderMapper.toDto(receptionOrderRepository.findAll());
+    }
+
+    @Override
+    public List<ReceptionOrderDTO> getReceptionOrderByPurchaseOrderId(Long purchaseOrderId) {
+        return receptionOrderMapper.toDto(receptionOrderRepository.getByPurchaseOrderId(purchaseOrderId));
     }
 }

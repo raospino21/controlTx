@@ -44,4 +44,6 @@ public interface ReceptionOrderRepository extends JpaRepository<ReceptionOrder, 
         "select receptionOrder from ReceptionOrder receptionOrder left join fetch receptionOrder.purchaseOrder where receptionOrder.purchaseOrder.iesOrderNumber =:iesOrderNumber"
     )
     List<ReceptionOrder> getByIesOrderNumber(Long iesOrderNumber);
+
+    List<ReceptionOrder> getByPurchaseOrderId(Long purchaseOrderId);
 }

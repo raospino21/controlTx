@@ -1,0 +1,132 @@
+<ngb-accordion #acc="ngbAccordion">
+  <ngb-panel id="panel1" title="Marcas">
+    <ng-template ngbPanelContent>
+      <div class="table-responsive table-entities" id="entities" *ngIf="brandsCompleteInfo && brandsCompleteInfo.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+          <thead>
+            <tr>
+              <th scope="col">
+                <div class="d-flex">
+                  <span jhiTranslate="controTxApp.brand.id">Id</span>
+                  <fa-icon class="p-1" icon="sort"></fa-icon>
+                </div>
+              </th>
+              <th scope="col">
+                <div class="d-flex">
+                  <span jhiTranslate="controTxApp.brand.name">Name</span>
+                  <fa-icon class="p-1" icon="sort"></fa-icon>
+                </div>
+              </th>
+              <th scope="col">
+                <span>Total Tarjetas Contratadas</span>
+              </th>
+              <th scope="col">
+                <span>Total Tarjetas Asignadas</span>
+              </th>
+              <th scope="col">
+                <span>Detalles</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let brandComplete of brandsCompleteInfo" data-cy="entityTable">
+              <td>{{ brandComplete.brand!.id }}</td>
+              <td>{{ brandComplete.brand!.name }}</td>
+              <td>{{ brandComplete.totalAmountBoardcontracted }}</td>
+              <td>{{ brandComplete.totalAmountBoardAssigned }}</td>
+              <td class="d-flex">
+                <div class="btn-group">
+                  <button
+                    type="submit"
+                    (click)="showOperatorsBtn(brandComplete.brand!)"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <fa-icon icon="eye"></fa-icon>
+                    <span class="d-none d-md-inline">Ver Operadores</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination" *ngIf="brandsCompleteInfo && brandsCompleteInfo.length > 0">
+        <div class="d-flex justify-content-center">
+          <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: pageSize }"></jhi-item-count>
+        </div>
+        <button [disabled]="page === 0" (click)="prevPage()">Anterior</button>
+        <span>{{ page }} / {{ totalPages }}</span>
+        <button [disabled]="page === totalPages" (click)="nextPage()">Siguiente</button>
+      </div>
+    </ng-template>
+  </ngb-panel>
+  <ngb-panel id="panel2" title="Operadores">
+    <ng-template ngbPanelContent>
+      <div class="table-responsive table-entities" id="entities" data-cy="entityTable" *ngIf="operators && operators.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+          <thead>
+            <tr>
+              <th scope="col">Marca</th>
+              <th scope="col">Nombre del Operador</th>
+              <th scope="col">Número de Contrato</th>
+              <th scope="col">Tipo de Contrato</th>
+              <th scope="col">Total Tarjetas Contratadas</th>
+              <th scope="col">Total Tarjetas Asignadas</th>
+              <th scope="col">Detalles de tarjetas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let operador of operators">
+              <tr *ngFor="let contrato of operador.contractSubList; let first = first">
+                <td>{{ operador.operator?.brand?.name }}</td>
+                <td *ngIf="first" [attr.rowspan]="operador.contractSubList!.length" class="centered-name">{{ operador.operator?.name }}</td>
+                <td>{{ contrato.reference }}</td>
+                <td jhiTranslate="{{ 'controTxApp.ContractType.' + contrato.contractType }}"></td>
+                <td>{{ contrato.amountInterfaceBoardContracted }}</td>
+                <td>{{ contrato.amountInterfaceBoardAssigned }}</td>
+                <td class="d-flex">
+                  <div class="btn-group">
+                    <button
+                      type="submit"
+                      (click)="loadMac(operador.operator, contrato.reference, contrato.contractType)"
+                      class="btn btn-info btn-sm"
+                      data-cy="entityDetailsButton"
+                    >
+                      <fa-icon icon="eye"></fa-icon>
+                      <span class="d-none d-md-inline">Ver Tarjetas</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </ng-template>
+  </ngb-panel>
+  <ngb-panel id="panel3" title="Tarjetas">
+    <ng-template ngbPanelContent>
+      <div class="table-responsive table-entities" id="entities" *ngIf="interfaceBoards && interfaceBoards.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+          <thead>
+            <tr>
+              <th scope="col">Nombre del Operador</th>
+              <th scope="col">Número de Contrato</th>
+              <th scope="col">Tipo de Contrato</th>
+              <th scope="col">Mac</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let interfaceBoard of interfaceBoards" data-cy="entityTable">
+              <td>{{ operatorSelected?.operator?.name }}</td>
+              <td>{{ operatorSelected?.reference }}</td>
+              <td jhiTranslate="{{ 'controTxApp.ContractType.' + operatorSelected?.contractType }}"></td>
+              <td>{{ interfaceBoard.mac }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-template>
+  </ngb-panel>
+</ngb-accordion>

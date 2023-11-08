@@ -64,7 +64,17 @@ public interface ControlInterfaceBoardRepository
     )
     List<ControlInterfaceBoard> getByContractId(Long contractId);
 
-    List<ControlInterfaceBoard> getByStateAndFinishTimeIsNull(StatusInterfaceBoard state);
+    @Query("SELECT controlInterfaceBoard FROM ControlInterfaceBoard controlInterfaceBoard WHERE finishTime is null and state = :state")
+    Page<ControlInterfaceBoard> getByStateAndFinishTimeIsNull(Pageable pageable, @Param("state") StatusInterfaceBoard state);
+
+    @Query(
+        "SELECT controlInterfaceBoard FROM ControlInterfaceBoard controlInterfaceBoard WHERE finishTime is null and state = :state and controlInterfaceBoard.interfaceBoard.id = :interfaceBoardId"
+    )
+    Page<ControlInterfaceBoard> getByInterfaceBoardIdAndStateAndFinishTimeIsNull(
+        Pageable pageable,
+        @Param("state") StatusInterfaceBoard state,
+        @Param("interfaceBoardId") Long interfaceBoardId
+    );
 
     @Query(
         "select controlInterfaceBoard from ControlInterfaceBoard controlInterfaceBoard left join fetch controlInterfaceBoard.contract left join fetch controlInterfaceBoard.interfaceBoard where controlInterfaceBoard.contract.id =:contractId and state =:state and controlInterfaceBoard.finishTime is null "

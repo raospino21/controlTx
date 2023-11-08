@@ -4,16 +4,14 @@ import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.service.core.ControlTxService;
+import co.com.ies.smol.service.criteria.OperatorCriteria;
+import co.com.ies.smol.service.criteria.ReceptionOrderCriteria;
 import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
-import co.com.ies.smol.service.dto.core.AssignBoardDTO;
-import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
-import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
-import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
-import co.com.ies.smol.service.dto.core.RequestStatusRecord;
+import co.com.ies.smol.service.dto.core.*;
 import co.com.ies.smol.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -183,7 +181,7 @@ public class ControlTxController {
     /**
      * Entrega la tarjetas disponibles en stock
      */
-    @GetMapping("/info/boards/available/")
+    @GetMapping("/info/boards/available")
     public ResponseEntity<List<InterfaceBoardDTO>> getInfoBoardsAvailable(
         @RequestParam(value = "mac", required = false) String mac,
         @org.springdoc.api.annotations.ParameterObject Pageable pageable
@@ -270,5 +268,42 @@ public class ControlTxController {
             .created(new URI("/api/reception-orders/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    @GetMapping("/purchase-orders/complete")
+    public ResponseEntity<List<PurchaseOrderCompleteResponse>> getAllPurchaseOrdersComplete(
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable
+    ) {
+        log.debug("REST request to get getAllPurchaseOrdersComplete by pag: {}", pageable);
+
+        Page<PurchaseOrderCompleteResponse> page = controlTxService.getAllPurchaseOrdersComplete(pageable);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/brand/complete/info")
+    public ResponseEntity<List<BrandCompleteInfoResponse>> getCompleteInfoBrands(
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable
+    ) {
+        log.debug("REST request to get getCompleteInfoBrands by pag: {}", pageable);
+
+        Page<BrandCompleteInfoResponse> page = controlTxService.getCompleteInfoBrands(pageable);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/operator/complete/info")
+    public ResponseEntity<List<OperatorCompleteInfoResponse>> getCompleteInfoOperators(
+        OperatorCriteria criteria,
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable
+    ) {
+        log.debug("REST request to get getCompleteInfoOperators by pag: {}", pageable);
+
+        Page<OperatorCompleteInfoResponse> page = controlTxService.getCompleteInfoOperators(criteria, pageable);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 }

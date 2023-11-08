@@ -1,6 +1,7 @@
 package co.com.ies.smol.service;
 
 import co.com.ies.smol.domain.Operator;
+import co.com.ies.smol.service.criteria.OperatorCriteria;
 import co.com.ies.smol.service.dto.OperatorDTO;
 import java.util.List;
 import java.util.Optional;
@@ -69,4 +70,6 @@ public interface OperatorService {
     List<Operator> findAllOperatorsByBrandName(String brandName);
 
     Optional<Operator> findOperatorByName(String operatorName);
+
+    Page<OperatorDTO> findByCriteria(OperatorCriteria criteria, Pageable pageable);
 }

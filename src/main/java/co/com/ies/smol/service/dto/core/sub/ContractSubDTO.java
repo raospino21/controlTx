@@ -4,5 +4,10 @@ import co.com.ies.smol.domain.enumeration.ContractType;
 import java.io.Serializable;
 
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public record ContractSubDTO(Long amountInterfaceBoardContracted, int amountInterfaceBoardAssigned, ContractType contractType)
+public record ContractSubDTO(
+    Long amountInterfaceBoardContracted,
+    int amountInterfaceBoardAssigned,
+    ContractType contractType,
+    String reference
+)
     implements Serializable {}

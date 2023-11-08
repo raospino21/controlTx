@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col-md-10 mx-auto">
+    <h1 class="text-capitalize text-center" jhiTranslate="controTxApp.manager.home.title">Administracion Gerencial</h1>
+    <hr />
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item">
+        <a routerLinkActive="active" class="nav-link" routerLink="/manager-admin/general" jhiTranslate="controTxApp.manager.list.general"
+          >General</a
+        >
+      </li>
+      <li class="nav-item">
+        <a routerLinkActive="active" class="nav-link" routerLink="/manager-admin/store" jhiTranslate="controTxApp.manager.list.store"
+          >Almacen</a
+        >
+      </li>
+    </ul>
+    <router-outlet></router-outlet>
+  </div>
+</div>

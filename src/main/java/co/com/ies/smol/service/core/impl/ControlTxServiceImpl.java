@@ -7,26 +7,13 @@ import co.com.ies.smol.domain.core.error.ControlTxException;
 import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.domain.enumeration.Location;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
-import co.com.ies.smol.service.ContractService;
-import co.com.ies.smol.service.ControlInterfaceBoardService;
-import co.com.ies.smol.service.InterfaceBoardService;
-import co.com.ies.smol.service.OperatorService;
-import co.com.ies.smol.service.PurchaseOrderService;
-import co.com.ies.smol.service.ReceptionOrderService;
+import co.com.ies.smol.service.*;
 import co.com.ies.smol.service.core.ControlTxService;
 import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria;
 import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria.StatusInterfaceBoardFilter;
-import co.com.ies.smol.service.dto.ContractDTO;
-import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
-import co.com.ies.smol.service.dto.InterfaceBoardDTO;
-import co.com.ies.smol.service.dto.OperatorDTO;
-import co.com.ies.smol.service.dto.PurchaseOrderDTO;
-import co.com.ies.smol.service.dto.ReceptionOrderDTO;
-import co.com.ies.smol.service.dto.core.AssignBoardDTO;
-import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
-import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
-import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
-import co.com.ies.smol.service.dto.core.RequestStatusRecord;
+import co.com.ies.smol.service.criteria.OperatorCriteria;
+import co.com.ies.smol.service.dto.*;
+import co.com.ies.smol.service.dto.core.*;
 import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -37,6 +24,7 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import tech.jhipster.service.filter.LongFilter;
@@ -53,6 +41,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     private final ControlInterfaceBoardService controlInterfaceBoardService;
     private final ContractService contractService;
     private final OperatorService operatorService;
+    private final BrandService brandService;
     private final PurchaseOrderService purchaseOrderService;
 
     public ControlTxServiceImpl(
@@ -61,7 +50,8 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         ControlInterfaceBoardService controlInterfaceBoardService,
         ContractService contractService,
         OperatorService operatorService,
-        PurchaseOrderService purchaseOrderService
+        PurchaseOrderService purchaseOrderService,
+        BrandService brandService
     ) {
         this.receptionOrderService = receptionOrderService;
         this.interfaceBoardService = interfaceBoardService;
@@ -69,6 +59,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         this.contractService = contractService;
         this.operatorService = operatorService;
         this.purchaseOrderService = purchaseOrderService;
+        this.brandService = brandService;
     }
 
     @Override
@@ -238,6 +229,12 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     public BoardAssociationResponseDTO getInfoBoardAssociation(Long operatorId) throws ControlTxException {
         Optional<OperatorDTO> oOperator = operatorService.findOne(operatorId);
         validateExistingOperator(oOperator);
+        List<ContractSubDTO> contractSubList = getContractSubListByOperatorId(operatorId);
+
+        return new BoardAssociationResponseDTO(contractSubList);
+    }
+
+    protected List<ContractSubDTO> getContractSubListByOperatorId(Long operatorId) {
         List<ContractDTO> contractList = contractService.getContractByOperatorId(operatorId);
 
         List<ContractSubDTO> contractSubList = new ArrayList<>();
@@ -255,39 +252,29 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
             ContractSubDTO contractSub = new ContractSubDTO(
                 contract.getAmountInterfaceBoard(),
                 controlInterfaceBoardList.size(),
-                contract.getType()
+                contract.getType(),
+                contract.getReference()
             );
             contractSubList.add(contractSub);
         });
-
-        return new BoardAssociationResponseDTO(contractSubList);
+        return contractSubList;
     }
 
     @Override
     public Page<InterfaceBoardDTO> getInfoBoardsAvailable(String mac, @org.springdoc.api.annotations.ParameterObject Pageable pageable)
         throws ControlTxException {
-        ControlInterfaceBoardCriteria criteria = new ControlInterfaceBoardCriteria();
-
         if (Objects.nonNull(mac)) {
-            Optional<InterfaceBoardDTO> oInterfaceBoard = interfaceBoardService.getInterfaceBoardByMac(mac);
+            final InterfaceBoardDTO interfaceBoard = interfaceBoardService
+                .getInterfaceBoardByMac(mac)
+                .orElseThrow(() -> new ControlTxException("Tarjeta no encontrada " + mac));
 
-            if (oInterfaceBoard.isEmpty()) {
-                throw new ControlTxException("Tarjeta no encontrada " + mac);
-            }
-            LongFilter interfaceBoardFilter = new LongFilter();
-            interfaceBoardFilter.setEquals(oInterfaceBoard.get().getId());
-            criteria.setInterfaceBoardId(interfaceBoardFilter);
+            Long interfaceBoardId = interfaceBoard.getId();
+            return controlInterfaceBoardService
+                .getInfoBoardsAvailableByinterfaceBoardId(interfaceBoardId, pageable)
+                .map(ControlInterfaceBoardDTO::getInterfaceBoard);
         }
 
-        StatusInterfaceBoardFilter statusFilter = new StatusInterfaceBoardFilter();
-        statusFilter.setEquals(StatusInterfaceBoard.STOCK);
-        criteria.setState(statusFilter);
-
-        ZonedDateTimeFilter finishTimeFilter = new ZonedDateTimeFilter();
-        finishTimeFilter.setEquals(null);
-        criteria.setFinishTime(finishTimeFilter);
-
-        return controlInterfaceBoardService.getInfoBoardsAvailable(criteria, pageable).map(ControlInterfaceBoardDTO::getInterfaceBoard);
+        return controlInterfaceBoardService.getInfoBoardsAvailable(pageable).map(ControlInterfaceBoardDTO::getInterfaceBoard);
     }
 
     @Override
@@ -417,5 +404,52 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         validateAvailability(boardOrderIes, boardHypotheticalTotal);
 
         return receptionOrderService.save(receptionOrderDTO);
+    }
+
+    @Override
+    public Page<PurchaseOrderCompleteResponse> getAllPurchaseOrdersComplete(Pageable pageable) {
+        Page<PurchaseOrderDTO> purchaseOrderPage = purchaseOrderService.findAll(pageable);
+        List<PurchaseOrderDTO> purchaseOrderList = purchaseOrderPage.getContent();
+        List<PurchaseOrderCompleteResponse> response = new ArrayList<>();
+
+        purchaseOrderList.forEach(purchaseOrder -> {
+            List<ReceptionOrderDTO> receptionOrderList = receptionOrderService.getReceptionOrderByPurchaseOrderId(purchaseOrder.getId());
+            response.add(new PurchaseOrderCompleteResponse(purchaseOrder, receptionOrderList));
+        });
+
+        return new PageImpl<>(response, pageable, purchaseOrderPage.getTotalElements());
+    }
+
+    @Override
+    public Page<BrandCompleteInfoResponse> getCompleteInfoBrands(Pageable pageable) {
+        Page<BrandDTO> brandsPage = brandService.findAll(pageable);
+        List<BrandDTO> brandList = brandsPage.getContent();
+        List<BrandCompleteInfoResponse> response = new ArrayList<>();
+
+        brandList.forEach(brand -> {
+            Long totalAmountBoardcontracted = getCountInterfaceBoardByBrand(brand.getName());
+            Long totalAmountBoardAssigned = Long.valueOf(getInterfaceBoardByBrand(brand.getName()).size());
+
+            response.add(new BrandCompleteInfoResponse(brand, totalAmountBoardcontracted, totalAmountBoardAssigned));
+        });
+
+        return new PageImpl<>(response, pageable, brandsPage.getTotalElements());
+    }
+
+    @Override
+    public Page<OperatorCompleteInfoResponse> getCompleteInfoOperators(OperatorCriteria criteria, Pageable pageable) {
+        Page<OperatorDTO> operatorsPage = operatorService.findByCriteria(criteria, pageable);
+        List<OperatorDTO> operatorList = operatorsPage.getContent();
+        List<OperatorCompleteInfoResponse> response = new ArrayList<>();
+
+        System.out.println("------ operatorList " + operatorList);
+
+        operatorList.forEach(operator -> {
+            Long operatorId = operator.getId();
+            List<ContractSubDTO> contractSubList = getContractSubListByOperatorId(operatorId);
+            response.add(new OperatorCompleteInfoResponse(operator, contractSubList));
+        });
+
+        return new PageImpl<>(response, pageable, operatorsPage.getTotalElements());
     }
 }
