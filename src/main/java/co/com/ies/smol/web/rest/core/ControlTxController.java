@@ -181,7 +181,7 @@ public class ControlTxController {
     /**
      * Entrega la tarjetas disponibles en stock
      */
-    @GetMapping("/info/boards/available/")
+    @GetMapping("/info/boards/available")
     public ResponseEntity<List<InterfaceBoardDTO>> getInfoBoardsAvailable(
         @RequestParam(value = "mac", required = false) String mac,
         @org.springdoc.api.annotations.ParameterObject Pageable pageable

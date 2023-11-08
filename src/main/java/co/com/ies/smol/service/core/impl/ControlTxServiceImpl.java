@@ -263,28 +263,18 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     @Override
     public Page<InterfaceBoardDTO> getInfoBoardsAvailable(String mac, @org.springdoc.api.annotations.ParameterObject Pageable pageable)
         throws ControlTxException {
-        ControlInterfaceBoardCriteria criteria = new ControlInterfaceBoardCriteria();
-
         if (Objects.nonNull(mac)) {
-            Optional<InterfaceBoardDTO> oInterfaceBoard = interfaceBoardService.getInterfaceBoardByMac(mac);
+            final InterfaceBoardDTO interfaceBoard = interfaceBoardService
+                .getInterfaceBoardByMac(mac)
+                .orElseThrow(() -> new ControlTxException("Tarjeta no encontrada " + mac));
 
-            if (oInterfaceBoard.isEmpty()) {
-                throw new ControlTxException("Tarjeta no encontrada " + mac);
-            }
-            LongFilter interfaceBoardFilter = new LongFilter();
-            interfaceBoardFilter.setEquals(oInterfaceBoard.get().getId());
-            criteria.setInterfaceBoardId(interfaceBoardFilter);
+            Long interfaceBoardId = interfaceBoard.getId();
+            return controlInterfaceBoardService
+                .getInfoBoardsAvailableByinterfaceBoardId(interfaceBoardId, pageable)
+                .map(ControlInterfaceBoardDTO::getInterfaceBoard);
         }
 
-        StatusInterfaceBoardFilter statusFilter = new StatusInterfaceBoardFilter();
-        statusFilter.setEquals(StatusInterfaceBoard.STOCK);
-        criteria.setState(statusFilter);
-
-        ZonedDateTimeFilter finishTimeFilter = new ZonedDateTimeFilter();
-        finishTimeFilter.setEquals(null);
-        criteria.setFinishTime(finishTimeFilter);
-
-        return controlInterfaceBoardService.getInfoBoardsAvailable(criteria, pageable).map(ControlInterfaceBoardDTO::getInterfaceBoard);
+        return controlInterfaceBoardService.getInfoBoardsAvailable(pageable).map(ControlInterfaceBoardDTO::getInterfaceBoard);
     }
 
     @Override
