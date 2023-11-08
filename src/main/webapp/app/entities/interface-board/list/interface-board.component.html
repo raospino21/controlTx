@@ -23,17 +23,6 @@
           <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
           <span jhiTranslate="controTxApp.interfaceBoard.home.refreshListLabel">Refrescar lista</span>
         </button>
-
-        <button
-          id="jh-create-entity"
-          data-cy="entityCreateButton"
-          class="btn btn-primary jh-create-entity create-interface-board"
-          [routerLink]="['/interface-board/create']"
-        >
-          <fa-icon icon="plus"></fa-icon>
-          <span jhiTranslate="controTxApp.interfaceBoard.home.createLabel"> Crear nuevo Interface Board </span>
-        </button>
-
         <button class="btn btn-primary jh-create-entity create-bonus" (click)="openModal(createBoardModalTpl)">
           <fa-icon icon="plus"></fa-icon>
           <span> Crear Tarjetas Por Archivo </span>

@@ -15,6 +15,7 @@ import co.com.ies.smol.service.criteria.OperatorCriteria;
 import co.com.ies.smol.service.dto.*;
 import co.com.ies.smol.service.dto.core.*;
 import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
+import java.io.Console;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,15 +82,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
                 existingInterfaces.add(oInterfaceBoardDTO.get());
                 continue;
             }
-            InterfaceBoardDTO interfaceBoardDTO = createInterfaceBoard(mac, receptionOrderDTO);
-
-            ControlInterfaceBoardDTO controlInterfaceBoardDTO = createControlInterfaceBoard(
-                Location.IES,
-                StatusInterfaceBoard.STOCK,
-                interfaceBoardDTO,
-                null
-            );
-            controlInterfaceBoardService.save(controlInterfaceBoardDTO);
+            createInterfaceBoard(mac, receptionOrderDTO);
         }
 
         return buildResponse(existingInterfaces);
@@ -98,6 +91,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     protected InterfaceBoardDTO createInterfaceBoard(String mac, ReceptionOrderDTO receptionOrder) {
         InterfaceBoardDTO interfaceBoardDTO = new InterfaceBoardDTO();
         interfaceBoardDTO.setMac(mac);
+        interfaceBoardDTO.setIsValidated(false);
         interfaceBoardDTO.setReceptionOrder(receptionOrder);
 
         interfaceBoardDTO = interfaceBoardService.save(interfaceBoardDTO);
@@ -269,9 +263,14 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
                 .orElseThrow(() -> new ControlTxException("Tarjeta no encontrada " + mac));
 
             Long interfaceBoardId = interfaceBoard.getId();
-            return controlInterfaceBoardService
+            Page<InterfaceBoardDTO> interfaceBoardPage = controlInterfaceBoardService
                 .getInfoBoardsAvailableByinterfaceBoardId(interfaceBoardId, pageable)
                 .map(ControlInterfaceBoardDTO::getInterfaceBoard);
+
+            if (interfaceBoardPage.getContent().isEmpty()) {
+                throw new ControlTxException("Tarjeta " + mac + " no se encuentra en stock");
+            }
+            return interfaceBoardPage;
         }
 
         return controlInterfaceBoardService.getInfoBoardsAvailable(pageable).map(ControlInterfaceBoardDTO::getInterfaceBoard);
