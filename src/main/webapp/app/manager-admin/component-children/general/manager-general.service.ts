@@ -6,6 +6,8 @@ import { IBrand } from 'app/entities/brand/brand.model';
 import { Observable } from 'rxjs';
 import { IBrandCompleteInfo } from './brand-complete-info.model';
 import { IOperatorCompleteInfo } from './operator-complete-info.model';
+import { ContractType } from 'app/entities/enumerations/contract-type.model';
+import { IInterfaceBoard } from '../../../entities/interface-board/interface-board.model';
 
 @Injectable({ providedIn: 'root' })
 export class ManagerGeneralService {
@@ -20,5 +22,11 @@ export class ManagerGeneralService {
   getOperators(req?: any): Observable<HttpResponse<IOperatorCompleteInfo[]>> {
     const options = createRequestOption(req);
     return this.http.get<IOperatorCompleteInfo[]>(this.resourceUrl + '/operator/complete/info', { params: options, observe: 'response' });
+  }
+
+  getMacByContracTypeReference(reference?: string, type?: ContractType): Observable<HttpResponse<IInterfaceBoard[]>> {
+    return this.http.get<IInterfaceBoard[]>(`${this.resourceUrl}/interface-boards/assigned-by-operator/${reference}/${type}`, {
+      observe: 'response',
+    });
   }
 }
