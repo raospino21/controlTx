@@ -13,6 +13,7 @@ import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.*;
 import co.com.ies.smol.web.rest.errors.BadRequestAlertException;
+import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -20,9 +21,12 @@ import java.util.Objects;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
@@ -305,5 +309,23 @@ public class ControlTxController {
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping(value = "/download/file/operator-boards{contractId}", produces = "text/csv")
+    public ResponseEntity<Resource> downloadOperatorBoards(@PathVariable Long contractId) {
+        log.debug("REST request to downloadOperatorBoards by contractId {}", contractId);
+
+        final ByteArrayInputStream fileInMemory = controlTxService.getFileWithOperatorBoardsByContractId(contractId);
+
+        final InputStreamResource fileInputStream = new InputStreamResource(fileInMemory);
+
+        final String nameFile = String.valueOf(contractId);
+
+        final HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + nameFile);
+        headers.set("filename", nameFile);
+        headers.set(HttpHeaders.CONTENT_TYPE, "text/csv");
+
+        return new ResponseEntity<>(fileInputStream, headers, HttpStatus.OK);
     }
 }

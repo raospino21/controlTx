@@ -178,4 +178,25 @@ export class ManagerGeneralComponent implements OnInit {
   private collapsePanel3() {
     this.acc!.collapse('panel3');
   }
+
+  public downloadMacs(contractId?: number): void {
+    this.service.donwloadOperatorBoards(contractId).subscribe({
+      next: (result: HttpResponse<Blob>) => {
+        const bodyResponse = result.body as Blob;
+        const fileName = result.headers.get('filename') as string;
+
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(bodyResponse);
+        link.download = fileName;
+        link.click();
+
+        URL.revokeObjectURL(link.href);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        console.log(error.error.detail);
+        alert('Error al descargar el archivo');
+      },
+    });
+  }
 }

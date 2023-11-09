@@ -5,6 +5,7 @@ export interface IContractSub {
   amountInterfaceBoardAssigned?: number;
   contractType?: ContractType;
   reference?: string;
+  contractId?: number;
 }
 
 export class ContractSub implements IContractSub {
@@ -12,6 +13,7 @@ export class ContractSub implements IContractSub {
     public amountInterfaceBoardContracted?: number,
     public amountInterfaceBoardAssigned?: number,
     public contractType?: ContractType,
-    public reference?: string
+    public reference?: string,
+    public contractId?: number
   ) {}
 }

@@ -8,6 +8,7 @@ public record ContractSubDTO(
     Long amountInterfaceBoardContracted,
     int amountInterfaceBoardAssigned,
     ContractType contractType,
-    String reference
+    String reference,
+    Long contractId
 )
     implements Serializable {}

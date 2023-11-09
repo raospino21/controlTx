@@ -10,6 +10,7 @@ import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.*;
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,4 +55,6 @@ public interface ControlTxService {
     Page<BrandCompleteInfoResponse> getCompleteInfoBrands(Pageable pageable);
 
     Page<OperatorCompleteInfoResponse> getCompleteInfoOperators(OperatorCriteria criteria, Pageable pageable);
+
+    ByteArrayInputStream getFileWithOperatorBoardsByContractId(Long contractId);
 }
