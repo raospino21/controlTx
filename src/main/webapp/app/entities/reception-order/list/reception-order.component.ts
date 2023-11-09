@@ -177,6 +177,9 @@ export class ReceptionOrderComponent implements OnInit {
     this.filter.purchaseOrderId = null;
     this.load();
   }
+  public containsFilter(): boolean {
+    return this.filter.purchaseOrderId !== null && this.filter.purchaseOrderId !== '';
+  }
 
   filter = {
     purchaseOrderId: null,

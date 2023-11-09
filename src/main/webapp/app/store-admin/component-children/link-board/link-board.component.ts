@@ -81,6 +81,10 @@ export class LinkBoardComponent implements OnInit {
     this.loadData();
   }
 
+  public containsFilter(): boolean {
+    return this.filters.reference !== null || this.filters.mac !== '';
+  }
+
   get totalPages(): number {
     return Math.ceil(this.totalItems / this.pageSize);
   }

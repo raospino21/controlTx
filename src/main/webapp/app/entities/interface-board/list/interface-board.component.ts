@@ -259,6 +259,9 @@ export class InterfaceBoardComponent implements OnInit {
     this.filter.mac = null;
     this.load();
   }
+  public containsFilter(): boolean {
+    return this.filter.mac !== null && this.filter.mac !== '';
+  }
 
   filter = {
     mac: null,
