@@ -43,7 +43,7 @@ public abstract class ControlTxDomainImpl {
 
     public PurchaseOrderDTO validateExistingPurchaseOrderAndGet(Optional<PurchaseOrderDTO> oPurchaseOrderDTO) throws ControlTxException {
         if (oPurchaseOrderDTO.isEmpty()) {
-            throw new ControlTxException("Orden de compra no encontrada ");
+            throw new ControlTxException(ControlTxException.PURCHASE_ORDER_NOT_FOUND);
         }
 
         return oPurchaseOrderDTO.get();
@@ -57,7 +57,7 @@ public abstract class ControlTxDomainImpl {
 
     public void validateIncomingBoardSize(Long amountReceived, Long boardSize) throws ControlTxException {
         if (!Objects.equals(amountReceived, boardSize)) {
-            throw new ControlTxException("El monto de la tarjetas a recibir no coincide con la cantidad de tarjetas");
+            throw new ControlTxException(ControlTxException.AMOUNT_OF_BOARDS_EXCEEDS_THE_RECEIVED);
         }
     }
 
