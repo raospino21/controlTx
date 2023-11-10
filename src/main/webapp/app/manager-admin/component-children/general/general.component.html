@@ -6,16 +6,10 @@
           <thead>
             <tr>
               <th scope="col">
-                <div class="d-flex">
-                  <span jhiTranslate="controTxApp.brand.id">Id</span>
-                  <fa-icon class="p-1" icon="sort"></fa-icon>
-                </div>
+                <span jhiTranslate="controTxApp.brand.id">Id</span>
               </th>
               <th scope="col">
-                <div class="d-flex">
-                  <span jhiTranslate="controTxApp.brand.name">Name</span>
-                  <fa-icon class="p-1" icon="sort"></fa-icon>
-                </div>
+                <span jhiTranslate="controTxApp.brand.name">Name</span>
               </th>
               <th scope="col">
                 <span>Total Tarjetas Contratadas</span>
@@ -34,7 +28,7 @@
               <td>{{ brandComplete.brand!.name }}</td>
               <td>{{ brandComplete.totalAmountBoardcontracted }}</td>
               <td>{{ brandComplete.totalAmountBoardAssigned }}</td>
-              <td class="d-flex">
+              <td>
                 <div class="btn-group">
                   <button
                     type="submit"
@@ -42,7 +36,7 @@
                     class="btn btn-info btn-sm"
                     data-cy="entityDetailsButton"
                   >
-                    <fa-icon icon="eye"></fa-icon>
+                    <fa-icon icon="eye" style="font-size: 14px"></fa-icon>
                     <span class="d-none d-md-inline">Ver Operadores</span>
                   </button>
                 </div>
@@ -93,7 +87,7 @@
                       class="btn btn-info btn-sm"
                       data-cy="entityDetailsButton"
                     >
-                      <fa-icon icon="eye"></fa-icon>
+                      <fa-icon icon="eye" style="font-size: 14px"></fa-icon>
                       <span class="d-none d-md-inline">Ver Tarjetas</span>
                     </button>
                     <button

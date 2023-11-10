@@ -22,7 +22,7 @@
       <input type="text" [(ngModel)]="filters.mac" [ngModelOptions]="{ standalone: true }" />
     </div>
 
-    <button type="submit" class="btn btn-primary col-1 mt-4" (click)="filter()">
+    <button type="submit" [disabled]="!containsFilter()" class="btn btn-primary col-1 mt-4" (click)="filter()">
       <span class="mr-4">Buscar</span>
       <fa-icon icon="search"></fa-icon>
     </button>

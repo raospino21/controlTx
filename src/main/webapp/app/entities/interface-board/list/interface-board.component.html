@@ -13,7 +13,7 @@
           placeholder="Ingrese la Mac"
         />
         <div class="mt-2">
-          <button type="submit" class="btn btn-primary" (click)="filterBtn()">Realizar Búsqueda</button>
+          <button type="submit" [disabled]="!containsFilter()" class="btn btn-primary" (click)="filterBtn()">Realizar Búsqueda</button>
           <button type="button" class="btn btn-secondary" (click)="cleanFilters()">Limpiar Filtros</button>
         </div>
       </form>
