@@ -12,6 +12,7 @@ import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.*;
+import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
 import co.com.ies.smol.web.rest.errors.BadRequestAlertException;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
@@ -183,6 +184,17 @@ public class ControlTxController {
         log.debug("REST request getInfoBoardAssociation operatorId : {} ", operatorId);
 
         return ResponseEntity.ok(controlTxService.getInfoBoardAssociation(operatorId));
+    }
+
+    /****
+     * Entrega la información de tarjetas asociadas vs contratadas
+     */
+    @GetMapping("/info/boards/association-by-referece/{reference}")
+    public ResponseEntity<List<ContractSubDTO>> getInfoBoardAssociationByReference(@PathVariable String reference)
+        throws ControlTxException {
+        log.debug("REST request getInfoBoardAssociation operatorId : {} ", reference);
+
+        return ResponseEntity.ok(controlTxService.getInfoBoardAssociationByReference(reference));
     }
 
     /**

@@ -16,7 +16,6 @@
       <span class="px-1 h6 col-12">Número del contrato</span>
       <input type="number" [(ngModel)]="filters.reference" [ngModelOptions]="{ standalone: true }" />
     </div>
-
     <div class="mb-1 col-4 row">
       <span class="px-1 h6 col-12">Mac</span>
       <input type="text" [(ngModel)]="filters.mac" [ngModelOptions]="{ standalone: true }" />
@@ -135,7 +134,7 @@
             <label>Contrato</label>
             <select
               id="inputState"
-              (change)="onSelectChange($event)"
+              (change)="onSelectContractChange($event)"
               class="form-control"
               formControlName="reference"
               [ngClass]="{ valid: !formAssignBoard.get('reference')?.errors, invalid: formAssignBoard.get('reference')!.invalid }"
@@ -152,6 +151,7 @@
               id="inputState"
               class="form-control"
               formControlName="contractType"
+              (change)="onSelectContractTypeChange($event)"
               [ngClass]="{ valid: !formAssignBoard.get('contractType')?.errors, invalid: formAssignBoard.get('contractType')!.invalid }"
             >
               <option [value]="type" jhiTranslate="{{ 'controTxApp.ContractType.' + type }}" *ngFor="let type of contractsType">
@@ -160,19 +160,33 @@
             </select>
           </div>
 
-          <div class="col">
-            <label>Mac</label>
-            <input
-              type="text"
-              class="form-control"
-              formControlName="mac"
-              placeholder="Ingrese la Mac"
-              [ngClass]="{ valid: !formAssignBoard.get('mac')?.errors, invalid: formAssignBoard.get('mac')!.invalid }"
-            />
+          <div class="row">
+            <div class="col">
+              <label>Tarjetas Contratadas: {{ infoContracts.boardContracted }}</label>
+            </div>
+
+            <div class="col">
+              <label>Targetas Asociadas: {{ infoContracts.boardsAssigned }}</label>
+            </div>
+
+            <hr />
+
+            <div class="row">
+              <span>tarjetas a asociar</span>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="amountAssociate"
+                placeholder="Ingrese la cantidad de tarjetas"
+                [ngClass]="{
+                  valid: !formAssignBoard.get('amountAssociate')?.errors,
+                  invalid: formAssignBoard.get('amountAssociate')!.invalid
+                }"
+              />
+            </div>
           </div>
         </div>
         <hr />
-
         <div class="row">
           <div class="col">
             <button

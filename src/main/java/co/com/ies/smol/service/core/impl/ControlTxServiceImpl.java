@@ -268,14 +268,14 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     public BoardAssociationResponseDTO getInfoBoardAssociation(Long operatorId) throws ControlTxException {
         Optional<OperatorDTO> oOperator = operatorService.findOne(operatorId);
         validateExistingOperator(oOperator);
-        List<ContractSubDTO> contractSubList = getContractSubListByOperatorId(operatorId);
+
+        List<ContractDTO> contractList = contractService.getContractByOperatorId(operatorId);
+        List<ContractSubDTO> contractSubList = getContractSubListByConstracList(contractList);
 
         return new BoardAssociationResponseDTO(contractSubList);
     }
 
-    protected List<ContractSubDTO> getContractSubListByOperatorId(Long operatorId) {
-        List<ContractDTO> contractList = contractService.getContractByOperatorId(operatorId);
-
+    protected List<ContractSubDTO> getContractSubListByConstracList(List<ContractDTO> contractList) {
         List<ContractSubDTO> contractSubList = new ArrayList<>();
 
         contractList.forEach(contract -> {
@@ -489,7 +489,8 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
 
         operatorList.forEach(operator -> {
             Long operatorId = operator.getId();
-            List<ContractSubDTO> contractSubList = getContractSubListByOperatorId(operatorId);
+            List<ContractDTO> contractList = contractService.getContractByOperatorId(operatorId);
+            List<ContractSubDTO> contractSubList = getContractSubListByConstracList(contractList);
             response.add(new OperatorCompleteInfoResponse(operator, contractSubList));
         });
 
@@ -540,5 +541,11 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     private List<String> deserializeColumnNames(String columnNamesString) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(columnNamesString, new TypeReference<List<String>>() {});
+    }
+
+    public List<ContractSubDTO> getInfoBoardAssociationByReference(String reference) {
+        List<ContractDTO> contractList = contractService.getContractByReference(reference);
+
+        return getContractSubListByConstracList(contractList);
     }
 }

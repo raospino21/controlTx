@@ -12,6 +12,7 @@ import { ContractType } from 'app/entities/enumerations/contract-type.model';
 import { AssignBoard } from './assign-board.model';
 import { IRequestStatus } from 'app/shared/request-status.model';
 import { StoreService } from '../store.service';
+import { IContractSub } from 'app/manager-admin/component-children/general/contratsub.model';
 
 @Component({
   selector: 'jhi-report',
@@ -33,6 +34,7 @@ export class LinkBoardComponent implements OnInit {
   contracts?: IContract[];
   contractsFilter?: IContract[];
   contractsType: ContractType[] = [];
+  contractSubList: IContractSub[] = [];
   controlInterfaceBoards?: IControlInterfaceBoard[];
   firstTimeStatus = true;
   public errorMsg = '';
@@ -131,7 +133,7 @@ export class LinkBoardComponent implements OnInit {
   formAssignBoard = this.fb.group({
     contractType: [null, [Validators.required]],
     reference: [null, [Validators.required]],
-    mac: [null, [Validators.required]],
+    amountAssociate: [null, [Validators.required]],
   });
 
   getPendingContractsForBoard(): void {
@@ -148,11 +150,38 @@ export class LinkBoardComponent implements OnInit {
     });
   }
 
-  onSelectChange(event: any) {
+  onSelectContractChange(event: any) {
     const selection: string = event.target.value;
+
+    this.formAssignBoard.patchValue({
+      contractType: null,
+    });
     this.contractsType = this.contracts!.filter(contract => contract.reference === selection).map(
       contract => contract.type
     ) as ContractType[];
+    this.service.getAssociatedBoardsByReference(selection).subscribe({
+      next: (res: HttpResponse<IContractSub[]>) => (this.contractSubList = res.body!),
+      error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.detail, 4000),
+    });
+  }
+
+  onSelectContractTypeChange(event: any) {
+    const selection: string = event.target.value;
+
+    const referenceSelected = this.formAssignBoard.get(['reference'])!.value;
+
+    const contractSelected = this.contracts!.find(
+      contract => contract.reference === referenceSelected && contract.type === selection
+    ) as IContract;
+    this.infoContracts.boardContracted = contractSelected.amountInterfaceBoard!;
+
+    const contractTypeSelected = this.formAssignBoard.get(['contractType'])!.value;
+
+    const contractSubSelected = this.contractSubList!.find(
+      info => info.reference === referenceSelected && info.contractType === contractTypeSelected
+    ) as IContractSub;
+
+    this.infoContracts.boardsAssigned = contractSubSelected.amountInterfaceBoardAssigned!;
   }
 
   assignBoard(): void {
@@ -160,7 +189,7 @@ export class LinkBoardComponent implements OnInit {
       ...new AssignBoard(),
       reference: this.formAssignBoard.get(['reference'])!.value,
       contractType: this.formAssignBoard.get(['contractType'])!.value,
-      macs: [this.formAssignBoard.get(['mac'])?.value],
+      amountAssociates: [this.formAssignBoard.get(['amountAssociate'])?.value],
     };
 
     this.service.assignInterfaceBoard(assignBoard).subscribe({
@@ -173,7 +202,7 @@ export class LinkBoardComponent implements OnInit {
     this.formAssignBoard.patchValue({
       contractType: null,
       reference: null,
-      mac: null,
+      amountAssociate: null,
     });
   }
 
@@ -186,4 +215,10 @@ export class LinkBoardComponent implements OnInit {
       this.modalService.dismissAll();
     }, showTime);
   }
+
+  infoContracts = {
+    boardContracted: 0,
+    boardsAssigned: 0,
+    boardsAssociate: 0,
+  };
 }

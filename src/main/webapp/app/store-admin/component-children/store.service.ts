@@ -9,6 +9,7 @@ import { IContract } from 'app/entities/contract/contract.model';
 import { IRequestStatus } from 'app/shared/request-status.model';
 import { IAssignBoard } from './link-board/assign-board.model';
 import { IControlInterfaceBoard } from 'app/entities/control-interface-board/control-interface-board.model';
+import { IContractSub } from 'app/manager-admin/component-children/general/contratsub.model';
 
 @Injectable({ providedIn: 'root' })
 export class StoreService {
@@ -37,6 +38,12 @@ export class StoreService {
     const options = createRequestOption(header);
     return this.http.get<IInterfaceBoard[]>(this.resourceUrl + '/info/boards/available/', {
       params: options,
+      observe: 'response',
+    });
+  }
+
+  getAssociatedBoardsByReference(reference?: string): Observable<HttpResponse<IContractSub[]>> {
+    return this.http.get<IContractSub[]>(`${this.resourceUrl}/info/boards/association-by-referece/${reference}/`, {
       observe: 'response',
     });
   }
