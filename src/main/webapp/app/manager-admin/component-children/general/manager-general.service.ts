@@ -24,8 +24,10 @@ export class ManagerGeneralService {
     return this.http.get<IOperatorCompleteInfo[]>(this.resourceUrl + '/operator/complete/info', { params: options, observe: 'response' });
   }
 
-  getMacByContracTypeReference(reference?: string, type?: ContractType): Observable<HttpResponse<IInterfaceBoard[]>> {
+  getMacByContracTypeReference(reference?: string, type?: ContractType, req?: any): Observable<HttpResponse<IInterfaceBoard[]>> {
+    const options = createRequestOption(req);
     return this.http.get<IInterfaceBoard[]>(`${this.resourceUrl}/interface-boards/assigned-by-operator/${reference}/${type}`, {
+      params: options,
       observe: 'response',
     });
   }

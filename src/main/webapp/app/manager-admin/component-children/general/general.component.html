@@ -127,6 +127,16 @@
           </tbody>
         </table>
       </div>
+      <div class="pagination" *ngIf="interfaceBoards && interfaceBoards.length > 0">
+        <div class="d-flex justify-content-center">
+          <jhi-item-count
+            [params]="{ page: pageInterfaceBoard, totalItems: InterfaceBoardTotalItems, itemsPerPage: pageInterfaceBoardSize }"
+          ></jhi-item-count>
+        </div>
+        <button [disabled]="pageInterfaceBoard === 0" (click)="prevPageMac()">Anterior</button>
+        <span>{{ pageInterfaceBoard }} / {{ totalPagesInterfaceBoard }}</span>
+        <button [disabled]="pageInterfaceBoard === totalPagesInterfaceBoard" (click)="nextPageMac()">Siguiente</button>
+      </div>
     </ng-template>
   </ngb-panel>
 </ngb-accordion>
