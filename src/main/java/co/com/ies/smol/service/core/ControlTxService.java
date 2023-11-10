@@ -23,7 +23,7 @@ public interface ControlTxService {
 
     Long getCountInterfaceBoardByBrand(String brandName);
 
-    List<InterfaceBoardDTO> getInterfaceBoardAssignedByContractAndType(String reference, ContractType contractType)
+    Page<InterfaceBoardDTO> getInterfaceBoardAssignedByContractAndType(String reference, ContractType contractType, Pageable pageable)
         throws ControlTxException;
 
     List<InterfaceBoardDTO> getInterfaceBoardAssignedByContract(String reference) throws ControlTxException;
