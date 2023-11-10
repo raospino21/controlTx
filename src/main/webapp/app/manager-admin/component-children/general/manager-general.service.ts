@@ -29,4 +29,8 @@ export class ManagerGeneralService {
       observe: 'response',
     });
   }
+
+  donwloadOperatorBoards(contractId?: number): Observable<HttpResponse<Blob>> {
+    return this.http.get(`${this.resourceUrl}/download/file/operator-boards/${contractId}`, { observe: 'response', responseType: 'blob' });
+  }
 }

@@ -85,7 +85,7 @@
                 <td jhiTranslate="{{ 'controTxApp.ContractType.' + contrato.contractType }}"></td>
                 <td>{{ contrato.amountInterfaceBoardContracted }}</td>
                 <td>{{ contrato.amountInterfaceBoardAssigned }}</td>
-                <td class="d-flex">
+                <td class="text-end">
                   <div class="btn-group">
                     <button
                       type="submit"
@@ -95,6 +95,15 @@
                     >
                       <fa-icon icon="eye"></fa-icon>
                       <span class="d-none d-md-inline">Ver Tarjetas</span>
+                    </button>
+                    <button
+                      type="submit"
+                      (click)="downloadMacs(operador.operator!.name!, contrato.contractId)"
+                      class="btn btn-primary btn-sm"
+                      data-cy="entityDetailsButton"
+                    >
+                      <fa-icon icon="download"></fa-icon>
+                      <span class="d-none d-md-inline">Descargar Tarjetas</span>
                     </button>
                   </div>
                 </td>
