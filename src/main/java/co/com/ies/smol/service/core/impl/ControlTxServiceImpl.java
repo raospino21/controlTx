@@ -29,6 +29,7 @@ import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import co.com.ies.smol.service.dto.core.BrandCompleteInfoResponse;
 import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
+import co.com.ies.smol.service.dto.core.InfoBoardByFileRecord;
 import co.com.ies.smol.service.dto.core.OperatorCompleteInfoResponse;
 import co.com.ies.smol.service.dto.core.PurchaseOrderCompleteResponse;
 import co.com.ies.smol.service.dto.core.RequestStatusRecord;
@@ -481,19 +482,21 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         );
 
         final CsvMapper mapper = new CsvMapper();
-        CsvSchema.Builder schemaBuilder = CsvSchema.builder();
-        schemaBuilder.addColumn("Nombre Operador");
-        schemaBuilder.addColumn("Contrato");
-        schemaBuilder.addColumn("Tipo");
-        schemaBuilder.addColumn("Mac");
-
-        CsvSchema schema = schemaBuilder.build().withHeader();
+        final CsvSchema schema = mapper.schemaFor(InfoBoardByFileRecord.class);
+        schema.withColumnSeparator(';');
+        schema.usesHeader();
 
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         controlInterfaceBoardList.forEach(data -> {
+            String operatorName = data.getContract().getOperator().getName();
+            String reference = data.getContract().getReference();
+            ContractType type = data.getContract().getType();
+            String mac = data.getInterfaceBoard().getMac();
+            InfoBoardByFileRecord dataFile = new InfoBoardByFileRecord(operatorName, reference, type, mac);
+
             try {
-                mapper.writer(schema).writeValue(out, data);
+                mapper.writer(schema).writeValue(out, dataFile);
             } catch (IOException e) {
                 log.error(e.getMessage());
             }

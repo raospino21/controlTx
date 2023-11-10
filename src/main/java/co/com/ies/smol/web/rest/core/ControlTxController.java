@@ -311,9 +311,9 @@ public class ControlTxController {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
-    @GetMapping(value = "/download/file/operator-boards{contractId}", produces = "text/csv")
+    @GetMapping(value = "/download/file/operator-boards/{contractId}", produces = "text/csv")
     public ResponseEntity<Resource> downloadOperatorBoards(@PathVariable Long contractId) {
-        log.debug("REST request to downloadOperatorBoards by contractId {}", contractId);
+        log.info("REST request to downloadOperatorBoards by contractId {}", contractId);
 
         final ByteArrayInputStream fileInMemory = controlTxService.getFileWithOperatorBoardsByContractId(contractId);
 
