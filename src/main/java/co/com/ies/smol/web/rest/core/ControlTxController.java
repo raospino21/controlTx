@@ -311,7 +311,7 @@ public class ControlTxController {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
-    @GetMapping(value = "/download/file/operator-boards/{contractId}", produces = "text/csv")
+    @GetMapping("/download/file/operator-boards/{contractId}")
     public ResponseEntity<Resource> downloadOperatorBoards(@PathVariable Long contractId) {
         log.info("REST request to downloadOperatorBoards by contractId {}", contractId);
 

@@ -34,9 +34,9 @@ import co.com.ies.smol.service.dto.core.OperatorCompleteInfoResponse;
 import co.com.ies.smol.service.dto.core.PurchaseOrderCompleteResponse;
 import co.com.ies.smol.service.dto.core.RequestStatusRecord;
 import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
-import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -488,20 +488,36 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
 
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        controlInterfaceBoardList.forEach(data -> {
-            String operatorName = data.getContract().getOperator().getName();
-            String reference = data.getContract().getReference();
-            ContractType type = data.getContract().getType();
-            String mac = data.getInterfaceBoard().getMac();
-            InfoBoardByFileRecord dataFile = new InfoBoardByFileRecord(operatorName, reference, type, mac);
+        try {
+            String columnNamesString = schema.getColumnDesc();
+            List<String> columnNames = deserializeColumnNames(columnNamesString);
 
-            try {
-                mapper.writer(schema).writeValue(out, dataFile);
-            } catch (IOException e) {
-                log.error(e.getMessage());
-            }
-        });
+            String headers = String.join(";", columnNames);
+            out.write(headers.getBytes());
+            out.write("\n".getBytes());
+
+            controlInterfaceBoardList.forEach(data -> {
+                String operatorName = data.getContract().getOperator().getName();
+                String reference = data.getContract().getReference();
+                ContractType type = data.getContract().getType();
+                String mac = data.getInterfaceBoard().getMac();
+                InfoBoardByFileRecord dataFile = new InfoBoardByFileRecord(operatorName, reference, type, mac);
+
+                try {
+                    mapper.writer(schema).writeValue(out, dataFile);
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
+            });
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
 
         return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    private List<String> deserializeColumnNames(String columnNamesString) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(columnNamesString, new TypeReference<List<String>>() {});
     }
 }

@@ -98,7 +98,7 @@
                     </button>
                     <button
                       type="submit"
-                      (click)="downloadMacs(contrato.contractId)"
+                      (click)="downloadMacs(operador.operator!.name!, contrato.contractId)"
                       class="btn btn-primary btn-sm"
                       data-cy="entityDetailsButton"
                     >
