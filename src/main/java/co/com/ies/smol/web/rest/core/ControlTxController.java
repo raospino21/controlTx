@@ -127,7 +127,8 @@ public class ControlTxController {
     @GetMapping("/interface-boards/assigned-by-operator/{reference}/{contractType}")
     public ResponseEntity<List<InterfaceBoardDTO>> getInterfaceBoardContratedByOperatorAndContractType(
         @PathVariable String reference,
-        @PathVariable ContractType contractType
+        @PathVariable ContractType contractType,
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable
     ) throws ControlTxException {
         log.debug(
             "REST request getInterfaceBoardContratedByOperatorAndContractType reference : {} - contractType {}",
@@ -135,7 +136,9 @@ public class ControlTxController {
             contractType
         );
 
-        return ResponseEntity.ok(controlTxService.getInterfaceBoardAssignedByContractAndType(reference, contractType));
+        Page<InterfaceBoardDTO> page = controlTxService.getInterfaceBoardAssignedByContractAndType(reference, contractType, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**

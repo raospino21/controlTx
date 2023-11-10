@@ -36,6 +36,10 @@ export class ManagerGeneralComponent implements OnInit {
   operators?: IOperatorCompleteInfo[];
   interfaceBoards?: IInterfaceBoard[];
   operatorSelected?: IOperatorSelected;
+  pageInterfaceBoard = 1;
+  pageInterfaceBoardSize: number = 10;
+  InterfaceBoardTotalItems = 0;
+
   ngOnInit(): void {
     this.load();
   }
@@ -143,28 +147,46 @@ export class ManagerGeneralComponent implements OnInit {
   loadMac(operator?: IOperator, reference?: string, type?: ContractType): void {
     this.operatorSelected = new OperatorSelected(operator, type, reference);
     const queryObject: any = {
-      page: this.page - 1,
-      size: this.pageSize,
+      page: this.pageInterfaceBoard - 1,
+      size: this.pageInterfaceBoardSize,
     };
 
-    this.service.getMacByContracTypeReference(reference, type).subscribe({
+    this.service.getMacByContracTypeReference(reference, type, queryObject).subscribe({
       next: (res: HttpResponse<IInterfaceBoard[]>) => this.onSuccessMacByContracType(res, res.headers),
       error: (error: HttpErrorResponse) => this.onError(error),
     });
   }
 
   private onSuccessMacByContracType(response: HttpResponse<IInterfaceBoard[]>, headers: HttpHeaders): void {
+    this.InterfaceBoardTotalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
     this.interfaceBoards = response.body!;
     this.togglePanel3(this.interfaceBoards);
     this.showAlert('success', 'Exito!', 2000);
   }
 
-  private togglePanel3(interfaceBoards: IInterfaceBoard[]) {
-    if (this.hasValidInterfaceBoard(interfaceBoards)) {
-      this.expandPanel3();
-    } else {
-      this.collapsePanel3();
+  get totalPagesInterfaceBoard(): number {
+    return Math.ceil(this.InterfaceBoardTotalItems / this.pageInterfaceBoardSize);
+  }
+
+  changePageMac(direction: 'next' | 'prev'): void {
+    const canChangePage = direction === 'next' ? this.pageInterfaceBoard < this.totalPagesInterfaceBoard : this.pageInterfaceBoard > 1;
+
+    if (canChangePage) {
+      this.pageInterfaceBoard += direction === 'next' ? 1 : -1;
+      this.loadMac(this.operatorSelected?.operator, this.operatorSelected?.reference, this.operatorSelected?.contractType);
     }
+  }
+
+  nextPageMac(): void {
+    this.changePageMac('next');
+  }
+
+  prevPageMac(): void {
+    this.changePageMac('prev');
+  }
+
+  private togglePanel3(interfaceBoards: IInterfaceBoard[]): void {
+    this.hasValidInterfaceBoard(interfaceBoards) ? this.expandPanel3() : this.collapsePanel3();
   }
 
   private hasValidInterfaceBoard(interfaceBoards: IInterfaceBoard[]): boolean {

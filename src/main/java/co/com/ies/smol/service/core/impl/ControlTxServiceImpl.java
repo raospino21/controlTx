@@ -51,6 +51,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import tech.jhipster.service.filter.LongFilter;
@@ -204,8 +205,11 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     }
 
     @Override
-    public List<InterfaceBoardDTO> getInterfaceBoardAssignedByContractAndType(String reference, ContractType contractType)
-        throws ControlTxException {
+    public Page<InterfaceBoardDTO> getInterfaceBoardAssignedByContractAndType(
+        String reference,
+        ContractType contractType,
+        Pageable pageable
+    ) throws ControlTxException {
         List<ControlInterfaceBoardDTO> controlInterfaceBoardList;
 
         if (Objects.isNull(contractType)) {
@@ -216,7 +220,24 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
             controlInterfaceBoardList = controlInterfaceBoardService.getControlInterfaceBoardByContractId(contract.getId());
         }
 
-        return controlInterfaceBoardList.stream().map(ControlInterfaceBoardDTO::getInterfaceBoard).toList();
+        return controlInterfaceBoardListToPage(
+            controlInterfaceBoardList.stream().map(ControlInterfaceBoardDTO::getInterfaceBoard).toList(),
+            pageable
+        );
+    }
+
+    private Page<InterfaceBoardDTO> controlInterfaceBoardListToPage(List<InterfaceBoardDTO> controlInterfaceBoardList, Pageable pageable) {
+        int pageNumber = pageable.getPageNumber();
+        int pageSize = pageable.getPageSize();
+        int totalElements = controlInterfaceBoardList.size();
+
+        int fromIndex = pageNumber * pageSize;
+
+        int toIndex = Math.min((pageNumber + 1) * pageSize, totalElements);
+
+        List<InterfaceBoardDTO> subList = controlInterfaceBoardList.subList(fromIndex, toIndex);
+
+        return new PageImpl<>(subList, PageRequest.of(pageNumber, pageSize), totalElements);
     }
 
     @Override
