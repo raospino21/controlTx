@@ -128,69 +128,85 @@
 
     <form class="p-5" name="formAssignBoard" role="form" novalidate [formGroup]="formAssignBoard" aria-label="assgin boards">
       <h3 class="pb-3" data-cy="AssingBoardHeading">Asignación de tarjetas</h3>
+
       <div class="content">
-        <div class="row mt-0">
-          <div class="col">
-            <label>Contrato</label>
-            <select
-              id="inputState"
-              (change)="onSelectContractChange($event)"
-              class="form-control"
-              formControlName="reference"
-              [ngClass]="{ valid: !formAssignBoard.get('reference')?.errors, invalid: formAssignBoard.get('reference')!.invalid }"
-            >
-              <option [value]="contract.reference" *ngFor="let contract of contractsFilter">
-                {{ contract.reference }}
-              </option>
-            </select>
-          </div>
-
-          <div class="col">
-            <label>Tipo</label>
-            <select
-              id="inputState"
-              class="form-control"
-              formControlName="contractType"
-              (change)="onSelectContractTypeChange($event)"
-              [ngClass]="{ valid: !formAssignBoard.get('contractType')?.errors, invalid: formAssignBoard.get('contractType')!.invalid }"
-            >
-              <option [value]="type" jhiTranslate="{{ 'controTxApp.ContractType.' + type }}" *ngFor="let type of contractsType">
-                {{ type }}
-              </option>
-            </select>
-          </div>
-
-          <div class="row">
-            <div class="col">
-              <label>Tarjetas Contratadas: {{ infoContracts.boardContracted }}</label>
-            </div>
-
-            <div class="col">
-              <label>Targetas Asociadas: {{ infoContracts.boardsAssigned }}</label>
-            </div>
-
-            <hr />
-
-            <div class="row">
-              <span>tarjetas a asociar</span>
-              <input
-                type="number"
+        <div class="gap-3 flex-column d-flex align-items-center justify-content-between">
+          <div class="gap-2 w-100 d-flex align-items-center justify-content-between">
+            <div class="col-6">
+              <label>Contrato</label>
+              <select
+                id="inputState"
+                (change)="onSelectContractChange($event)"
                 class="form-control"
-                formControlName="amountAssociate"
-                placeholder="Ingrese la cantidad de tarjetas"
-                [ngClass]="{
-                  valid: !formAssignBoard.get('amountAssociate')?.errors,
-                  invalid: formAssignBoard.get('amountAssociate')!.invalid
-                }"
-              />
+                formControlName="reference"
+                [ngClass]="{ valid: !formAssignBoard.get('reference')?.errors, invalid: formAssignBoard.get('reference')!.invalid }"
+              >
+                <option [value]="contract.reference" *ngFor="let contract of contractsFilter">
+                  {{ contract.reference }}
+                </option>
+              </select>
             </div>
+
+            <div class="col-6">
+              <label>Tipo</label>
+              <select
+                id="inputState"
+                class="form-control"
+                formControlName="contractType"
+                (change)="onSelectContractTypeChange($event)"
+                [ngClass]="{ valid: !formAssignBoard.get('contractType')?.errors, invalid: formAssignBoard.get('contractType')!.invalid }"
+              >
+                <option [value]="type" jhiTranslate="{{ 'controTxApp.ContractType.' + type }}" *ngFor="let type of contractsType">
+                  {{ type }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="formAssignBoard.get('contractType')?.value">
+            <div class="col fw-bold">
+              <label
+                >Tarjetas Contratadas: <span class="text-danger">{{ infoContracts.boardContracted }} </span>
+              </label>
+            </div>
+            <div class="col fw-bold">
+              <label
+                >Targetas Asociadas: <span class="text-danger">{{ infoContracts.boardsAssigned }} </span>
+              </label>
+            </div>
+            <hr />
+            <span class="fw-bold text-warning"
+              >Max tarjetas a asociar {{ infoContracts.boardContracted - infoContracts.boardsAssigned }}</span
+            >
+            <input
+              type="number"
+              class="form-control"
+              formControlName="amountToAssociate"
+              placeholder="Ingrese la cantidad de tarjetas"
+              [ngClass]="{
+                valid: !formAssignBoard.get('amountToAssociate')?.errors,
+                invalid: formAssignBoard.get('amountToAssociate')!.invalid
+              }"
+            />
+            <div
+              *ngIf="
+                formAssignBoard.get('amountToAssociate')!.invalid &&
+                (formAssignBoard.get('amountToAssociate')!.dirty || formAssignBoard.get('amountToAssociate')!.touched)
+              "
+            >
+              <span class="fw-bold text-danger" *ngIf="formAssignBoard.get('amountToAssociate')!.invalid"> valor de ser superior a 0 </span>
+            </div>
+            <span class="fw-bold text-danger" *ngIf="viable2Assign">Supera el monto disponible para asociar </span>
           </div>
         </div>
+
         <hr />
         <div class="row">
           <div class="col">
             <button
-              [disabled]="formAssignBoard.get('contractType')!.invalid || formAssignBoard.get('mac')!.invalid"
+              [disabled]="
+                formAssignBoard.get('contractType')!.invalid || formAssignBoard.get('amountToAssociate')!.invalid || viable2Assign
+              "
               type="submit"
               id="save-entity"
               data-cy="entityCreateSaveButton"
@@ -208,8 +224,6 @@
             </button>
           </div>
         </div>
-
-        <hr />
       </div>
     </form>
   </ng-template>

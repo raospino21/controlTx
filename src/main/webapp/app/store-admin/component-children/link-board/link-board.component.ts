@@ -42,13 +42,16 @@ export class LinkBoardComponent implements OnInit {
   pageSize: number = ITEMS_PER_PAGE;
   page = 1;
   totalItems = 0;
-
+  viable2Assign = false;
   canView(role: string[]) {
     return this.accountService.hasAnyAuthority(role);
   }
 
   ngOnInit(): void {
     this.loadData();
+    this.formAssignBoard.get('amountToAssociate')?.valueChanges.subscribe(newValue => {
+      this.viable2Assign = newValue! > this.infoContracts.boardContracted - this.infoContracts.boardsAssigned;
+    });
   }
 
   loadData(): void {
@@ -68,7 +71,7 @@ export class LinkBoardComponent implements OnInit {
   private onSuccess(controlInterfaceBoards: IControlInterfaceBoard[], headers: HttpHeaders): void {
     this.totalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
     this.controlInterfaceBoards = controlInterfaceBoards;
-    this.showAlert('success', 'Exito!', 2000);
+    this.showAlert('success', 'Exito!', 500);
   }
 
   private onError(error: HttpErrorResponse): void {
@@ -133,7 +136,7 @@ export class LinkBoardComponent implements OnInit {
   formAssignBoard = this.fb.group({
     contractType: [null, [Validators.required]],
     reference: [null, [Validators.required]],
-    amountAssociate: [null, [Validators.required]],
+    amountToAssociate: [null, [Validators.required, Validators.min(1)]],
   });
 
   getPendingContractsForBoard(): void {
@@ -184,12 +187,16 @@ export class LinkBoardComponent implements OnInit {
     this.infoContracts.boardsAssigned = contractSubSelected.amountInterfaceBoardAssigned!;
   }
 
+  onAmountToAssociateChange(event: any) {
+    const selection: string = event.target.value;
+  }
+
   assignBoard(): void {
     const assignBoard = {
       ...new AssignBoard(),
       reference: this.formAssignBoard.get(['reference'])!.value,
       contractType: this.formAssignBoard.get(['contractType'])!.value,
-      amountAssociates: [this.formAssignBoard.get(['amountAssociate'])?.value],
+      amountToAssociate: this.formAssignBoard.get(['amountToAssociate'])?.value,
     };
 
     this.service.assignInterfaceBoard(assignBoard).subscribe({
@@ -202,7 +209,7 @@ export class LinkBoardComponent implements OnInit {
     this.formAssignBoard.patchValue({
       contractType: null,
       reference: null,
-      amountAssociate: null,
+      amountToAssociate: null,
     });
   }
 
