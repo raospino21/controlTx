@@ -19,7 +19,7 @@ import org.springframework.data.domain.Pageable;
 public interface ControlTxService {
     RequestStatusRecord createBoardRegister(BoardRegisterDTO boardRegisterDTO) throws ControlTxException;
 
-    void assignInterfaceBoard(AssignBoardDTO assignBoardDTO) throws ControlTxException;
+    ByteArrayInputStream assignInterfaceBoard(int amountToAssociate, String reference, ContractType contractType) throws ControlTxException;
 
     List<InterfaceBoardDTO> getInterfaceBoardByBrand(String brandName);
 

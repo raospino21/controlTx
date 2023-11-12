@@ -71,21 +71,29 @@ public class ControlTxController {
         return ResponseEntity.ok(controlTxService.createBoardRegister(boardRegisterDTO));
     }
 
-    @PostMapping("/assign/board")
-    public ResponseEntity<RequestStatusRecord> assignInterfaceBoard(@Valid @RequestBody AssignBoardDTO assignBoardDTO, Errors errors)
-        throws ControlTxException {
-        log.debug("REST request to save assignInterfaceBoard : {}", assignBoardDTO);
+    @GetMapping("/assign/board")
+    public ResponseEntity<Resource> assignInterfaceBoard(
+        @RequestParam(value = "reference", required = false) String reference,
+        @RequestParam(value = "contractType", required = false) ContractType contractType,
+        @RequestParam(value = "amountToAssociate", required = false) int amountToAssociate
+    ) throws ControlTxException {
+        log.debug(
+            "REST request to save assignInterfaceBoard amountToAssociate: {} : reference {} : contractType {}",
+            amountToAssociate,
+            reference,
+            contractType
+        );
 
-        FieldError fieldError = errors.getFieldError();
+        final ByteArrayInputStream fileInMemory = controlTxService.assignInterfaceBoard(amountToAssociate, reference, contractType);
+        final InputStreamResource fileInputStream = new InputStreamResource(fileInMemory);
 
-        if (errors.hasErrors() && Objects.nonNull(fieldError)) {
-            String errorMsg = fieldError.getField().concat(" ").concat(fieldError.getDefaultMessage());
-            throw new BadRequestAlertException(errorMsg, ENTITY_NAME, "400");
-        }
+        final String nameFile = "Tarjetas asignadas " + reference;
 
-        controlTxService.assignInterfaceBoard(assignBoardDTO);
+        final HttpHeaders headers = new HttpHeaders();
+        headers.set("filename", nameFile);
+        headers.set(HttpHeaders.CONTENT_TYPE, "text/csv");
 
-        return ResponseEntity.ok(new RequestStatusRecord("AssignInterfaceBoard", "Proceso Exitoso!!", 200));
+        return new ResponseEntity<>(fileInputStream, headers, HttpStatus.OK);
     }
 
     /**

@@ -91,4 +91,8 @@ public interface ControlInterfaceBoardService {
     List<ControlInterfaceBoardDTO> getControlInterfaceBoardByReceptionOrderIdAndFinishTimeIsNull(Long receptionOrderId);
 
     List<ControlInterfaceBoardDTO> getControlInterfaceBoardByReceptionOrderIdInAndFinishTimeIsNull(List<Long> receivedOrderIds);
+
+    List<ControlInterfaceBoardDTO> getInterfaceBoardUsedInStock(int recordQuantity);
+
+    List<ControlInterfaceBoardDTO> getInterfaceBoardNewInStock(int recordQuantity);
 }

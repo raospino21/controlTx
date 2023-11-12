@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { IInterfaceBoard } from 'app/entities/interface-board/interface-board.model';
@@ -36,8 +36,9 @@ export class StoreService {
     });
   }
 
-  assignInterfaceBoard(request: IAssignBoard): Observable<IRequestStatus> {
-    return this.http.post<IRequestStatus>(this.resourceUrl + '/assign/board', request);
+  assignInterfaceBoard(request: IAssignBoard): Observable<HttpResponse<Blob>> {
+    const options = createRequestOption(request);
+    return this.http.get(this.resourceUrl + '/assign/board', { params: options, observe: 'response', responseType: 'blob' });
   }
 
   getBoardsInStock(header?: any): Observable<HttpResponse<IInterfaceBoard[]>> {

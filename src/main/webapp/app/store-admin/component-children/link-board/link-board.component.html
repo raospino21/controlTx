@@ -138,7 +138,7 @@
         <div class="gap-3 flex-column d-flex align-items-center justify-content-between">
           <div class="gap-2 w-100 d-flex align-items-center justify-content-between">
             <div class="col-6">
-              <label>Contrato</label>
+              <label>Operador</label>
               <select
                 id="inputState"
                 (change)="onSelectContractChange($event)"
@@ -147,13 +147,13 @@
                 [ngClass]="{ valid: !formAssignBoard.get('reference')?.errors, invalid: formAssignBoard.get('reference')!.invalid }"
               >
                 <option [value]="contract.reference" *ngFor="let contract of contractsFilter">
-                  {{ contract.reference }}
+                  {{ contract.operator?.name }}
                 </option>
               </select>
             </div>
 
             <div class="col-6">
-              <label>Tipo</label>
+              <label>Tipo de Contrato</label>
               <select
                 id="inputState"
                 class="form-control"

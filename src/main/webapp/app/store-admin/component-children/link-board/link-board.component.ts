@@ -68,7 +68,6 @@ export class LinkBoardComponent implements OnInit {
       next: (res: HttpResponse<IControlInterfaceBoard[]>) => this.onSuccess(res.body!, res.headers),
       error: (error: HttpErrorResponse) => this.onError(error),
     });
-
     this.service.getCountBoardsAvailable().subscribe({
       next: (res: HttpResponse<number>) => (this.numberBoardInStock = res.body!),
       error: (error: HttpErrorResponse) => this.onError(error),
@@ -209,8 +208,27 @@ export class LinkBoardComponent implements OnInit {
     };
 
     this.service.assignInterfaceBoard(assignBoard).subscribe({
-      next: (res: IRequestStatus) => this.showAlert('success', res.msg!, 4000),
-      error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.detail, 4000),
+      next: (result: HttpResponse<Blob>) => {
+        const bodyResponse = result.body as Blob;
+
+        console.log('res.headers ', result.headers);
+        const fileName = result.headers.get('filename') as string;
+
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(bodyResponse);
+        link.download = fileName;
+        link.click();
+
+        URL.revokeObjectURL(link.href);
+        this.showAlert('success', 'Exito!', 500);
+        this.loadData();
+        this.cleanFormAssignBoard();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        console.log(error.error.detail);
+        alert('Error al descargar el archivo');
+      },
     });
   }
 
