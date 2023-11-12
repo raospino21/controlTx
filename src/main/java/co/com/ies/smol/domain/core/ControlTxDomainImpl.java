@@ -7,7 +7,6 @@ import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.OperatorDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.core.RequestStatusRecord;
-import co.com.ies.smol.web.rest.errors.BadRequestAlertException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
