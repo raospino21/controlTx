@@ -21,7 +21,6 @@ export class BoardInStockComponent implements OnInit {
   public typeAlertErrorMsg = 'danger';
 
   ngOnInit(): void {
-    console.log('------------------- init ', this.filter.mac);
     this.getBoardsInStock();
   }
 

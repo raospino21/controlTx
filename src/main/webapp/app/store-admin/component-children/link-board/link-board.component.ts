@@ -42,7 +42,8 @@ export class LinkBoardComponent implements OnInit {
   pageSize: number = ITEMS_PER_PAGE;
   page = 1;
   totalItems = 0;
-  viable2Assign = false;
+  viable2Assign = true;
+  numberBoardInStock = 0;
   canView(role: string[]) {
     return this.accountService.hasAnyAuthority(role);
   }
@@ -50,7 +51,8 @@ export class LinkBoardComponent implements OnInit {
   ngOnInit(): void {
     this.loadData();
     this.formAssignBoard.get('amountToAssociate')?.valueChanges.subscribe(newValue => {
-      this.viable2Assign = newValue! > this.infoContracts.boardContracted - this.infoContracts.boardsAssigned;
+      this.viable2Assign =
+        newValue! <= this.infoContracts.boardContracted - this.infoContracts.boardsAssigned && newValue! <= this.numberBoardInStock;
     });
   }
 
@@ -62,8 +64,13 @@ export class LinkBoardComponent implements OnInit {
       mac: this.filters!.mac!.trim(),
     };
 
-    this.service.getControlBoardsAvailable(queryObject).subscribe({
+    this.service.getControlBoardsLinked(queryObject).subscribe({
       next: (res: HttpResponse<IControlInterfaceBoard[]>) => this.onSuccess(res.body!, res.headers),
+      error: (error: HttpErrorResponse) => this.onError(error),
+    });
+
+    this.service.getCountBoardsAvailable().subscribe({
+      next: (res: HttpResponse<number>) => (this.numberBoardInStock = res.body!),
       error: (error: HttpErrorResponse) => this.onError(error),
     });
   }
@@ -158,6 +165,7 @@ export class LinkBoardComponent implements OnInit {
 
     this.formAssignBoard.patchValue({
       contractType: null,
+      amountToAssociate: null,
     });
     this.contractsType = this.contracts!.filter(contract => contract.reference === selection).map(
       contract => contract.type
@@ -185,12 +193,13 @@ export class LinkBoardComponent implements OnInit {
     ) as IContractSub;
 
     this.infoContracts.boardsAssigned = contractSubSelected.amountInterfaceBoardAssigned!;
+    this.calculateMaxAmountForAssignment();
   }
-
-  onAmountToAssociateChange(event: any) {
-    const selection: string = event.target.value;
+  calculateMaxAmountForAssignment(): void {
+    const amountAvalaibleForContract = this.infoContracts.boardContracted - this.infoContracts.boardsAssigned;
+    this.infoContracts.maxAmountForAssignment =
+      this.numberBoardInStock > amountAvalaibleForContract ? amountAvalaibleForContract : this.numberBoardInStock;
   }
-
   assignBoard(): void {
     const assignBoard = {
       ...new AssignBoard(),
@@ -226,6 +235,6 @@ export class LinkBoardComponent implements OnInit {
   infoContracts = {
     boardContracted: 0,
     boardsAssigned: 0,
-    boardsAssociate: 0,
+    maxAmountForAssignment: 0,
   };
 }

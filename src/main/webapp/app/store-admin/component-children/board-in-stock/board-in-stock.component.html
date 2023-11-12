@@ -1,5 +1,7 @@
 <div>
-  <h2 class="text-capitalize text-center">Tarjetas en Stock</h2>
+  <h2 class="text-capitalize text-center">
+    Tarjetas en Almacén <span class="text-warning">{{ totalItems }} </span>
+  </h2>
   <div *ngIf="errorMsg !== ''">
     <ngb-alert [type]="typeAlertErrorMsg">
       <strong

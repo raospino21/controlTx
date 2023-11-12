@@ -191,4 +191,9 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
 
         return new PageImpl<>(controlInterfaceBoard, pageable, pageControlInterfaceBoard.getTotalElements());
     }
+
+    @Override
+    public List<ControlInterfaceBoardDTO> getInfoBoardsAvailable() {
+        return controlInterfaceBoardMapper.toDto(controlInterfaceBoardRepository.getByStateAndFinishTimeIsNull(StatusInterfaceBoard.STOCK));
+    }
 }

@@ -16,10 +16,16 @@ export class StoreService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api');
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
-  getControlBoardsAvailable(header?: any, request?: any): Observable<HttpResponse<IControlInterfaceBoard[]>> {
+  getControlBoardsLinked(header?: any, request?: any): Observable<HttpResponse<IControlInterfaceBoard[]>> {
     const options = createRequestOption(header);
-    return this.http.get<IControlInterfaceBoard[]>(this.resourceUrl + '/info/control-interface-boards/available/', {
+    return this.http.get<IControlInterfaceBoard[]>(this.resourceUrl + '/info/control-interface-boards/linked/', {
       params: options,
+      observe: 'response',
+    });
+  }
+
+  getCountBoardsAvailable(): Observable<HttpResponse<number>> {
+    return this.http.get<number>(this.resourceUrl + '/count/boards/available', {
       observe: 'response',
     });
   }

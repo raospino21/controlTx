@@ -59,4 +59,6 @@ public interface ControlTxService {
 
     ByteArrayInputStream getFileWithOperatorBoardsByContractId(Long contractId);
     List<ContractSubDTO> getInfoBoardAssociationByReference(String reference);
+
+    Integer getCountBoardsAvailable();
 }

@@ -301,8 +301,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     }
 
     @Override
-    public Page<InterfaceBoardDTO> getInfoBoardsAvailable(String mac, @org.springdoc.api.annotations.ParameterObject Pageable pageable)
-        throws ControlTxException {
+    public Page<InterfaceBoardDTO> getInfoBoardsAvailable(String mac, Pageable pageable) throws ControlTxException {
         if (Objects.nonNull(mac)) {
             final InterfaceBoardDTO interfaceBoard = interfaceBoardService
                 .getInterfaceBoardByMac(mac)
@@ -547,5 +546,10 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         List<ContractDTO> contractList = contractService.getContractByReference(reference);
 
         return getContractSubListByConstracList(contractList);
+    }
+
+    @Override
+    public Integer getCountBoardsAvailable() {
+        return controlInterfaceBoardService.getInfoBoardsAvailable().size();
     }
 }

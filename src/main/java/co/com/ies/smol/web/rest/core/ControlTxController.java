@@ -199,6 +199,7 @@ public class ControlTxController {
 
     /**
      * Entrega la tarjetas disponibles en stock
+     * contiene filtro y es paginado
      */
     @GetMapping("/info/boards/available")
     public ResponseEntity<List<InterfaceBoardDTO>> getInfoBoardsAvailable(
@@ -213,7 +214,17 @@ public class ControlTxController {
     }
 
     /**
-     * Entrega la tarjetas disponibles en stock
+     * Entrega la cantidad disponibles en stock
+     */
+    @GetMapping("/count/boards/available")
+    public ResponseEntity<Integer> getCountBoardsAvailable() throws ControlTxException {
+        log.debug("REST request getCountBoardsAvailable ");
+
+        return ResponseEntity.ok(controlTxService.getCountBoardsAvailable());
+    }
+
+    /**
+     * Entrega la tarjetas de un operador por estdado
      */
     @GetMapping("/info/boards/by-state/{operatorId}/{state}")
     public ResponseEntity<List<InterfaceBoardDTO>> getInfoBoardsByOperatorIdAndState(
@@ -226,10 +237,10 @@ public class ControlTxController {
     }
 
     /**
-     * Entrega los registro de control interface board disponibles
+     * Entrega los registro de control interface board vinculadas a contratos
      */
-    @GetMapping("/info/control-interface-boards/available/")
-    public ResponseEntity<List<ControlInterfaceBoardDTO>> getControlInterfaceBoardAvailable(
+    @GetMapping("/info/control-interface-boards/linked/")
+    public ResponseEntity<List<ControlInterfaceBoardDTO>> getControlInterfaceBoardLinked(
         @RequestParam(value = "mac", required = false) String mac,
         @RequestParam(value = "reference", required = false) String reference,
         @org.springdoc.api.annotations.ParameterObject Pageable pageable
