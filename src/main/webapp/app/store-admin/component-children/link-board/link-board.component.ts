@@ -12,6 +12,7 @@ import { ContractType } from 'app/entities/enumerations/contract-type.model';
 import { AssignBoard } from './assign-board.model';
 import { IRequestStatus } from 'app/shared/request-status.model';
 import { StoreService } from '../store.service';
+import { IContractSub } from 'app/manager-admin/component-children/general/contratsub.model';
 
 @Component({
   selector: 'jhi-report',
@@ -33,6 +34,7 @@ export class LinkBoardComponent implements OnInit {
   contracts?: IContract[];
   contractsFilter?: IContract[];
   contractsType: ContractType[] = [];
+  contractSubList: IContractSub[] = [];
   controlInterfaceBoards?: IControlInterfaceBoard[];
   firstTimeStatus = true;
   public errorMsg = '';
@@ -40,13 +42,18 @@ export class LinkBoardComponent implements OnInit {
   pageSize: number = ITEMS_PER_PAGE;
   page = 1;
   totalItems = 0;
-
+  viable2Assign = true;
+  numberBoardInStock = 0;
   canView(role: string[]) {
     return this.accountService.hasAnyAuthority(role);
   }
 
   ngOnInit(): void {
     this.loadData();
+    this.formAssignBoard.get('amountToAssociate')?.valueChanges.subscribe(newValue => {
+      this.viable2Assign =
+        newValue! <= this.infoContracts.boardContracted - this.infoContracts.boardsAssigned && newValue! <= this.numberBoardInStock;
+    });
   }
 
   loadData(): void {
@@ -57,8 +64,12 @@ export class LinkBoardComponent implements OnInit {
       mac: this.filters!.mac!.trim(),
     };
 
-    this.service.getControlBoardsAvailable(queryObject).subscribe({
+    this.service.getControlBoardsLinked(queryObject).subscribe({
       next: (res: HttpResponse<IControlInterfaceBoard[]>) => this.onSuccess(res.body!, res.headers),
+      error: (error: HttpErrorResponse) => this.onError(error),
+    });
+    this.service.getCountBoardsAvailable().subscribe({
+      next: (res: HttpResponse<number>) => (this.numberBoardInStock = res.body!),
       error: (error: HttpErrorResponse) => this.onError(error),
     });
   }
@@ -66,7 +77,7 @@ export class LinkBoardComponent implements OnInit {
   private onSuccess(controlInterfaceBoards: IControlInterfaceBoard[], headers: HttpHeaders): void {
     this.totalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
     this.controlInterfaceBoards = controlInterfaceBoards;
-    this.showAlert('success', 'Exito!', 2000);
+    this.showAlert('success', 'Exito!', 500);
   }
 
   private onError(error: HttpErrorResponse): void {
@@ -135,7 +146,7 @@ export class LinkBoardComponent implements OnInit {
   formAssignBoard = this.fb.group({
     contractType: [null, [Validators.required]],
     reference: [null, [Validators.required]],
-    mac: [null, [Validators.required]],
+    amountToAssociate: [null, [Validators.required, Validators.min(1)]],
   });
 
   getPendingContractsForBoard(): void {
@@ -152,24 +163,76 @@ export class LinkBoardComponent implements OnInit {
     });
   }
 
-  onSelectChange(event: any) {
+  onSelectContractChange(event: any) {
     const selection: string = event.target.value;
+
+    this.formAssignBoard.patchValue({
+      contractType: null,
+      amountToAssociate: null,
+    });
     this.contractsType = this.contracts!.filter(contract => contract.reference === selection).map(
       contract => contract.type
     ) as ContractType[];
+    this.service.getAssociatedBoardsByReference(selection).subscribe({
+      next: (res: HttpResponse<IContractSub[]>) => (this.contractSubList = res.body!),
+      error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.detail, 4000),
+    });
   }
 
+  onSelectContractTypeChange(event: any) {
+    const selection: string = event.target.value;
+
+    const referenceSelected = this.formAssignBoard.get(['reference'])!.value;
+
+    const contractSelected = this.contracts!.find(
+      contract => contract.reference === referenceSelected && contract.type === selection
+    ) as IContract;
+    this.infoContracts.boardContracted = contractSelected.amountInterfaceBoard!;
+
+    const contractTypeSelected = this.formAssignBoard.get(['contractType'])!.value;
+
+    const contractSubSelected = this.contractSubList!.find(
+      info => info.reference === referenceSelected && info.contractType === contractTypeSelected
+    ) as IContractSub;
+
+    this.infoContracts.boardsAssigned = contractSubSelected.amountInterfaceBoardAssigned!;
+    this.calculateMaxAmountForAssignment();
+  }
+  calculateMaxAmountForAssignment(): void {
+    const amountAvalaibleForContract = this.infoContracts.boardContracted - this.infoContracts.boardsAssigned;
+    this.infoContracts.maxAmountForAssignment =
+      this.numberBoardInStock > amountAvalaibleForContract ? amountAvalaibleForContract : this.numberBoardInStock;
+  }
   assignBoard(): void {
     const assignBoard = {
       ...new AssignBoard(),
       reference: this.formAssignBoard.get(['reference'])!.value,
       contractType: this.formAssignBoard.get(['contractType'])!.value,
-      macs: [this.formAssignBoard.get(['mac'])?.value],
+      amountToAssociate: this.formAssignBoard.get(['amountToAssociate'])?.value,
     };
 
     this.service.assignInterfaceBoard(assignBoard).subscribe({
-      next: (res: IRequestStatus) => this.showAlert('success', res.msg!, 4000),
-      error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.detail, 4000),
+      next: (result: HttpResponse<Blob>) => {
+        const bodyResponse = result.body as Blob;
+
+        console.log('res.headers ', result.headers);
+        const fileName = result.headers.get('filename') as string;
+
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(bodyResponse);
+        link.download = fileName;
+        link.click();
+
+        URL.revokeObjectURL(link.href);
+        this.showAlert('success', 'Exito!', 500);
+        this.loadData();
+        this.cleanFormAssignBoard();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        console.log(error.error.detail);
+        alert('Error al descargar el archivo');
+      },
     });
   }
 
@@ -177,7 +240,7 @@ export class LinkBoardComponent implements OnInit {
     this.formAssignBoard.patchValue({
       contractType: null,
       reference: null,
-      mac: null,
+      amountToAssociate: null,
     });
   }
 
@@ -190,4 +253,10 @@ export class LinkBoardComponent implements OnInit {
       this.modalService.dismissAll();
     }, showTime);
   }
+
+  infoContracts = {
+    boardContracted: 0,
+    boardsAssigned: 0,
+    maxAmountForAssignment: 0,
+  };
 }

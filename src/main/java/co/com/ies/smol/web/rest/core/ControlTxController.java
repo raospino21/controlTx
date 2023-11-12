@@ -12,6 +12,7 @@ import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.*;
+import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
 import co.com.ies.smol.web.rest.errors.BadRequestAlertException;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
@@ -70,21 +71,29 @@ public class ControlTxController {
         return ResponseEntity.ok(controlTxService.createBoardRegister(boardRegisterDTO));
     }
 
-    @PostMapping("/assign/board")
-    public ResponseEntity<RequestStatusRecord> assignInterfaceBoard(@Valid @RequestBody AssignBoardDTO assignBoardDTO, Errors errors)
-        throws ControlTxException {
-        log.debug("REST request to save assignInterfaceBoard : {}", assignBoardDTO);
+    @GetMapping("/assign/board")
+    public ResponseEntity<Resource> assignInterfaceBoard(
+        @RequestParam(value = "reference", required = false) String reference,
+        @RequestParam(value = "contractType", required = false) ContractType contractType,
+        @RequestParam(value = "amountToAssociate", required = false) int amountToAssociate
+    ) throws ControlTxException {
+        log.debug(
+            "REST request to save assignInterfaceBoard amountToAssociate: {} : reference {} : contractType {}",
+            amountToAssociate,
+            reference,
+            contractType
+        );
 
-        FieldError fieldError = errors.getFieldError();
+        final ByteArrayInputStream fileInMemory = controlTxService.assignInterfaceBoard(amountToAssociate, reference, contractType);
+        final InputStreamResource fileInputStream = new InputStreamResource(fileInMemory);
 
-        if (errors.hasErrors() && Objects.nonNull(fieldError)) {
-            String errorMsg = fieldError.getField().concat(" ").concat(fieldError.getDefaultMessage());
-            throw new BadRequestAlertException(errorMsg, ENTITY_NAME, "400");
-        }
+        final String nameFile = "Tarjetas asignadas " + reference;
 
-        controlTxService.assignInterfaceBoard(assignBoardDTO);
+        final HttpHeaders headers = new HttpHeaders();
+        headers.set("filename", nameFile);
+        headers.set(HttpHeaders.CONTENT_TYPE, "text/csv");
 
-        return ResponseEntity.ok(new RequestStatusRecord("AssignInterfaceBoard", "Proceso Exitoso!!", 200));
+        return new ResponseEntity<>(fileInputStream, headers, HttpStatus.OK);
     }
 
     /**
@@ -185,8 +194,20 @@ public class ControlTxController {
         return ResponseEntity.ok(controlTxService.getInfoBoardAssociation(operatorId));
     }
 
+    /****
+     * Entrega la información de tarjetas asociadas vs contratadas
+     */
+    @GetMapping("/info/boards/association-by-referece/{reference}")
+    public ResponseEntity<List<ContractSubDTO>> getInfoBoardAssociationByReference(@PathVariable String reference)
+        throws ControlTxException {
+        log.debug("REST request getInfoBoardAssociation operatorId : {} ", reference);
+
+        return ResponseEntity.ok(controlTxService.getInfoBoardAssociationByReference(reference));
+    }
+
     /**
      * Entrega la tarjetas disponibles en stock
+     * contiene filtro y es paginado
      */
     @GetMapping("/info/boards/available")
     public ResponseEntity<List<InterfaceBoardDTO>> getInfoBoardsAvailable(
@@ -201,7 +222,17 @@ public class ControlTxController {
     }
 
     /**
-     * Entrega la tarjetas disponibles en stock
+     * Entrega la cantidad disponibles en stock
+     */
+    @GetMapping("/count/boards/available")
+    public ResponseEntity<Integer> getCountBoardsAvailable() throws ControlTxException {
+        log.debug("REST request getCountBoardsAvailable ");
+
+        return ResponseEntity.ok(controlTxService.getCountBoardsAvailable());
+    }
+
+    /**
+     * Entrega la tarjetas de un operador por estdado
      */
     @GetMapping("/info/boards/by-state/{operatorId}/{state}")
     public ResponseEntity<List<InterfaceBoardDTO>> getInfoBoardsByOperatorIdAndState(
@@ -214,10 +245,10 @@ public class ControlTxController {
     }
 
     /**
-     * Entrega los registro de control interface board disponibles
+     * Entrega los registro de control interface board vinculadas a contratos
      */
-    @GetMapping("/info/control-interface-boards/available/")
-    public ResponseEntity<List<ControlInterfaceBoardDTO>> getControlInterfaceBoardAvailable(
+    @GetMapping("/info/control-interface-boards/linked/")
+    public ResponseEntity<List<ControlInterfaceBoardDTO>> getControlInterfaceBoardLinked(
         @RequestParam(value = "mac", required = false) String mac,
         @RequestParam(value = "reference", required = false) String reference,
         @org.springdoc.api.annotations.ParameterObject Pageable pageable

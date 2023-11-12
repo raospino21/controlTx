@@ -1,11 +1,11 @@
 import { ContractType } from 'app/entities/enumerations/contract-type.model';
 
 export interface IAssignBoard {
-  reference?: string | null;
-  contractType?: ContractType | null;
-  macs?: string[] | null;
+  reference?: string;
+  contractType?: ContractType;
+  amountAssociate?: number;
 }
 
 export class AssignBoard implements IAssignBoard {
-  constructor(public reference?: string, public contractType?: ContractType, public macs?: string[]) {}
+  constructor(public reference?: string, public contractType?: ContractType, public amountAssociate?: number) {}
 }

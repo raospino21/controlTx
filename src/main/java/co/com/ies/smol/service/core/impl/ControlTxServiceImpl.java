@@ -24,12 +24,12 @@ import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.OperatorDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
-import co.com.ies.smol.service.dto.core.AssignBoardDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import co.com.ies.smol.service.dto.core.BrandCompleteInfoResponse;
 import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
 import co.com.ies.smol.service.dto.core.InfoBoardByFileRecord;
+import co.com.ies.smol.service.dto.core.InfoBoardToAssignByFileRecord;
 import co.com.ies.smol.service.dto.core.OperatorCompleteInfoResponse;
 import co.com.ies.smol.service.dto.core.PurchaseOrderCompleteResponse;
 import co.com.ies.smol.service.dto.core.RequestStatusRecord;
@@ -43,10 +43,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -142,45 +146,153 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
 
     @Transactional
     @Override
-    public void assignInterfaceBoard(AssignBoardDTO assignBoardDTO) throws ControlTxException {
-        List<String> macs = assignBoardDTO.getMacs();
-        String reference = assignBoardDTO.getReference();
+    public ByteArrayInputStream assignInterfaceBoard(int amountToAssociate, String reference, ContractType contractType)
+        throws ControlTxException {
+        Optional<ContractDTO> oContract = contractService.getContractByReferenceAndType(reference, contractType);
+        ContractDTO contract = validateExistingContract(oContract);
+        Long contractedBoard = contract.getAmountInterfaceBoard();
 
-        for (String mac : macs) {
-            Optional<InterfaceBoardDTO> oInterfaceBoardDTO = interfaceBoardService.getInterfaceBoardByMac(mac);
+        Map<String, List<InterfaceBoardDTO>> interfaceBoardListMap = getInterfaceBoardAnalyzingContractType(
+            contractType,
+            amountToAssociate
+        );
 
-            InterfaceBoardDTO interfaceBoardDTO = validateExistingInterfaceBoard(oInterfaceBoardDTO);
-            InterfaceBoard interfaceBoard = interfaceBoardService.toEntity(interfaceBoardDTO);
+        for (Map.Entry<String, List<InterfaceBoardDTO>> entry : interfaceBoardListMap.entrySet()) {
+            List<InterfaceBoardDTO> interfaceBoardList = entry.getValue();
 
-            ContractType contractType = assignBoardDTO.getContractType();
-            Optional<ContractDTO> oContract = contractService.getContractByReferenceAndType(reference, contractType);
-            ContractDTO contract = validateExistingContract(oContract);
+            for (InterfaceBoardDTO interfaceBoardItem : interfaceBoardList) {
+                InterfaceBoard interfaceBoard = interfaceBoardService.toEntity(interfaceBoardItem);
 
-            Long contractedBoard = contract.getAmountInterfaceBoard();
-            List<ControlInterfaceBoardDTO> assigenedControlBoardList = controlInterfaceBoardService.getControlInterfaceBoardByContractId(
-                contract.getId()
-            );
-            Long assigenedControlBoard = Long.valueOf(assigenedControlBoardList.size());
+                List<ControlInterfaceBoardDTO> assigenedControlBoardList = controlInterfaceBoardService.getControlInterfaceBoardByContractId(
+                    contract.getId()
+                );
+                Long assigenedControlBoard = Long.valueOf(assigenedControlBoardList.size());
 
-            if (contractedBoard.equals(assigenedControlBoard)) {
-                throw new ControlTxException("No es posible asignar una nueva tarjeta a este contrato");
+                if (contractedBoard.equals(assigenedControlBoard)) {
+                    throw new ControlTxException("No es posible asignar una nueva tarjeta a este contrato");
+                }
+                Optional<ControlInterfaceBoardDTO> oControlInterfaceBoardDTO = controlInterfaceBoardService.getControlInterfaceBoardByInterfaceBoard(
+                    interfaceBoard
+                );
+
+                ControlInterfaceBoardDTO controlInterfaceBoardDTO = validateExistingBoardControl(oControlInterfaceBoardDTO);
+
+                controlInterfaceBoardDTO.setFinishTime(ZonedDateTime.now());
+                controlInterfaceBoardService.save(controlInterfaceBoardDTO);
+
+                ControlInterfaceBoardDTO controlInterfaceBoardNewDTO = createControlInterfaceBoard(
+                    Location.CLIENT,
+                    StatusInterfaceBoard.OPERATION,
+                    interfaceBoardItem,
+                    contract
+                );
+                controlInterfaceBoardService.save(controlInterfaceBoardNewDTO);
             }
-            Optional<ControlInterfaceBoardDTO> oControlInterfaceBoardDTO = controlInterfaceBoardService.getControlInterfaceBoardByInterfaceBoard(
-                interfaceBoard
-            );
+        }
+        return buildResponseFileForBoardAssignment(interfaceBoardListMap, contract);
+    }
 
-            ControlInterfaceBoardDTO controlInterfaceBoardDTO = validateExistingBoardControl(oControlInterfaceBoardDTO);
+    protected Map<String, List<InterfaceBoardDTO>> getInterfaceBoardAnalyzingContractType(ContractType contractType, int amountToAssociat) {
+        Map<String, List<InterfaceBoardDTO>> interfaceBoardMap = new HashMap<>();
 
-            controlInterfaceBoardDTO.setFinishTime(ZonedDateTime.now());
-            controlInterfaceBoardService.save(controlInterfaceBoardDTO);
+        List<ControlInterfaceBoardDTO> controlInterfaceBoardFinalList = new ArrayList<>();
 
-            ControlInterfaceBoardDTO controlInterfaceBoardNewDTO = createControlInterfaceBoard(
-                Location.CLIENT,
-                StatusInterfaceBoard.OPERATION,
-                interfaceBoardDTO,
-                contract
-            );
-            controlInterfaceBoardService.save(controlInterfaceBoardNewDTO);
+        if (contractType.name().equals("RENT")) {
+            controlInterfaceBoardFinalList = controlInterfaceBoardService.getInterfaceBoardUsedInStock(amountToAssociat);
+            List<InterfaceBoardDTO> interfaceBoardUsedList = controlInterfaceBoardFinalList
+                .stream()
+                .map(ControlInterfaceBoardDTO::getInterfaceBoard)
+                .toList();
+            interfaceBoardMap.put("Usadas", interfaceBoardUsedList);
+            if (controlInterfaceBoardFinalList.size() == amountToAssociat) {
+                return interfaceBoardMap;
+            } else {
+                amountToAssociat = amountToAssociat - controlInterfaceBoardFinalList.size();
+                List<InterfaceBoardDTO> interfaceBoardNewList = controlInterfaceBoardService
+                    .getInterfaceBoardNewInStock(amountToAssociat)
+                    .stream()
+                    .map(ControlInterfaceBoardDTO::getInterfaceBoard)
+                    .toList();
+                interfaceBoardMap.put("Nuevas", interfaceBoardNewList);
+                return interfaceBoardMap;
+            }
+        } else if (contractType.name().equals("SALE")) {
+            controlInterfaceBoardFinalList = controlInterfaceBoardService.getInterfaceBoardNewInStock(amountToAssociat);
+            List<InterfaceBoardDTO> interfaceBoardUsedList = controlInterfaceBoardFinalList
+                .stream()
+                .map(ControlInterfaceBoardDTO::getInterfaceBoard)
+                .toList();
+            interfaceBoardMap.put("Nuevas", interfaceBoardUsedList);
+            if (controlInterfaceBoardFinalList.size() == amountToAssociat) {
+                return interfaceBoardMap;
+            } else {
+                amountToAssociat = amountToAssociat - controlInterfaceBoardFinalList.size();
+                List<InterfaceBoardDTO> interfaceBoardNewList = controlInterfaceBoardService
+                    .getInterfaceBoardUsedInStock(amountToAssociat)
+                    .stream()
+                    .map(ControlInterfaceBoardDTO::getInterfaceBoard)
+                    .toList();
+                interfaceBoardMap.put("Usadas", interfaceBoardNewList);
+                return interfaceBoardMap;
+            }
+        }
+        return interfaceBoardMap;
+    }
+
+    protected ByteArrayInputStream buildResponseFileForBoardAssignment(
+        Map<String, List<InterfaceBoardDTO>> interfaceBoardListMap,
+        ContractDTO contract
+    ) {
+        final CsvMapper mapper = new CsvMapper();
+        final CsvSchema schema = mapper.schemaFor(InfoBoardToAssignByFileRecord.class);
+        schema.withColumnSeparator(';');
+        schema.usesHeader();
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try {
+            String columnNamesString = schema.getColumnDesc();
+            List<String> columnNames = deserializeColumnNames(columnNamesString);
+
+            String headers = String.join(";", columnNames);
+            out.write(headers.getBytes());
+            out.write("\n".getBytes());
+
+            for (Map.Entry<String, List<InterfaceBoardDTO>> entry : interfaceBoardListMap.entrySet()) {
+                String description = entry.getKey();
+                List<InterfaceBoardDTO> interfaces = entry.getValue();
+
+                interfaces.forEach(interfaceBoard -> {
+                    String mac = interfaceBoard.getMac();
+                    InfoBoardToAssignByFileRecord dataFile = new InfoBoardToAssignByFileRecord(
+                        description,
+                        mac,
+                        contract.getOperator().getName(),
+                        contract.getReference(),
+                        translateContractType(contract.getType().name())
+                    );
+
+                    try {
+                        mapper.writer(schema).writeValue(out, dataFile);
+                    } catch (IOException e) {
+                        log.error(e.getMessage());
+                    }
+                });
+            }
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    private String translateContractType(String englishName) {
+        switch (englishName) {
+            case "RENT":
+                return "Arriendo";
+            case "SALE":
+                return "Venta";
+            default:
+                return englishName;
         }
     }
 
@@ -268,14 +380,14 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     public BoardAssociationResponseDTO getInfoBoardAssociation(Long operatorId) throws ControlTxException {
         Optional<OperatorDTO> oOperator = operatorService.findOne(operatorId);
         validateExistingOperator(oOperator);
-        List<ContractSubDTO> contractSubList = getContractSubListByOperatorId(operatorId);
+
+        List<ContractDTO> contractList = contractService.getContractByOperatorId(operatorId);
+        List<ContractSubDTO> contractSubList = getContractSubListByConstracList(contractList);
 
         return new BoardAssociationResponseDTO(contractSubList);
     }
 
-    protected List<ContractSubDTO> getContractSubListByOperatorId(Long operatorId) {
-        List<ContractDTO> contractList = contractService.getContractByOperatorId(operatorId);
-
+    protected List<ContractSubDTO> getContractSubListByConstracList(List<ContractDTO> contractList) {
         List<ContractSubDTO> contractSubList = new ArrayList<>();
 
         contractList.forEach(contract -> {
@@ -301,8 +413,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     }
 
     @Override
-    public Page<InterfaceBoardDTO> getInfoBoardsAvailable(String mac, @org.springdoc.api.annotations.ParameterObject Pageable pageable)
-        throws ControlTxException {
+    public Page<InterfaceBoardDTO> getInfoBoardsAvailable(String mac, Pageable pageable) throws ControlTxException {
         if (Objects.nonNull(mac)) {
             final InterfaceBoardDTO interfaceBoard = interfaceBoardService
                 .getInterfaceBoardByMac(mac)
@@ -489,7 +600,8 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
 
         operatorList.forEach(operator -> {
             Long operatorId = operator.getId();
-            List<ContractSubDTO> contractSubList = getContractSubListByOperatorId(operatorId);
+            List<ContractDTO> contractList = contractService.getContractByOperatorId(operatorId);
+            List<ContractSubDTO> contractSubList = getContractSubListByConstracList(contractList);
             response.add(new OperatorCompleteInfoResponse(operator, contractSubList));
         });
 
@@ -540,5 +652,16 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     private List<String> deserializeColumnNames(String columnNamesString) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(columnNamesString, new TypeReference<List<String>>() {});
+    }
+
+    public List<ContractSubDTO> getInfoBoardAssociationByReference(String reference) {
+        List<ContractDTO> contractList = contractService.getContractByReference(reference);
+
+        return getContractSubListByConstracList(contractList);
+    }
+
+    @Override
+    public Integer getCountBoardsAvailable() {
+        return controlInterfaceBoardService.getInfoBoardsAvailable().size();
     }
 }

@@ -10,6 +10,7 @@ import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.*;
+import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
 import java.io.ByteArrayInputStream;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -18,7 +19,7 @@ import org.springframework.data.domain.Pageable;
 public interface ControlTxService {
     RequestStatusRecord createBoardRegister(BoardRegisterDTO boardRegisterDTO) throws ControlTxException;
 
-    void assignInterfaceBoard(AssignBoardDTO assignBoardDTO) throws ControlTxException;
+    ByteArrayInputStream assignInterfaceBoard(int amountToAssociate, String reference, ContractType contractType) throws ControlTxException;
 
     List<InterfaceBoardDTO> getInterfaceBoardByBrand(String brandName);
 
@@ -57,4 +58,7 @@ public interface ControlTxService {
     Page<OperatorCompleteInfoResponse> getCompleteInfoOperators(OperatorCriteria criteria, Pageable pageable);
 
     ByteArrayInputStream getFileWithOperatorBoardsByContractId(Long contractId);
+    List<ContractSubDTO> getInfoBoardAssociationByReference(String reference);
+
+    Integer getCountBoardsAvailable();
 }
