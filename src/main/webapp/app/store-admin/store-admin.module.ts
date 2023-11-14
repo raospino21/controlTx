@@ -9,6 +9,7 @@ import { STORE_ROUTE } from './store-admin.route';
 @NgModule({
   imports: [SharedModule, RouterModule.forRoot([STORE_ROUTE], { useHash: true })],
   declarations: [StoreComponent, LinkBoardComponent, BoardInStockComponent],
+  exports: [BoardInStockComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class StoreAdminModule {}

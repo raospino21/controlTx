@@ -6,7 +6,7 @@ import { IInterfaceBoard } from 'app/entities/interface-board/interface-board.mo
 import { StoreService } from '../store.service';
 
 @Component({
-  selector: 'jhi-report',
+  selector: 'jhi-board-in-stock',
   templateUrl: './board-in-stock.component.html',
 })
 export class BoardInStockComponent implements OnInit {
