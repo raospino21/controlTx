@@ -5,4 +5,4 @@ import java.io.Serializable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public record FilterControlInterfaceBoard(String mac, String reference) implements Serializable {}
+public record FilterControlInterfaceBoard(String mac, String reference, String operatorName) implements Serializable {}

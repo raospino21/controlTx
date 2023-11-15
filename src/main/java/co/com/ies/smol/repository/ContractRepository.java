@@ -50,4 +50,10 @@ public interface ContractRepository extends JpaRepository<Contract, Long>, JpaSp
 
     @Query("select contract from Contract contract left join fetch contract.operator where contract.operator.id =:operatorId")
     List<Contract> getContractByOperatorId(Long operatorId);
+
+    @Query(
+        nativeQuery = true,
+        value = "select  c.*  from contract c inner join \"operator\" o on o.id = c.operator_id WHERE LOWER(o.company_name) LIKE LOWER(CONCAT('%', :operatorName, '%'))"
+    )
+    List<Contract> getContractByOperatorName(String operatorName);
 }

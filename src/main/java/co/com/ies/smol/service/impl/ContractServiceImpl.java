@@ -118,4 +118,9 @@ public class ContractServiceImpl implements ContractService {
     public List<ContractDTO> findAll() {
         return contractMapper.toDto(contractRepository.findAll());
     }
+
+    @Override
+    public List<ContractDTO> getContractByOperatorName(String operatorName) {
+        return contractMapper.toDto(contractRepository.getContractByOperatorName(operatorName));
+    }
 }
