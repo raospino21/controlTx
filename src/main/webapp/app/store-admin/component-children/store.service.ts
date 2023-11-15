@@ -1,15 +1,15 @@
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
-import { IInterfaceBoard } from 'app/entities/interface-board/interface-board.model';
-import { Observable } from 'rxjs/internal/Observable';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IContract } from 'app/entities/contract/contract.model';
+import { IInterfaceBoard } from 'app/entities/interface-board/interface-board.model';
+import { Observable } from 'rxjs/internal/Observable';
 
-import { IRequestStatus } from 'app/shared/request-status.model';
-import { IAssignBoard } from './link-board/assign-board.model';
 import { IControlInterfaceBoard } from 'app/entities/control-interface-board/control-interface-board.model';
 import { IContractSub } from 'app/manager-admin/component-children/general/contratsub.model';
+import { IBoardDetailsInSotck } from './board-in-stock/board-details-in-sotck.model';
+import { IAssignBoard } from './link-board/assign-board.model';
 
 @Injectable({ providedIn: 'root' })
 export class StoreService {
@@ -51,6 +51,12 @@ export class StoreService {
 
   getAssociatedBoardsByReference(reference?: string): Observable<HttpResponse<IContractSub[]>> {
     return this.http.get<IContractSub[]>(`${this.resourceUrl}/info/boards/association-by-referece/${reference}/`, {
+      observe: 'response',
+    });
+  }
+
+  getBoardDetailsInSotck(): Observable<HttpResponse<IBoardDetailsInSotck>> {
+    return this.http.get<IBoardDetailsInSotck>(this.resourceUrl + '/board/details-in-sotck', {
       observe: 'response',
     });
   }

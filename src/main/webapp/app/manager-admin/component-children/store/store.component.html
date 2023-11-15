@@ -1,5 +1,5 @@
 <ngb-accordion #acc="ngbAccordion">
-  <ngb-panel id="toggle-1" title="Ordenes de Compra">
+  <ngb-panel id="panel1" title="Ordenes de Compra">
     <ng-template ngbPanelContent>
       <div class="table-responsive table-entities" id="entities" *ngIf="purchaseOrderComplete && purchaseOrderComplete.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
@@ -73,8 +73,10 @@
     </ng-template>
   </ngb-panel>
 
-  <ngb-panel id="toggle-2" title="Tarjeta en Stock">
-    <jhi-board-in-stock></jhi-board-in-stock>
+  <ngb-panel id="panel2" title="Tarjeta en Stock">
+    <ng-template ngbPanelContent>
+      <jhi-board-in-stock></jhi-board-in-stock>
+    </ng-template>
   </ngb-panel>
 </ngb-accordion>
 

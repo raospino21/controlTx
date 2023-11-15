@@ -22,7 +22,7 @@ export const BOARD_ROUTE: Route = {
   path: 'board-in-stock',
   component: BoardInStockComponent,
   data: {
-    authorities: ['ROLE_STORE', 'ROLE_COMMERCIAL'],
+    authorities: ['ROLE_STORE', 'ROLE_COMMERCIAL', 'ROLE_MANAGER'],
     defaultSort: 'id,asc',
     pageTitle: 'global.menu.store-admin.board-in-stock.title',
   },
