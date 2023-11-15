@@ -107,6 +107,7 @@ export class ManagerGeneralComponent implements OnInit {
   }
 
   showOperatorsBtn(brand: IBrand): void {
+    this.acc!.collapse('panel3');
     const queryObject: any = {
       'brandId.equals': brand.id,
     };
