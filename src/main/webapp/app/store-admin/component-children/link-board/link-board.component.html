@@ -12,11 +12,16 @@
     </ngb-alert>
   </div>
   <section class="d-flex row gap-3">
-    <div class="mb-1 col-4 row">
+    <div class="mb-1 col-2 row">
+      <span class="px-1 h6 col-12">Nombre del operador</span>
+      <input type="text" [(ngModel)]="filters.operatorName" [ngModelOptions]="{ standalone: true }" />
+    </div>
+
+    <div class="mb-1 col-2 row">
       <span class="px-1 h6 col-12">Número del contrato</span>
       <input type="number" [(ngModel)]="filters.reference" [ngModelOptions]="{ standalone: true }" />
     </div>
-    <div class="mb-1 col-4 row">
+    <div class="mb-1 col-2 row">
       <span class="px-1 h6 col-12">Mac</span>
       <input type="text" [(ngModel)]="filters.mac" [ngModelOptions]="{ standalone: true }" />
     </div>

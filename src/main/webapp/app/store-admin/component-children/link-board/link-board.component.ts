@@ -62,6 +62,7 @@ export class LinkBoardComponent implements OnInit {
       size: this.pageSize,
       reference: this.filters.reference,
       mac: this.filters!.mac!.trim(),
+      operator: this.filters.operatorName.trim(),
     };
 
     this.service.getControlBoardsLinked(queryObject).subscribe({
@@ -83,17 +84,19 @@ export class LinkBoardComponent implements OnInit {
   private onError(error: HttpErrorResponse): void {
     this.filters.reference = null;
     this.filters.mac = '';
+    this.filters.operatorName = '';
     this.showAlert('danger', error.error.detail, 4000);
   }
 
   public cleanFilters(): void {
     this.filters.reference = null;
     this.filters.mac = '';
+    this.filters.operatorName = '';
     this.loadData();
   }
 
   public containsFilter(): boolean {
-    return this.filters.reference !== null || this.filters.mac !== '';
+    return this.filters.reference !== null || this.filters.mac !== '' || this.filters.operatorName !== '';
   }
 
   get totalPages(): number {
@@ -117,11 +120,13 @@ export class LinkBoardComponent implements OnInit {
   filters = {
     reference: null,
     mac: '',
+    operatorName: '',
   };
 
   public filter(): void {
     this.page = 1;
     this.filters!.mac = this.filters!.mac!.trim();
+    this.filters.operatorName = this.filters.operatorName.trim();
     this.loadData();
   }
 
