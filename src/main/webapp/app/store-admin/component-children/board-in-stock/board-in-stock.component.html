@@ -1,7 +1,11 @@
 <div>
-  <h2 class="text-capitalize text-center">
-    Tarjetas en Almacén <span class="text-warning">{{ totalItems }} </span>
-  </h2>
+  <section class="d-flex gap-4 justify-content-center">
+    <h2 class="text-capitalize text-center">
+      Tarjetas en Almacén <span class="fw-bold text-decoration-underline">{{ totalItems }} </span>
+    </h2>
+
+    <button type="button" class="btn btn-secondary" (click)="viewDetails(boardDetailsInSotckTpl)">Ver Detalles</button>
+  </section>
   <div *ngIf="errorMsg !== ''">
     <ngb-alert [type]="typeAlertErrorMsg">
       <strong
@@ -22,7 +26,7 @@
         id="filterMac"
         placeholder="Ingrese la Mac"
       />
-      <div>
+      <div class="mt-2">
         <button type="submit" [disabled]="!containsFilter()" class="btn btn-primary" (click)="getBoardsInStock()">Realizar Búsqueda</button>
         <button type="button" class="btn btn-secondary" (click)="cleanFilters()">Limpiar Filtros</button>
       </div>
@@ -77,3 +81,10 @@
     <button [disabled]="page === totalPages" (click)="nextPage()">Siguiente</button>
   </div>
 </div>
+
+<ng-template #boardDetailsInSotckTpl let-modal>
+  <div class="d-flex w-100" *ngIf="boardDetailInStock">
+    <span class="col quantity board-details">Tarjetas Nuevas: {{ boardDetailInStock.newQuantity }}</span>
+    <span class="col quantity board-details">Tarjetas Usadas: {{ boardDetailInStock.usedQuantity }}</span>
+  </div>
+</ng-template>

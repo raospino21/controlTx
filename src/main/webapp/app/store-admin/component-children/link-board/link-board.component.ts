@@ -15,7 +15,7 @@ import { StoreService } from '../store.service';
 import { IContractSub } from 'app/manager-admin/component-children/general/contratsub.model';
 
 @Component({
-  selector: 'jhi-report',
+  selector: 'jhi-link-board',
   templateUrl: './link-board.component.html',
   styleUrls: ['./link-board.component.scss'],
 })

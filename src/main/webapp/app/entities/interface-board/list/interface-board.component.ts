@@ -328,6 +328,7 @@ export class InterfaceBoardComponent implements OnInit {
 
   private onProccessResponse(res: IRequestStatus): void {
     if (res.code == 200) {
+      this.load();
       return this.onSuccess(res.msg!);
     }
     this.macsWithErros = res.msg!.split(',') as string[];

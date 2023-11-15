@@ -25,6 +25,7 @@ import co.com.ies.smol.service.dto.OperatorDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
+import co.com.ies.smol.service.dto.core.BoardDetailsInSotckRecord;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import co.com.ies.smol.service.dto.core.BrandCompleteInfoResponse;
 import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
@@ -49,8 +50,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -663,5 +662,22 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     @Override
     public Integer getCountBoardsAvailable() {
         return controlInterfaceBoardService.getInfoBoardsAvailable().size();
+    }
+
+    @Override
+    public BoardDetailsInSotckRecord getBoardDetailsInSotck() {
+        List<InterfaceBoardDTO> interfaceBoardNewList = controlInterfaceBoardService
+            .getInterfaceBoardUsedInStock()
+            .stream()
+            .map(ControlInterfaceBoardDTO::getInterfaceBoard)
+            .toList();
+
+        List<InterfaceBoardDTO> interfaceBoardUsedList = controlInterfaceBoardService
+            .getInterfaceBoardNewInStock()
+            .stream()
+            .map(ControlInterfaceBoardDTO::getInterfaceBoard)
+            .toList();
+
+        return new BoardDetailsInSotckRecord(interfaceBoardNewList.size(), interfaceBoardUsedList.size());
     }
 }

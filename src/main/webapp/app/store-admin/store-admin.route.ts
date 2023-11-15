@@ -9,7 +9,7 @@ export const STORE_ROUTE: Route = {
   path: 'store-admin',
   component: StoreComponent,
   data: {
-    authorities: ['ROLE_STORE', 'ROLE_COMMERCIAL'],
+    authorities: ['ROLE_STORE', 'ROLE_COMMERCIAL', 'ROLE_MANAGER'],
     pageTitle: 'store.title',
   },
   canActivate: [UserRouteAccessService],

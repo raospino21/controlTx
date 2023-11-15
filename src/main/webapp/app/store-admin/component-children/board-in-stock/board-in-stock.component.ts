@@ -4,16 +4,25 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ITEMS_PER_PAGE, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { IInterfaceBoard } from 'app/entities/interface-board/interface-board.model';
 import { StoreService } from '../store.service';
+import { IBoardDetailsInSotck } from './board-details-in-sotck.model';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'jhi-report',
+  selector: 'jhi-board-in-stock',
   templateUrl: './board-in-stock.component.html',
+  styleUrls: ['./board-in-stock.component.scss'],
 })
 export class BoardInStockComponent implements OnInit {
-  constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected service: StoreService) {}
+  constructor(
+    protected activatedRoute: ActivatedRoute,
+    protected router: Router,
+    protected service: StoreService,
+    private modalService: NgbModal
+  ) {}
 
   interfaceBoards?: IInterfaceBoard[];
   pageSize: number = ITEMS_PER_PAGE;
+  boardDetailInStock?: IBoardDetailsInSotck;
   page = 1;
   totalItems = 0;
 
@@ -86,6 +95,22 @@ export class BoardInStockComponent implements OnInit {
       this.filter.mac = null;
       this.getBoardsInStock();
     }
+  }
+
+  private openModal(modal: any): void {
+    this.modalService.open(modal, {
+      keyboard: false,
+    });
+  }
+
+  viewDetails(boardDetailsInSotckTpl: any): void {
+    this.service.getBoardDetailsInSotck().subscribe({
+      next: (res: HttpResponse<IBoardDetailsInSotck>) => {
+        this.boardDetailInStock = res.body!;
+        this.openModal(boardDetailsInSotckTpl);
+      },
+      error: (error: HttpErrorResponse) => this.onError(error),
+    });
   }
 
   public containsFilter(): boolean {
