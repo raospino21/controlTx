@@ -111,7 +111,21 @@ public interface ControlInterfaceBoardRepository
     @Query(
         nativeQuery = true,
         value = "SELECT ctx.* FROM control_interface_board ctx WHERE interface_board_id IN (SELECT interface_board_id FROM control_interface_board GROUP BY \n" + //
+        "interface_board_id having COUNT(interface_board_id) > 1) and state = :state and finish_time is null"
+    )
+    List<ControlInterfaceBoard> getInterfaceBoardUsedInStock(@Param("state") String state);
+
+    @Query(
+        nativeQuery = true,
+        value = "SELECT ctx.* FROM control_interface_board ctx WHERE interface_board_id IN (SELECT interface_board_id FROM control_interface_board GROUP BY \n" + //
         "interface_board_id having COUNT(interface_board_id) = 1) and state = :state and finish_time is null limit :limit"
     )
     List<ControlInterfaceBoard> getInterfaceBoardNewInStock(@Param("state") String state, int limit);
+
+    @Query(
+        nativeQuery = true,
+        value = "SELECT ctx.* FROM control_interface_board ctx WHERE interface_board_id IN (SELECT interface_board_id FROM control_interface_board GROUP BY \n" + //
+        "interface_board_id having COUNT(interface_board_id) = 1) and state = :state and finish_time is null"
+    )
+    List<ControlInterfaceBoard> getInterfaceBoardNewInStock(@Param("state") String state);
 }

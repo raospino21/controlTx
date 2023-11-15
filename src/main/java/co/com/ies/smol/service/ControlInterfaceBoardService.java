@@ -95,4 +95,8 @@ public interface ControlInterfaceBoardService {
     List<ControlInterfaceBoardDTO> getInterfaceBoardUsedInStock(int recordQuantity);
 
     List<ControlInterfaceBoardDTO> getInterfaceBoardNewInStock(int recordQuantity);
+
+    List<ControlInterfaceBoardDTO> getInterfaceBoardUsedInStock();
+
+    List<ControlInterfaceBoardDTO> getInterfaceBoardNewInStock();
 }

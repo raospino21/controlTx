@@ -61,4 +61,6 @@ public interface ControlTxService {
     List<ContractSubDTO> getInfoBoardAssociationByReference(String reference);
 
     Integer getCountBoardsAvailable();
+
+    BoardDetailsInSotckRecord getBoardDetailsInSotck();
 }

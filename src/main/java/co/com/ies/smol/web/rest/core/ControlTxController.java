@@ -362,4 +362,11 @@ public class ControlTxController {
 
         return new ResponseEntity<>(fileInputStream, headers, HttpStatus.OK);
     }
+
+    @GetMapping("/board/details-in-sotck")
+    public ResponseEntity<BoardDetailsInSotckRecord> getBoardDetailsInSotck() {
+        log.debug("REST request togetBoardDetailsInSotck");
+
+        return ResponseEntity.ok(controlTxService.getBoardDetailsInSotck());
+    }
 }
