@@ -78,4 +78,6 @@ public interface ContractService {
     Optional<ContractDTO> findContractByOperator(Operator operator);
 
     List<ContractDTO> getContractByOperatorId(Long operatorId);
+
+    List<ContractDTO> getContractByOperatorName(String operatorName);
 }

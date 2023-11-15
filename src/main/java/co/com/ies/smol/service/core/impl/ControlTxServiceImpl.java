@@ -460,6 +460,17 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         interfaceBoardFilter.setNotEquals(null);
         criteria.setInterfaceBoardId(interfaceBoardFilter);
 
+        if (Objects.nonNull(filter.operatorName())) {
+            List<ContractDTO> contractList = contractService.getContractByOperatorName(filter.operatorName());
+
+            if (contractList.isEmpty()) {
+                throw new ControlTxException("Operador no encontrado (" + filter.operatorName() + ")");
+            }
+            List<Long> contractIdList = contractList.stream().map(ContractDTO::getId).toList();
+            contractFilter.setIn(contractIdList);
+            criteria.setContractId(contractFilter);
+        }
+
         if (Objects.nonNull(filter.reference())) {
             List<ContractDTO> contractList = contractService.getContractByReference(filter.reference());
 

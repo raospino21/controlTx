@@ -251,9 +251,10 @@ public class ControlTxController {
     public ResponseEntity<List<ControlInterfaceBoardDTO>> getControlInterfaceBoardLinked(
         @RequestParam(value = "mac", required = false) String mac,
         @RequestParam(value = "reference", required = false) String reference,
+        @RequestParam(value = "operator", required = false) String operatorName,
         @org.springdoc.api.annotations.ParameterObject Pageable pageable
     ) throws ControlTxException {
-        FilterControlInterfaceBoard filter = new FilterControlInterfaceBoard(mac, reference);
+        FilterControlInterfaceBoard filter = new FilterControlInterfaceBoard(mac, reference, operatorName);
         log.debug("REST request getControlInterfaceBoardAvailable filter {}", filter);
 
         Page<ControlInterfaceBoardDTO> page = controlTxService.getControlInterfaceBoardAvailable(filter, pageable);
