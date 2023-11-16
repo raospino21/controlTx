@@ -31,7 +31,7 @@
       <fa-icon icon="search"></fa-icon>
     </button>
 
-    <button type="submit" class="btn btn-primary col-1 mt-4" (click)="cleanFilters()">
+    <button type="submit" [disabled]="!containsFilter()" class="btn btn-primary col-1 mt-4" (click)="cleanFilters()">
       <span class="mr-4">Limpiar</span>
       <fa-icon icon="trash-alt"></fa-icon>
     </button>
