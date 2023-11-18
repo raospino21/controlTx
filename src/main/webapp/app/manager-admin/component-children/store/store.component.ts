@@ -50,7 +50,7 @@ export class ManagerStoreComponent implements OnInit {
       item.purchaseOrder!.amountReceived = this.calculateTotalAmount(item.receptionOrderList!);
       return item;
     });
-    this.showAlert('success', 'Exito!', 2000);
+    this.showAlert('success', 'Exito!', 20);
   }
 
   calculateTotalAmount(receptionOrderList: IReceptionOrder[]): number {

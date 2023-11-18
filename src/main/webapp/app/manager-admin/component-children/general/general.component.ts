@@ -59,7 +59,7 @@ export class ManagerGeneralComponent implements OnInit {
   private onSuccess(response: HttpResponse<IBrandCompleteInfo[]>, headers: HttpHeaders): void {
     this.totalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
     this.brandsCompleteInfo = response.body!;
-    this.showAlert('success', 'Exito!', 2000);
+    this.showAlert('success', 'Exito!', 20);
   }
 
   calculateTotalAmount(receptionOrderList: IReceptionOrder[]): number {
@@ -120,7 +120,7 @@ export class ManagerGeneralComponent implements OnInit {
   private onSuccessOperators(response: HttpResponse<IOperatorCompleteInfo[]>, headers: HttpHeaders): void {
     this.operators = response.body!;
     this.togglePanel2(this.operators);
-    this.showAlert('success', 'Exito!', 2000);
+    this.showAlert('success', 'Exito!', 20);
   }
 
   private togglePanel2(operators: IOperatorCompleteInfo[]) {
@@ -162,7 +162,7 @@ export class ManagerGeneralComponent implements OnInit {
     this.InterfaceBoardTotalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
     this.interfaceBoards = response.body!;
     this.togglePanel3(this.interfaceBoards);
-    this.showAlert('success', 'Exito!', 2000);
+    this.showAlert('success', 'Exito!', 20);
   }
 
   get totalPagesInterfaceBoard(): number {

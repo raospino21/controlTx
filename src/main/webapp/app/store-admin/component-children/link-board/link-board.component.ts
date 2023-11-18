@@ -78,7 +78,7 @@ export class LinkBoardComponent implements OnInit {
   private onSuccess(controlInterfaceBoards: IControlInterfaceBoard[], headers: HttpHeaders): void {
     this.totalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
     this.controlInterfaceBoards = controlInterfaceBoards;
-    this.showAlert('success', 'Exito!', 500);
+    this.showAlert('success', 'Exito!', 20);
   }
 
   private onError(error: HttpErrorResponse): void {
@@ -229,7 +229,7 @@ export class LinkBoardComponent implements OnInit {
         link.click();
 
         URL.revokeObjectURL(link.href);
-        this.showAlert('success', 'Exito!', 500);
+        this.showAlert('success', 'Exito!', 50);
         this.loadData();
         this.cleanFormAssignBoard();
       },
