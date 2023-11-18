@@ -209,7 +209,7 @@ export class ManagerGeneralComponent implements OnInit {
 
         const link = document.createElement('a');
         link.href = URL.createObjectURL(bodyResponse);
-        link.download = operatorName!;
+        link.download = operatorName + '.csv';
         link.click();
 
         URL.revokeObjectURL(link.href);

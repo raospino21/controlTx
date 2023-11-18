@@ -351,15 +351,11 @@ public class ControlTxController {
         log.info("REST request to downloadOperatorBoards by contractId {}", contractId);
 
         final ByteArrayInputStream fileInMemory = controlTxService.getFileWithOperatorBoardsByContractId(contractId);
-
         final InputStreamResource fileInputStream = new InputStreamResource(fileInMemory);
 
-        final String nameFile = String.valueOf(contractId);
-
         final HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + nameFile);
-        headers.set("filename", nameFile);
-        headers.set(HttpHeaders.CONTENT_TYPE, "text/csv");
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment;");
+        headers.set(HttpHeaders.CONTENT_TYPE, "text/csv;charset=UTF-8");
 
         return new ResponseEntity<>(fileInputStream, headers, HttpStatus.OK);
     }
