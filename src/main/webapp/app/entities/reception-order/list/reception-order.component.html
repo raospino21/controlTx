@@ -14,7 +14,7 @@
         />
         <div>
           <button type="submit" [disabled]="!containsFilter()" class="btn btn-primary" (click)="filterBtn()">Realizar Búsqueda</button>
-          <button type="button" class="btn btn-secondary" (click)="cleanFilters()">Limpiar Filtros</button>
+          <button type="button" [disabled]="!containsFilter()" class="btn btn-primary" (click)="cleanFilters()">Limpiar Filtros</button>
         </div>
       </form>
 

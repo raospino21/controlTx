@@ -49,7 +49,7 @@
         <div class="d-flex justify-content-center">
           <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: pageSize }"></jhi-item-count>
         </div>
-        <button [disabled]="page === 0" (click)="prevPage()">Anterior</button>
+        <button [disabled]="page === 1" (click)="prevPage()">Anterior</button>
         <span>{{ page }} / {{ totalPages }}</span>
         <button [disabled]="page === totalPages" (click)="nextPage()">Siguiente</button>
       </div>
@@ -136,7 +136,7 @@
             [params]="{ page: pageInterfaceBoard, totalItems: InterfaceBoardTotalItems, itemsPerPage: pageInterfaceBoardSize }"
           ></jhi-item-count>
         </div>
-        <button [disabled]="pageInterfaceBoard === 0" (click)="prevPageMac()">Anterior</button>
+        <button [disabled]="pageInterfaceBoard === 1" (click)="prevPageMac()">Anterior</button>
         <span>{{ pageInterfaceBoard }} / {{ totalPagesInterfaceBoard }}</span>
         <button [disabled]="pageInterfaceBoard === totalPagesInterfaceBoard" (click)="nextPageMac()">Siguiente</button>
       </div>

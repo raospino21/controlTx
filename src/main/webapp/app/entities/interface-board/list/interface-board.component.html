@@ -14,7 +14,7 @@
         />
         <div class="mt-2">
           <button type="submit" [disabled]="!containsFilter()" class="btn btn-primary" (click)="filterBtn()">Realizar Búsqueda</button>
-          <button type="button" class="btn btn-secondary" (click)="cleanFilters()">Limpiar Filtros</button>
+          <button type="button" [disabled]="!containsFilter()" class="btn btn-primary" (click)="cleanFilters()">Limpiar Filtros</button>
         </div>
       </form>
 
@@ -142,7 +142,7 @@
           <th scope="col" jhiSortBy="receptionOrder.providerLotNumber">
             <div class="d-flex">
               <span jhiTranslate="controTxApp.interfaceBoard.validateInterface">Tarjeta validada</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
+              <fa-icon class="p-2" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col"></th>

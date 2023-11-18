@@ -55,7 +55,7 @@ export class BoardInStockComponent implements OnInit {
   private onSuccess(interfaceBoards: IInterfaceBoard[], headers: HttpHeaders): void {
     this.totalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
     this.interfaceBoards = interfaceBoards;
-    this.showAlert('success', 'Exito!', 2000);
+    this.showAlert('success', 'Exito!', 0);
   }
 
   private onError(error: HttpErrorResponse): void {

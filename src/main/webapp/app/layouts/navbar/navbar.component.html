@@ -273,44 +273,14 @@
         <!-- commercial section -->
 
         <!-- manager section -->
-        <li
-          *ngSwitchCase="true"
-          ngbDropdown
-          class="nav-item dropdown pointer"
-          display="dynamic"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
-          <a
-            class="nav-link dropdown-toggle"
-            ngbDropdownToggle
-            href="javascript:void(0);"
-            id="entityStore-menu"
-            data-cy="entity"
-            *jhiHasAnyAuthority="['ROLE_MANAGER']"
-          >
+        <li *jhiHasAnyAuthority="['ROLE_MANAGER']">
+          <a class="nav-link" href="javascript:void(0);" routerLink="manager-admin" routerLinkActive="active" (click)="collapseNavbar()">
             <i class="store" aria-hidden="true"></i>
-            <span>
-              <fa-icon icon="calculator"></fa-icon>
-              <span jhiTranslate="global.menu.manager.title">Gerente</span>
-            </span>
+            <fa-icon icon="users-gear"></fa-icon>
+            <span jhiTranslate="global.menu.manager.title">Gerente</span>
           </a>
-
-          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="entityccounting-menu">
-            <li>
-              <a
-                class="dropdown-item"
-                routerLink="manager-admin"
-                routerLinkActive="active"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="collapseNavbar()"
-              >
-                <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                <span jhiTranslate="controTxApp.manager.list.store">Store</span>
-              </a>
-            </li>
-          </ul>
         </li>
+
         <!-- manager section -->
         <li
           *ngSwitchCase="true"

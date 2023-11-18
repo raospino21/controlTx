@@ -28,7 +28,7 @@
       />
       <div class="mt-2">
         <button type="submit" [disabled]="!containsFilter()" class="btn btn-primary" (click)="getBoardsInStock()">Realizar Búsqueda</button>
-        <button type="button" class="btn btn-secondary" (click)="cleanFilters()">Limpiar Filtros</button>
+        <button type="button" [disabled]="!containsFilter()" class="btn btn-primary" (click)="cleanFilters()">Limpiar Filtros</button>
       </div>
     </form>
 
@@ -76,7 +76,7 @@
     <div class="d-flex justify-content-center">
       <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: pageSize }"></jhi-item-count>
     </div>
-    <button [disabled]="page === 0" (click)="prevPage()">Anterior</button>
+    <button [disabled]="page === 1" (click)="prevPage()">Anterior</button>
     <span>{{ page }} / {{ totalPages }}</span>
     <button [disabled]="page === totalPages" (click)="nextPage()">Siguiente</button>
   </div>
