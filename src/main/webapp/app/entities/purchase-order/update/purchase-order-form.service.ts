@@ -27,7 +27,7 @@ type PurchaseOrderFormRawValue = FormValueOf<IPurchaseOrder>;
 
 type NewPurchaseOrderFormRawValue = FormValueOf<NewPurchaseOrder>;
 
-type PurchaseOrderFormDefaults = Pick<NewPurchaseOrder, 'id' | 'createAt'>;
+type PurchaseOrderFormDefaults = Pick<NewPurchaseOrder, 'id' | 'createAt' | 'iesOrderNumber'>;
 
 type PurchaseOrderFormGroupContent = {
   id: FormControl<PurchaseOrderFormRawValue['id'] | NewPurchaseOrder['id']>;
@@ -81,10 +81,12 @@ export class PurchaseOrderFormService {
 
   private getFormDefaults(): PurchaseOrderFormDefaults {
     const currentTime = dayjs();
+    const iesOrderNumberGenerate = Math.floor(10000000 + Math.random() * 90000000);
 
     return {
       id: null,
       createAt: currentTime,
+      iesOrderNumber: iesOrderNumberGenerate,
     };
   }
 
