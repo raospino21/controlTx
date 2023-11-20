@@ -5,6 +5,7 @@ import co.com.ies.smol.repository.InterfaceBoardRepository;
 import co.com.ies.smol.service.InterfaceBoardService;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.mapper.InterfaceBoardMapper;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,5 +91,10 @@ public class InterfaceBoardServiceImpl implements InterfaceBoardService {
     @Override
     public InterfaceBoard toEntity(InterfaceBoardDTO interfaceBoardDTO) {
         return interfaceBoardMapper.toEntity(interfaceBoardDTO);
+    }
+
+    @Override
+    public List<InterfaceBoardDTO> getInterfaceBoardByReceptionOrderId(Long receptionOrderId) {
+        return interfaceBoardMapper.toDto(interfaceBoardRepository.getByReceptionOrderId(receptionOrderId));
     }
 }

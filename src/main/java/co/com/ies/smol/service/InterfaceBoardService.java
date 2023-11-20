@@ -2,6 +2,7 @@ package co.com.ies.smol.service;
 
 import co.com.ies.smol.domain.InterfaceBoard;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,4 +61,6 @@ public interface InterfaceBoardService {
     Optional<InterfaceBoardDTO> getInterfaceBoardByMac(String mac);
 
     InterfaceBoard toEntity(InterfaceBoardDTO interfaceBoardDTO);
+
+    List<InterfaceBoardDTO> getInterfaceBoardByReceptionOrderId(Long id);
 }

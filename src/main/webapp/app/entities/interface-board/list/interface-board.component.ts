@@ -67,7 +67,6 @@ export class InterfaceBoardComponent implements OnInit {
   ngOnInit(): void {
     this.load();
     this.filters.filterChanges.subscribe(filterOptions => this.handleNavigation(1, this.predicate, this.ascending, filterOptions));
-    this.loadRelationshipsOptions();
 
     this.uploadService.layersMacs$().subscribe(layers => {
       this.resetData();
@@ -101,6 +100,7 @@ export class InterfaceBoardComponent implements OnInit {
         this.onResponseSuccess(res);
       },
     });
+    this.loadRelationshipsOptions();
   }
 
   update(interfaceBoard: IInterfaceBoard): void {
@@ -279,10 +279,6 @@ export class InterfaceBoardComponent implements OnInit {
 
   public openModal(modal: any): void {
     this.cleanformCreateInterfaceBoard();
-    console.log('-------  orden de recepcion  ', this.formCreateInterfaceBoard.get(['receptionOrderOption'])!.value);
-    console.log(' macs con errores ', this.macsWithErros);
-    console.log(' macs con errores ', this.macs);
-
     this.modalService.open(modal, {
       backdrop: 'static',
       keyboard: false,

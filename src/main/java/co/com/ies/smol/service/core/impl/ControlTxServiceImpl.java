@@ -518,10 +518,8 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         List<ReceptionOrderDTO> receptionOrderListAvailable = new ArrayList<>();
 
         receptionOrderList.forEach(receptionOrder -> {
-            List<ControlInterfaceBoardDTO> controlInterfaceBoardList = controlInterfaceBoardService.getControlInterfaceBoardByReceptionOrderIdAndFinishTimeIsNull(
-                receptionOrder.getId()
-            );
-            boolean isAvailable = isAvailable(receptionOrder.getAmountReceived(), controlInterfaceBoardList.size());
+            List<InterfaceBoardDTO> interfaceBoardList = interfaceBoardService.getInterfaceBoardByReceptionOrderId(receptionOrder.getId());
+            boolean isAvailable = isAvailable(receptionOrder.getAmountReceived(), interfaceBoardList.size());
 
             if (isAvailable) {
                 receptionOrderListAvailable.add(receptionOrder);
