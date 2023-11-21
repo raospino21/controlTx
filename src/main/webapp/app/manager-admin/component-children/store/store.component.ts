@@ -1,12 +1,13 @@
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ITEMS_PER_PAGE, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { IInterfaceBoard } from 'app/entities/interface-board/interface-board.model';
 import { IReceptionOrder } from 'app/entities/reception-order/reception-order.model';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordion, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ManagerStoreService } from './manager-store.service';
 import { IPurchaseOrderCompleteResponse } from './purchaseorder-complete-response.model';
+import { IOrderReceptionDetail } from './ order-reception-detail.model';
 
 @Component({
   selector: 'jhi-manager-store',
@@ -20,14 +21,23 @@ export class ManagerStoreComponent implements OnInit {
     private modalService: NgbModal
   ) {}
 
+  @ViewChild('acc') acc: NgbAccordion | undefined;
+
   purchaseOrderComplete?: IPurchaseOrderCompleteResponse[];
   receptionOrderListSelected?: IReceptionOrder[];
-  pageSize: number = 10;
-  page = 1;
-  totalItems = 0;
+  interfaceBoards?: IInterfaceBoard[];
+  pageSize: number = 4;
+  pagePurchaseOrder = 1;
+  totalItemsPurchaseOrder = 0;
+
+  pageInterfaceBoard = 1;
+  InterfaceBoardTotalItems = 0;
+
   public errorMsg = '';
   public typeAlertErrorMsg = 'danger';
-
+  detailReceptionOrder?: IOrderReceptionDetail;
+  public orderIesSelected?: number;
+  orderReceptionSelected?: number;
   public totalOrderAmount?: number;
   public totalAmountReceived?: number;
 
@@ -37,7 +47,7 @@ export class ManagerStoreComponent implements OnInit {
 
   load(): void {
     const queryObject: any = {
-      page: this.page - 1,
+      page: this.pagePurchaseOrder - 1,
       size: this.pageSize,
     };
     this.service.getPurchaseOrderComplete(queryObject).subscribe({
@@ -47,7 +57,7 @@ export class ManagerStoreComponent implements OnInit {
   }
 
   private onSuccess(response: IPurchaseOrderCompleteResponse[], headers: HttpHeaders): void {
-    this.totalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
+    this.totalItemsPurchaseOrder = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
 
     this.purchaseOrderComplete = response.map(item => {
       item.purchaseOrder!.amountReceived = this.calculateTotalAmount(item.receptionOrderList!);
@@ -69,11 +79,26 @@ export class ManagerStoreComponent implements OnInit {
     }, 0);
   }
 
-  public showReceptionOrder(receptionOrderId: number, modal: any) {
+  public showReceptionOrder(receptionOrderId: number, orderIesSelected: number) {
+    this.orderIesSelected = orderIesSelected;
     this.receptionOrderListSelected = this.purchaseOrderComplete!.find(
       item => item.purchaseOrder!.id === receptionOrderId
     )?.receptionOrderList;
-    this.openModal(modal);
+
+    this.receptionOrderListSelected!.length > 0 ? this.expandPanel3() : this.collapsePanel3();
+  }
+
+  private expandPanel3() {
+    this.acc!.expand('panel3');
+  }
+
+  private collapsePanel3() {
+    this.acc!.collapse('panel3');
+  }
+
+  public showDetailReceptionOrder(receptionOrderId: number): void {
+    this.orderReceptionSelected = receptionOrderId;
+    this.loadMac();
   }
 
   private openModal(modal: any): void {
@@ -87,20 +112,65 @@ export class ManagerStoreComponent implements OnInit {
     this.showAlert('danger', error.error.detail, 4000);
   }
 
-  get totalPages(): number {
-    return Math.ceil(this.totalItems / this.pageSize);
+  get totalPagesPurchaseOrder(): number {
+    return Math.ceil(this.totalItemsPurchaseOrder / this.pageSize);
   }
 
-  nextPage() {
-    if (this.page < this.totalPages) {
-      this.page++;
+  nextPagePurchaseOrder() {
+    if (this.pagePurchaseOrder < this.totalPagesPurchaseOrder) {
+      this.pagePurchaseOrder++;
       this.load();
     }
   }
 
-  prevPage() {
-    if (this.page > 1) {
-      this.page--;
+  prevPagePurchaseOrder() {
+    if (this.pagePurchaseOrder > 1) {
+      this.pagePurchaseOrder--;
+      this.load();
+    }
+  }
+
+  get totalPagesInterfaceBoard(): number {
+    return Math.ceil(this.InterfaceBoardTotalItems / this.pageSize);
+  }
+
+  loadMac(): void {
+    const queryObject: any = {
+      page: this.pageInterfaceBoard - 1,
+      size: this.pageSize,
+    };
+    this.fillOwnFilter(queryObject);
+    this.service.query(queryObject).subscribe({
+      next: (res: HttpResponse<IInterfaceBoard[]>) => (this.interfaceBoards = res.body!),
+      error: (error: HttpErrorResponse) => this.onError(error),
+    });
+  }
+
+  protected fillOwnFilter(queryObject: any): any {
+    queryObject['receptionOrderId.equals'] = this.orderReceptionSelected;
+    queryObject['isValidated.equals'] = false;
+  }
+
+  changePageMac(direction: 'next' | 'prev'): void {
+    const canChangePage = direction === 'next' ? this.pageInterfaceBoard < this.totalPagesInterfaceBoard : this.pageInterfaceBoard > 1;
+
+    if (canChangePage) {
+      this.pageInterfaceBoard += direction === 'next' ? 1 : -1;
+      this.loadMac();
+    }
+  }
+
+  nextPageMac(): void {
+    this.changePageMac('next');
+  }
+
+  prevPageMac(): void {
+    this.changePageMac('prev');
+  }
+
+  public prevPageIntPurchaseOrder() {
+    if (this.pagePurchaseOrder > 1) {
+      this.pagePurchaseOrder--;
       this.load();
     }
   }

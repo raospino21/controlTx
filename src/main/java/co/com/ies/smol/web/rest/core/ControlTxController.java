@@ -5,13 +5,13 @@ import co.com.ies.smol.domain.enumeration.ContractType;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
 import co.com.ies.smol.service.core.ControlTxService;
 import co.com.ies.smol.service.criteria.OperatorCriteria;
-import co.com.ies.smol.service.criteria.ReceptionOrderCriteria;
 import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.*;
+import co.com.ies.smol.service.dto.core.OrderReceptionDetailRecord;
 import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
 import co.com.ies.smol.web.rest.errors.BadRequestAlertException;
 import java.io.ByteArrayInputStream;
@@ -365,5 +365,12 @@ public class ControlTxController {
         log.debug("REST request togetBoardDetailsInSotck");
 
         return ResponseEntity.ok(controlTxService.getBoardDetailsInSotck());
+    }
+
+    @GetMapping("/detail/reception-order/{receptionOrderId}")
+    public ResponseEntity<OrderReceptionDetailRecord> getDetailReceptionOrder(@PathVariable Long receptionOrderId) {
+        log.debug("REST request togetBoardDetailsInSotck");
+
+        return ResponseEntity.ok(controlTxService.getDetailReceptionOrder(receptionOrderId));
     }
 }

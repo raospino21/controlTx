@@ -32,6 +32,7 @@ import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
 import co.com.ies.smol.service.dto.core.InfoBoardByFileRecord;
 import co.com.ies.smol.service.dto.core.InfoBoardToAssignByFileRecord;
 import co.com.ies.smol.service.dto.core.OperatorCompleteInfoResponse;
+import co.com.ies.smol.service.dto.core.OrderReceptionDetailRecord;
 import co.com.ies.smol.service.dto.core.PurchaseOrderCompleteResponse;
 import co.com.ies.smol.service.dto.core.RequestStatusRecord;
 import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
@@ -693,5 +694,17 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
             .toList();
 
         return new BoardDetailsInSotckRecord(interfaceBoardNewList.size(), interfaceBoardUsedList.size());
+    }
+
+    @Override
+    public OrderReceptionDetailRecord getDetailReceptionOrder(Long receptionOrderId) {
+        List<InterfaceBoardDTO> interfaceBoardList = interfaceBoardService.getInterfaceBoardByReceptionOrderId(receptionOrderId);
+
+        List<InterfaceBoardDTO> validatedInterfaceBoardList = interfaceBoardList
+            .stream()
+            .filter(interfaceBoard -> interfaceBoard.getIsValidated().equals(true))
+            .toList();
+
+        return new OrderReceptionDetailRecord(interfaceBoardList.size(), validatedInterfaceBoardList.size());
     }
 }

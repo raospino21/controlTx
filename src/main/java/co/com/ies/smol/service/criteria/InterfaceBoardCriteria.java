@@ -31,6 +31,8 @@ public class InterfaceBoardCriteria implements Serializable, Criteria {
 
     private LongFilter receptionOrderId;
 
+    private BooleanFilter isValidated;
+
     private Boolean distinct;
 
     public InterfaceBoardCriteria() {}
@@ -62,6 +64,21 @@ public class InterfaceBoardCriteria implements Serializable, Criteria {
 
     public void setId(LongFilter id) {
         this.id = id;
+    }
+
+    public BooleanFilter getIsValidated() {
+        return isValidated;
+    }
+
+    public BooleanFilter isValidated() {
+        if (isValidated == null) {
+            isValidated = new BooleanFilter();
+        }
+        return isValidated;
+    }
+
+    public void setIsValidated(BooleanFilter isValidated) {
+        this.isValidated = isValidated;
     }
 
     public StringFilter getIpAddress() {
@@ -146,6 +163,7 @@ public class InterfaceBoardCriteria implements Serializable, Criteria {
             Objects.equals(ipAddress, that.ipAddress) &&
             Objects.equals(hash, that.hash) &&
             Objects.equals(mac, that.mac) &&
+            Objects.equals(isValidated, that.isValidated) &&
             Objects.equals(receptionOrderId, that.receptionOrderId) &&
             Objects.equals(distinct, that.distinct)
         );
@@ -153,7 +171,7 @@ public class InterfaceBoardCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ipAddress, hash, mac, receptionOrderId, distinct);
+        return Objects.hash(id, ipAddress, hash, mac, receptionOrderId, isValidated, distinct);
     }
 
     // prettier-ignore
@@ -164,6 +182,7 @@ public class InterfaceBoardCriteria implements Serializable, Criteria {
             (ipAddress != null ? "ipAddress=" + ipAddress + ", " : "") +
             (hash != null ? "hash=" + hash + ", " : "") +
             (mac != null ? "mac=" + mac + ", " : "") +
+            (isValidated != null ? "isValidated=" + isValidated + ", " : "") +            
             (receptionOrderId != null ? "receptionOrderId=" + receptionOrderId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
