@@ -642,7 +642,12 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
                 String reference = data.getContract().getReference();
                 ContractType type = data.getContract().getType();
                 String mac = data.getInterfaceBoard().getMac();
-                InfoBoardByFileRecord dataFile = new InfoBoardByFileRecord(operatorName, reference, type, mac);
+                InfoBoardByFileRecord dataFile = new InfoBoardByFileRecord(
+                    mac,
+                    operatorName,
+                    reference,
+                    translateContractType(type.name())
+                );
 
                 try {
                     mapper.writer(schema).writeValue(out, dataFile);
