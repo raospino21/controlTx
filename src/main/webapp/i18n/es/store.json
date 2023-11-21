@@ -1,0 +1,10 @@
+{
+  "controTxApp": {
+    "store": {
+      "isValidate": {
+        "true": "Si",
+        "false": "No"
+      }
+    }
+  }
+}

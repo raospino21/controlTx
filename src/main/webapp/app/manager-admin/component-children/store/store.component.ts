@@ -7,7 +7,6 @@ import { IReceptionOrder } from 'app/entities/reception-order/reception-order.mo
 import { NgbAccordion, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ManagerStoreService } from './manager-store.service';
 import { IPurchaseOrderCompleteResponse } from './purchaseorder-complete-response.model';
-import { IOrderReceptionDetail } from './ order-reception-detail.model';
 
 @Component({
   selector: 'jhi-manager-store',
@@ -26,7 +25,7 @@ export class ManagerStoreComponent implements OnInit {
   purchaseOrderComplete?: IPurchaseOrderCompleteResponse[];
   receptionOrderListSelected?: IReceptionOrder[];
   interfaceBoards?: IInterfaceBoard[];
-  pageSize: number = 4;
+  pageSize: number = 10;
   pagePurchaseOrder = 1;
   totalItemsPurchaseOrder = 0;
 
@@ -35,11 +34,11 @@ export class ManagerStoreComponent implements OnInit {
 
   public errorMsg = '';
   public typeAlertErrorMsg = 'danger';
-  detailReceptionOrder?: IOrderReceptionDetail;
-  public orderIesSelected?: number;
+  public orderIesSelected?: string;
   orderReceptionSelected?: number;
   public totalOrderAmount?: number;
   public totalAmountReceived?: number;
+  detailReceptionOrder?: string = '';
 
   ngOnInit(): void {
     this.load();
@@ -80,7 +79,7 @@ export class ManagerStoreComponent implements OnInit {
   }
 
   public showReceptionOrder(receptionOrderId: number, orderIesSelected: number) {
-    this.orderIesSelected = orderIesSelected;
+    this.orderIesSelected = ' vinculada a la orden ies: ' + orderIesSelected;
     this.receptionOrderListSelected = this.purchaseOrderComplete!.find(
       item => item.purchaseOrder!.id === receptionOrderId
     )?.receptionOrderList;
@@ -90,15 +89,33 @@ export class ManagerStoreComponent implements OnInit {
 
   private expandPanel3() {
     this.acc!.expand('panel3');
+    this.acc!.collapse('panel4');
   }
 
   private collapsePanel3() {
     this.acc!.collapse('panel3');
   }
 
-  public showDetailReceptionOrder(receptionOrderId: number): void {
+  private expandPanel4() {
+    this.acc!.expand('panel4');
+  }
+
+  private collapsePanel4() {
+    this.acc!.collapse('panel4');
+  }
+
+  public showTxAssociatedToReceptionOrder(receptionOrderId: number): void {
     this.orderReceptionSelected = receptionOrderId;
-    this.loadMac();
+    this.detailReceptionOrder = 'Asociadas';
+    this.loadMac(false);
+    this.expandPanel4();
+  }
+
+  public showTxValidatedToReceptionOrder(receptionOrderId: number): void {
+    this.orderReceptionSelected = receptionOrderId;
+    this.detailReceptionOrder = 'Validadas';
+    this.loadMac(true);
+    this.expandPanel4();
   }
 
   private openModal(modal: any): void {
@@ -134,21 +151,24 @@ export class ManagerStoreComponent implements OnInit {
     return Math.ceil(this.InterfaceBoardTotalItems / this.pageSize);
   }
 
-  loadMac(): void {
+  loadMac(isValidated: boolean): void {
     const queryObject: any = {
       page: this.pageInterfaceBoard - 1,
       size: this.pageSize,
+      'receptionOrderId.equals': this.orderReceptionSelected,
     };
-    this.fillOwnFilter(queryObject);
+    isValidated ? this.fillOwnFilter(queryObject) : undefined;
     this.service.query(queryObject).subscribe({
-      next: (res: HttpResponse<IInterfaceBoard[]>) => (this.interfaceBoards = res.body!),
+      next: (res: HttpResponse<IInterfaceBoard[]>) => {
+        this.InterfaceBoardTotalItems = Number(res.headers.get(TOTAL_COUNT_RESPONSE_HEADER));
+        this.interfaceBoards = res.body!;
+      },
       error: (error: HttpErrorResponse) => this.onError(error),
     });
   }
 
   protected fillOwnFilter(queryObject: any): any {
-    queryObject['receptionOrderId.equals'] = this.orderReceptionSelected;
-    queryObject['isValidated.equals'] = false;
+    queryObject['isValidated.equals'] = 'true';
   }
 
   changePageMac(direction: 'next' | 'prev'): void {
@@ -156,7 +176,7 @@ export class ManagerStoreComponent implements OnInit {
 
     if (canChangePage) {
       this.pageInterfaceBoard += direction === 'next' ? 1 : -1;
-      this.loadMac();
+      this.loadMac(false);
     }
   }
 

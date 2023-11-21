@@ -182,18 +182,19 @@
                     type="submit"
                     class="btn btn-primary btn-sm"
                     data-cy="entityDetailsButton"
-                    (click)="showDetailReceptionOrder(receptionOrder.id)"
+                    (click)="showTxAssociatedToReceptionOrder(receptionOrder.id)"
                   >
                     <fa-icon icon="eye"></fa-icon>
-                    <span class="d-none d-md-inline">Ver Detalles</span>
+                    <span class="d-none d-md-inline">Ver Tx Asociadas</span>
                   </button>
-                  <button type="submit" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                  <button
+                    type="submit"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                    (click)="showTxValidatedToReceptionOrder(receptionOrder.id)"
+                  >
                     <fa-icon icon="eye" style="font-size: 14px"></fa-icon>
-                    <span class="d-none d-md-inline">Ver Tarjetas</span>
-                  </button>
-                  <button type="submit" class="btn btn-primary btn-sm" data-cy="entityDetailsButton">
-                    <fa-icon icon="download"></fa-icon>
-                    <span class="d-none d-md-inline">Descargar Tarjetas</span>
+                    <span class="d-none d-md-inline">Ver Tx Validadas</span>
                   </button>
                 </div>
               </td>
@@ -204,7 +205,15 @@
     </ng-template>
   </ngb-panel>
 
-  <ngb-panel id="panel4" title="Tarjetas Relacionadas">
+  <ngb-panel id="panel4">
+    <ng-template ngbPanelTitle>
+      Tarjetas &nbsp; <strong *ngIf="detailReceptionOrder != ''">{{ detailReceptionOrder }}</strong> &nbsp;
+      <strong *ngIf="detailReceptionOrder != ''">{{ InterfaceBoardTotalItems }}</strong> &nbsp;
+      <button *ngIf="detailReceptionOrder != ''" type="submit" class="btn btn-primary btn-sm" data-cy="entityDetailsButton">
+        <fa-icon *ngIf="InterfaceBoardTotalItems > 0" icon="download"></fa-icon>
+        <span class="d-none d-md-inline" *ngIf="InterfaceBoardTotalItems > 0">Descargar</span>
+      </button>
+    </ng-template>
     <ng-template ngbPanelContent>
       <div class="table-responsive table-entities" id="entities" *ngIf="interfaceBoards && interfaceBoards.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
@@ -217,7 +226,7 @@
           <tbody>
             <tr *ngFor="let interfaceBoard of interfaceBoards" data-cy="entityTable">
               <td>{{ interfaceBoard.mac }}</td>
-              <td>{{ interfaceBoard?.isValidated }}</td>
+              <td jhiTranslate="{{ 'controTxApp.store.isValidate.' + interfaceBoard?.isValidated }}">{{ interfaceBoard?.isValidated }}</td>
             </tr>
           </tbody>
         </table>
