@@ -10,6 +10,7 @@ import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.*;
+import co.com.ies.smol.service.dto.core.OrderReceptionDetailRecord;
 import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
 import java.io.ByteArrayInputStream;
 import java.util.List;
@@ -63,4 +64,6 @@ public interface ControlTxService {
     Integer getCountBoardsAvailable();
 
     BoardDetailsInSotckRecord getBoardDetailsInSotck();
+
+    OrderReceptionDetailRecord getDetailReceptionOrder(Long receptionOrderId);
 }

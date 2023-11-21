@@ -1,7 +1,7 @@
 {
     "AWSEBDockerrunVersion": "1",
     "Image": {
-    "Name": "682457346504.dkr.ecr.us-east-2.amazonaws.com/controltx:0.0.1-SNAPSHOT",
+    "Name": "682457346504.dkr.ecr.us-east-2.amazonaws.com/controltx:0.0.2-SNAPSHOT",
       "Update": "true"
     },
     "Ports": [

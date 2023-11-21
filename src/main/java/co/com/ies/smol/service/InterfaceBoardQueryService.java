@@ -1,7 +1,6 @@
 package co.com.ies.smol.service;
 
 import co.com.ies.smol.domain.*; // for static metamodels
-import co.com.ies.smol.domain.InterfaceBoard;
 import co.com.ies.smol.repository.InterfaceBoardRepository;
 import co.com.ies.smol.service.criteria.InterfaceBoardCriteria;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
@@ -89,6 +88,9 @@ public class InterfaceBoardQueryService extends QueryService<InterfaceBoard> {
             }
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), InterfaceBoard_.id));
+            }
+            if (criteria.getIsValidated() != null) {
+                specification = specification.and(buildSpecification(criteria.getIsValidated(), InterfaceBoard_.isValidated));
             }
             if (criteria.getIpAddress() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getIpAddress(), InterfaceBoard_.ipAddress));

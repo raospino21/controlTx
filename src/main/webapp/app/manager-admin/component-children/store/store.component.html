@@ -1,5 +1,34 @@
 <ngb-accordion #acc="ngbAccordion">
-  <ngb-panel id="panel1" title="Ordenes de Compra">
+  <ngb-panel id="panel1" title="Resumén Ordenes de Compra">
+    <ng-template ngbPanelContent>
+      <div class="table-responsive table-entities" id="entities" *ngIf="purchaseOrderComplete && purchaseOrderComplete.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+          <thead>
+            <tr>
+              <th scope="col">
+                <div class="d-flex">
+                  <span>Total Cantidad Comprada</span>
+                </div>
+              </th>
+              <th scope="col">
+                <div class="d-flex">
+                  <span jhiTranslate="controTxApp.receptionOrder.amountReceived">Cantidad Recibida</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-cy="entityTable">
+              <td>{{ totalOrderAmount }}</td>
+              <td>{{ totalAmountReceived }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-template>
+  </ngb-panel>
+
+  <ngb-panel id="panel2" title="Detalle Ordenes de Compra">
     <ng-template ngbPanelContent>
       <div class="table-responsive table-entities" id="entities" *ngIf="purchaseOrderComplete && purchaseOrderComplete.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
@@ -50,7 +79,7 @@
                     type="submit"
                     class="btn btn-info btn-sm"
                     data-cy="entityDetailsButton"
-                    (click)="showReceptionOrder(item.purchaseOrder!.id, receptionOrderListTpl)"
+                    (click)="showReceptionOrder(item.purchaseOrder!.id, item.purchaseOrder!.iesOrderNumber!)"
                   >
                     <fa-icon icon="eye"></fa-icon>
                     <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
@@ -64,107 +93,161 @@
 
       <div class="pagination" *ngIf="purchaseOrderComplete && purchaseOrderComplete.length > 0">
         <div class="d-flex justify-content-center">
-          <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: pageSize }"></jhi-item-count>
+          <jhi-item-count
+            [params]="{ page: pagePurchaseOrder, totalItems: totalItemsPurchaseOrder, itemsPerPage: pageSize }"
+          ></jhi-item-count>
         </div>
-        <button [disabled]="page === 1" (click)="prevPage()">Anterior</button>
-        <span>{{ page }} / {{ totalPages }}</span>
-        <button [disabled]="page === totalPages" (click)="nextPage()">Siguiente</button>
+        <button [disabled]="pagePurchaseOrder === 1" (click)="prevPagePurchaseOrder()">Anterior</button>
+        <span>{{ pagePurchaseOrder }} / {{ totalPagesPurchaseOrder }}</span>
+        <button [disabled]="pagePurchaseOrder === totalPagesPurchaseOrder" (click)="nextPagePurchaseOrder()">Siguiente</button>
       </div>
     </ng-template>
   </ngb-panel>
 
-  <ngb-panel id="panel2" title="Tarjeta en Stock">
+  <ngb-panel id="panel3">
+    <ng-template ngbPanelTitle>
+      Ordenes de Recepción&nbsp; <strong>{{ orderIesSelected }}</strong>
+    </ng-template>
+    <ng-template ngbPanelContent>
+      <div class="px-6" *ngIf="receptionOrderListSelected!.length === 0">
+        <span>No hay ordenes de compras asociadas</span>
+      </div>
+      <div
+        class="table-responsive table-entities"
+        id="entities"
+        *ngIf="receptionOrderListSelected && receptionOrderListSelected.length > 0"
+      >
+        <table class="table table-striped" aria-describedby="page-heading">
+          <thead>
+            <tr>
+              <th scope="col">
+                <div class="d-flex">
+                  <span jhiTranslate="controTxApp.receptionOrder.id">Id</span>
+                  <fa-icon class="p-1"></fa-icon>
+                </div>
+              </th>
+              <th scope="col">
+                <div class="d-flex">
+                  <span>Cantidad Orden</span>
+                  <fa-icon class="p-1"></fa-icon>
+                </div>
+              </th>
+              <th scope="col">
+                <div class="d-flex">
+                  <span>Proveedor</span>
+                  <fa-icon class="p-1"></fa-icon>
+                </div>
+              </th>
+              <th scope="col">
+                <div class="d-flex">
+                  <span jhiTranslate="controTxApp.receptionOrder.remission">Remission</span>
+                  <fa-icon class="p-1"></fa-icon>
+                </div>
+              </th>
+              <th scope="col">
+                <div class="d-flex">
+                  <span>Ingreso</span>
+                  <fa-icon class="p-1"></fa-icon>
+                </div>
+              </th>
+              <th scope="col">
+                <div class="d-flex">
+                  <span>Garantia</span>
+                  <fa-icon class="p-1"></fa-icon>
+                </div>
+              </th>
+              <th scope="col">
+                <div class="d-flex">
+                  <span jhiTranslate="controTxApp.receptionOrder.amountReceived">Amount Received</span>
+                  <fa-icon class="p-1"></fa-icon>
+                </div>
+              </th>
+              <th scope="col">Detalles</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let receptionOrder of receptionOrderListSelected" data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/reception-order', receptionOrder.id, 'view']">{{ receptionOrder.id }} </a>
+              </td>
+              <td *ngIf="receptionOrder.purchaseOrder">{{ receptionOrder.purchaseOrder.orderAmount }}</td>
+              <td>{{ receptionOrder.providerLotNumber }}</td>
+              <td>{{ receptionOrder.remission }}</td>
+              <td>{{ receptionOrder.entryDate!.toString() | date: 'yyyy-MM-dd' }}</td>
+              <td>{{ receptionOrder.warrantyDate!.toString() | date: 'yyyy-MM-dd' }}</td>
+              <td>{{ receptionOrder.amountReceived }}</td>
+              <td>
+                <div class="btn-group">
+                  <button
+                    type="submit"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityDetailsButton"
+                    (click)="showTxAssociatedToReceptionOrder(receptionOrder.id)"
+                  >
+                    <fa-icon icon="eye"></fa-icon>
+                    <span class="d-none d-md-inline">Ver Tx Asociadas</span>
+                  </button>
+                  <button
+                    type="submit"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                    (click)="showTxValidatedToReceptionOrder(receptionOrder.id)"
+                  >
+                    <fa-icon icon="eye" style="font-size: 14px"></fa-icon>
+                    <span class="d-none d-md-inline">Ver Tx Validadas</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-template>
+  </ngb-panel>
+
+  <ngb-panel id="panel4">
+    <ng-template ngbPanelTitle>
+      Tarjetas &nbsp; <strong *ngIf="detailReceptionOrder != ''">{{ detailReceptionOrder }}</strong> &nbsp;
+      <strong *ngIf="detailReceptionOrder != ''">{{ InterfaceBoardTotalItems }}</strong> &nbsp;
+      <button *ngIf="detailReceptionOrder != ''" type="submit" class="btn btn-primary btn-sm" data-cy="entityDetailsButton">
+        <fa-icon *ngIf="InterfaceBoardTotalItems > 0" icon="download"></fa-icon>
+        <span class="d-none d-md-inline" *ngIf="InterfaceBoardTotalItems > 0">Descargar</span>
+      </button>
+    </ng-template>
+    <ng-template ngbPanelContent>
+      <div class="table-responsive table-entities" id="entities" *ngIf="interfaceBoards && interfaceBoards.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+          <thead>
+            <tr>
+              <th scope="col">Mac</th>
+              <th scope="col">Validada</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let interfaceBoard of interfaceBoards" data-cy="entityTable">
+              <td>{{ interfaceBoard.mac }}</td>
+              <td jhiTranslate="{{ 'controTxApp.store.isValidate.' + interfaceBoard?.isValidated }}">{{ interfaceBoard?.isValidated }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination" *ngIf="interfaceBoards && interfaceBoards.length > 0">
+        <div class="d-flex justify-content-center">
+          <jhi-item-count
+            [params]="{ page: pageInterfaceBoard, totalItems: InterfaceBoardTotalItems, itemsPerPage: pageSize }"
+          ></jhi-item-count>
+        </div>
+        <button [disabled]="pageInterfaceBoard === 1" (click)="prevPageMac()">Anterior</button>
+        <span>{{ pageInterfaceBoard }} / {{ totalPagesInterfaceBoard }}</span>
+        <button [disabled]="pageInterfaceBoard === totalPagesInterfaceBoard" (click)="nextPageMac()">Siguiente</button>
+      </div>
+    </ng-template>
+  </ngb-panel>
+
+  <ngb-panel id="panel5" title="Tarjeta en Stock">
     <ng-template ngbPanelContent>
       <jhi-board-in-stock></jhi-board-in-stock>
     </ng-template>
   </ngb-panel>
 </ngb-accordion>
-
-<ng-template #receptionOrderListTpl let-modal>
-  <div class="px-6" *ngIf="receptionOrderListSelected!.length === 0">
-    <span>No hay ordenes de compras asociadas</span>
-  </div>
-  <div class="table-responsive table-entities" id="entities" *ngIf="receptionOrderListSelected && receptionOrderListSelected.length > 0">
-    <table class="table table-striped" aria-describedby="page-heading">
-      <thead>
-        <tr>
-          <th scope="col">
-            <div class="d-flex">
-              <span jhiTranslate="controTxApp.receptionOrder.id">Id</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col">
-            <div class="d-flex">
-              <span jhiTranslate="controTxApp.receptionOrder.providerLotNumber">Provider Lot Number</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col">
-            <div class="d-flex">
-              <span jhiTranslate="controTxApp.receptionOrder.amountReceived">Amount Received</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col">
-            <div class="d-flex">
-              <span jhiTranslate="controTxApp.receptionOrder.remission">Remission</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col">
-            <div class="d-flex">
-              <span jhiTranslate="controTxApp.receptionOrder.entryDate">Entry Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col">
-            <div class="d-flex">
-              <span jhiTranslate="controTxApp.receptionOrder.warrantyDate">Warranty Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col">
-            <div class="d-flex">
-              <span jhiTranslate="controTxApp.receptionOrder.purchaseOrder">Purchase Order Id</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col">
-            <div class="d-flex">
-              <span jhiTranslate="controTxApp.purchaseOrder.iesOrderNumber">Order IES</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col">
-            <div class="d-flex">
-              <span jhiTranslate="controTxApp.purchaseOrder.orderAmount">Order Amount</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let receptionOrder of receptionOrderListSelected" data-cy="entityTable">
-          <td>
-            <a [routerLink]="['/reception-order', receptionOrder.id, 'view']">{{ receptionOrder.id }} </a>
-          </td>
-          <td>{{ receptionOrder.providerLotNumber }}</td>
-          <td>{{ receptionOrder.amountReceived }}</td>
-          <td>{{ receptionOrder.remission }}</td>
-          <td>{{ receptionOrder.entryDate!.toString() | date: 'yyyy-MM-dd HH:mm' }}</td>
-          <td>{{ receptionOrder.warrantyDate!.toString() | date: 'yyyy-MM-dd HH:mm' }}</td>
-          <td *ngIf="receptionOrder.purchaseOrder">{{ receptionOrder.purchaseOrder.id }}</td>
-          <td>
-            <div *ngIf="receptionOrder.purchaseOrder">
-              <a [routerLink]="['/purchase-order', receptionOrder.purchaseOrder.id, 'view']"
-                >{{ receptionOrder.purchaseOrder.iesOrderNumber }}
-              </a>
-            </div>
-          </td>
-          <td *ngIf="receptionOrder.purchaseOrder">{{ receptionOrder.purchaseOrder.orderAmount }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</ng-template>

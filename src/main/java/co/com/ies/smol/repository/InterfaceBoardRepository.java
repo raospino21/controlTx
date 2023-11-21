@@ -41,4 +41,6 @@ public interface InterfaceBoardRepository extends JpaRepository<InterfaceBoard, 
     Optional<InterfaceBoard> findOneWithToOneRelationships(@Param("id") Long id);
 
     Optional<InterfaceBoard> getInterfaceBoardByMac(String mac);
+
+    List<InterfaceBoard> getByReceptionOrderId(Long receptionOrderId);
 }

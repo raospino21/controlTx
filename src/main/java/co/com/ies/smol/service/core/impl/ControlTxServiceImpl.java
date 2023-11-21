@@ -32,6 +32,7 @@ import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
 import co.com.ies.smol.service.dto.core.InfoBoardByFileRecord;
 import co.com.ies.smol.service.dto.core.InfoBoardToAssignByFileRecord;
 import co.com.ies.smol.service.dto.core.OperatorCompleteInfoResponse;
+import co.com.ies.smol.service.dto.core.OrderReceptionDetailRecord;
 import co.com.ies.smol.service.dto.core.PurchaseOrderCompleteResponse;
 import co.com.ies.smol.service.dto.core.RequestStatusRecord;
 import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
@@ -518,10 +519,8 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         List<ReceptionOrderDTO> receptionOrderListAvailable = new ArrayList<>();
 
         receptionOrderList.forEach(receptionOrder -> {
-            List<ControlInterfaceBoardDTO> controlInterfaceBoardList = controlInterfaceBoardService.getControlInterfaceBoardByReceptionOrderIdAndFinishTimeIsNull(
-                receptionOrder.getId()
-            );
-            boolean isAvailable = isAvailable(receptionOrder.getAmountReceived(), controlInterfaceBoardList.size());
+            List<InterfaceBoardDTO> interfaceBoardList = interfaceBoardService.getInterfaceBoardByReceptionOrderId(receptionOrder.getId());
+            boolean isAvailable = isAvailable(receptionOrder.getAmountReceived(), interfaceBoardList.size());
 
             if (isAvailable) {
                 receptionOrderListAvailable.add(receptionOrder);
@@ -644,7 +643,12 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
                 String reference = data.getContract().getReference();
                 ContractType type = data.getContract().getType();
                 String mac = data.getInterfaceBoard().getMac();
-                InfoBoardByFileRecord dataFile = new InfoBoardByFileRecord(operatorName, reference, type, mac);
+                InfoBoardByFileRecord dataFile = new InfoBoardByFileRecord(
+                    mac,
+                    operatorName,
+                    reference,
+                    translateContractType(type.name())
+                );
 
                 try {
                     mapper.writer(schema).writeValue(out, dataFile);
@@ -690,5 +694,17 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
             .toList();
 
         return new BoardDetailsInSotckRecord(interfaceBoardNewList.size(), interfaceBoardUsedList.size());
+    }
+
+    @Override
+    public OrderReceptionDetailRecord getDetailReceptionOrder(Long receptionOrderId) {
+        List<InterfaceBoardDTO> interfaceBoardList = interfaceBoardService.getInterfaceBoardByReceptionOrderId(receptionOrderId);
+
+        List<InterfaceBoardDTO> validatedInterfaceBoardList = interfaceBoardList
+            .stream()
+            .filter(interfaceBoard -> interfaceBoard.getIsValidated().equals(true))
+            .toList();
+
+        return new OrderReceptionDetailRecord(interfaceBoardList.size(), validatedInterfaceBoardList.size());
     }
 }

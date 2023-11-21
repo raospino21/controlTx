@@ -11,6 +11,7 @@ import { IRequestStatus } from 'app/shared/request-status.model';
 import { IControlInterfaceBoard } from 'app/entities/control-interface-board/control-interface-board.model';
 import { IAssignBoard } from 'app/store-admin/component-children/link-board/assign-board.model';
 import { IPurchaseOrderCompleteResponse } from './purchaseorder-complete-response.model';
+import { IOrderReceptionDetail } from './ order-reception-detail.model';
 
 @Injectable({ providedIn: 'root' })
 export class ManagerStoreService {
@@ -41,5 +42,14 @@ export class ManagerStoreService {
       params: options,
       observe: 'response',
     });
+  }
+
+  getDetailReceptionOrder(receptionOrderId?: number): Observable<HttpResponse<IOrderReceptionDetail>> {
+    return this.http.get<IOrderReceptionDetail>(`${this.resourceUrl}/detail/reception-order/${receptionOrderId}`, { observe: 'response' });
+  }
+
+  query(req?: any): Observable<HttpResponse<IInterfaceBoard[]>> {
+    const options = createRequestOption(req);
+    return this.http.get<IInterfaceBoard[]>(this.resourceUrl + '/interface-boards', { params: options, observe: 'response' });
   }
 }
