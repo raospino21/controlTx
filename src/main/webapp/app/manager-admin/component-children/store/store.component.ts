@@ -28,6 +28,9 @@ export class ManagerStoreComponent implements OnInit {
   public errorMsg = '';
   public typeAlertErrorMsg = 'danger';
 
+  public totalOrderAmount?: number;
+  public totalAmountReceived?: number;
+
   ngOnInit(): void {
     this.load();
   }
@@ -50,6 +53,13 @@ export class ManagerStoreComponent implements OnInit {
       item.purchaseOrder!.amountReceived = this.calculateTotalAmount(item.receptionOrderList!);
       return item;
     });
+
+    this.totalOrderAmount = this.purchaseOrderComplete.reduce((acumulador, objeto) => acumulador + objeto.purchaseOrder?.orderAmount!, 0);
+    this.totalAmountReceived = this.purchaseOrderComplete.reduce(
+      (acumulador, objeto) => acumulador + objeto.purchaseOrder?.amountReceived!,
+      0
+    );
+
     this.showAlert('success', 'Exito!', 20);
   }
 
