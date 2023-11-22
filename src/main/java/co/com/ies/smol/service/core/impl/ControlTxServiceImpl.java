@@ -30,6 +30,7 @@ import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import co.com.ies.smol.service.dto.core.BrandCompleteInfoResponse;
 import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
 import co.com.ies.smol.service.dto.core.InfoBoardByFileRecord;
+import co.com.ies.smol.service.dto.core.InfoBoardInStockByFileRecord;
 import co.com.ies.smol.service.dto.core.InfoBoardToAssignByFileRecord;
 import co.com.ies.smol.service.dto.core.OperatorCompleteInfoResponse;
 import co.com.ies.smol.service.dto.core.OrderReceptionDetailRecord;
@@ -706,5 +707,41 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
             .toList();
 
         return new OrderReceptionDetailRecord(interfaceBoardList.size(), validatedInterfaceBoardList.size());
+    }
+
+    @Override
+    public ByteArrayInputStream getFileTheBoardsInStock() {
+        List<ControlInterfaceBoardDTO> controlInterfaceBoardList = controlInterfaceBoardService.getInfoBoardsAvailable();
+
+        final CsvMapper mapper = new CsvMapper();
+        final CsvSchema schema = mapper.schemaFor(InfoBoardInStockByFileRecord.class);
+        schema.withColumnSeparator(';');
+        schema.usesHeader();
+
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try {
+            String columnNamesString = schema.getColumnDesc();
+            List<String> columnNames = deserializeColumnNames(columnNamesString);
+
+            String headers = String.join(";", columnNames);
+            out.write(headers.getBytes());
+            out.write("\n".getBytes());
+
+            controlInterfaceBoardList.forEach(data -> {
+                String mac = data.getInterfaceBoard().getMac();
+                InfoBoardInStockByFileRecord dataFile = new InfoBoardInStockByFileRecord(mac);
+
+                try {
+                    mapper.writer(schema).writeValue(out, dataFile);
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
+            });
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
+        return new ByteArrayInputStream(out.toByteArray());
     }
 }
