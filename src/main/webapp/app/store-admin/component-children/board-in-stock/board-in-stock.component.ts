@@ -46,6 +46,25 @@ export class BoardInStockComponent implements OnInit {
     });
   }
 
+  downloadBoardsInStock() {
+    this.service.downloadBoardsInStock().subscribe({
+      next: (result: HttpResponse<Blob>) => {
+        const bodyResponse = result.body as Blob;
+
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(bodyResponse);
+        link.download = 'TarjetaEnStock.csv';
+        link.click();
+
+        URL.revokeObjectURL(link.href);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        alert('Error al descargar las MACs');
+      },
+    });
+  }
+
   protected fillOwnFilter(queryObject: any): any {
     if (this.filter.mac != null) {
       queryObject['mac.equals'] = this.filter.mac;

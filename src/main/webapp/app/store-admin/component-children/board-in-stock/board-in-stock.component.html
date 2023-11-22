@@ -33,6 +33,11 @@
     </form>
 
     <div>
+      <button type="submit" (click)="downloadBoardsInStock()" class="btn btn-dark me-2" data-cy="entityDetailsButton">
+        <fa-icon icon="download"></fa-icon>
+        <span class="d-none d-md-inline">Descargar Tarjetas</span>
+      </button>
+
       <button class="btn btn-info me-2" (click)="getBoardsInStock()">
         <fa-icon icon="sync"></fa-icon>
         <span jhiTranslate="controTxApp.interfaceBoard.home.refreshListLabel">Refrescar lista</span>
