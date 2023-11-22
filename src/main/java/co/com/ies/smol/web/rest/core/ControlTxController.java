@@ -11,7 +11,6 @@ import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.dto.PurchaseOrderDTO;
 import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.*;
-import co.com.ies.smol.service.dto.core.OrderReceptionDetailRecord;
 import co.com.ies.smol.service.dto.core.sub.ContractSubDTO;
 import co.com.ies.smol.web.rest.errors.BadRequestAlertException;
 import java.io.ByteArrayInputStream;
@@ -372,5 +371,19 @@ public class ControlTxController {
         log.debug("REST request togetBoardDetailsInSotck");
 
         return ResponseEntity.ok(controlTxService.getDetailReceptionOrder(receptionOrderId));
+    }
+
+    @GetMapping("/download/file/boards-in-sotck/")
+    public ResponseEntity<Resource> downloadBoardsInStock() {
+        log.info("REST request to downloadBoardsInStock");
+
+        final ByteArrayInputStream fileInMemory = controlTxService.getFileTheBoardsInStock();
+        final InputStreamResource fileInputStream = new InputStreamResource(fileInMemory);
+
+        final HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment;");
+        headers.set(HttpHeaders.CONTENT_TYPE, "text/csv;charset=UTF-8");
+
+        return new ResponseEntity<>(fileInputStream, headers, HttpStatus.OK);
     }
 }
