@@ -62,5 +62,7 @@ public interface InterfaceBoardService {
 
     InterfaceBoard toEntity(InterfaceBoardDTO interfaceBoardDTO);
 
-    List<InterfaceBoardDTO> getInterfaceBoardByReceptionOrderId(Long id);
+    List<InterfaceBoardDTO> getInterfaceBoardByReceptionOrderId(Long receptionOrderId);
+
+    List<InterfaceBoardDTO> getInterfaceBoardByReceptionOrderIdAndIsValidated(Long receptionOrderId, Boolean isValidated);
 }

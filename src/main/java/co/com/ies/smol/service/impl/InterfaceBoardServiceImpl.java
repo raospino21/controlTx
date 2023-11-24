@@ -97,4 +97,9 @@ public class InterfaceBoardServiceImpl implements InterfaceBoardService {
     public List<InterfaceBoardDTO> getInterfaceBoardByReceptionOrderId(Long receptionOrderId) {
         return interfaceBoardMapper.toDto(interfaceBoardRepository.getByReceptionOrderId(receptionOrderId));
     }
+
+    @Override
+    public List<InterfaceBoardDTO> getInterfaceBoardByReceptionOrderIdAndIsValidated(Long receptionOrderId, Boolean isValidated) {
+        return interfaceBoardMapper.toDto(interfaceBoardRepository.getByReceptionOrderIdAndIsValidated(receptionOrderId, isValidated));
+    }
 }

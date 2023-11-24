@@ -43,4 +43,6 @@ public interface InterfaceBoardRepository extends JpaRepository<InterfaceBoard, 
     Optional<InterfaceBoard> getInterfaceBoardByMac(String mac);
 
     List<InterfaceBoard> getByReceptionOrderId(Long receptionOrderId);
+
+    List<InterfaceBoard> getByReceptionOrderIdAndIsValidated(Long receptionOrderId, Boolean isValidated);
 }
