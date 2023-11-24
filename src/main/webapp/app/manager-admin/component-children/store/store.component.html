@@ -209,7 +209,13 @@
     <ng-template ngbPanelTitle>
       Tarjetas &nbsp; <strong *ngIf="detailReceptionOrder != ''">{{ detailReceptionOrder }}</strong> &nbsp;
       <strong *ngIf="detailReceptionOrder != ''">{{ InterfaceBoardTotalItems }}</strong> &nbsp;
-      <button *ngIf="detailReceptionOrder != ''" type="submit" class="btn btn-primary btn-sm" data-cy="entityDetailsButton">
+      <button
+        *ngIf="detailReceptionOrder != ''"
+        type="submit"
+        (click)="downloadAssociatedBoardsReceptionOrder()"
+        class="btn btn-primary btn-sm"
+        data-cy="entityDetailsButton"
+      >
         <fa-icon *ngIf="InterfaceBoardTotalItems > 0" icon="download"></fa-icon>
         <span class="d-none d-md-inline" *ngIf="InterfaceBoardTotalItems > 0">Descargar</span>
       </button>

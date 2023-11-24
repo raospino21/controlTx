@@ -52,4 +52,10 @@ export class ManagerStoreService {
     const options = createRequestOption(req);
     return this.http.get<IInterfaceBoard[]>(this.resourceUrl + '/interface-boards', { params: options, observe: 'response' });
   }
+  downloadAssociatedBoardsReceptionOrder(validate: boolean, receptionOrderId: number): Observable<HttpResponse<Blob>> {
+    return this.http.get(`${this.resourceUrl}/download/file/associated-boards/reception-order/${validate}/${receptionOrderId}`, {
+      observe: 'response',
+      responseType: 'blob',
+    });
+  }
 }
