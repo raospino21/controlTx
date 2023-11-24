@@ -29,6 +29,7 @@ import co.com.ies.smol.service.dto.core.BoardDetailsInSotckRecord;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
 import co.com.ies.smol.service.dto.core.BrandCompleteInfoResponse;
 import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
+import co.com.ies.smol.service.dto.core.InfoBoardAssociatedOrderReceptionByFileRecord;
 import co.com.ies.smol.service.dto.core.InfoBoardByFileRecord;
 import co.com.ies.smol.service.dto.core.InfoBoardToAssignByFileRecord;
 import co.com.ies.smol.service.dto.core.OperatorCompleteInfoResponse;
@@ -293,6 +294,17 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
                 return "Venta";
             default:
                 return englishName;
+        }
+    }
+
+    private String translateIsValidated(Boolean englishName) {
+        switch (String.valueOf(englishName)) {
+            case "true":
+                return "Si";
+            case "false":
+                return "No";
+            default:
+                return "No";
         }
     }
 
@@ -706,5 +718,84 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
             .toList();
 
         return new OrderReceptionDetailRecord(interfaceBoardList.size(), validatedInterfaceBoardList.size());
+    }
+
+    @Override
+    public ByteArrayInputStream getFileTheBoardsInStock() {
+        List<ControlInterfaceBoardDTO> controlInterfaceBoardList = controlInterfaceBoardService.getInfoBoardsAvailable();
+
+        final CsvMapper mapper = new CsvMapper();
+        final CsvSchema schema = mapper.schemaFor(InfoBoardInStockByFileRecord.class);
+        schema.withColumnSeparator(';');
+        schema.usesHeader();
+
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try {
+            String columnNamesString = schema.getColumnDesc();
+            List<String> columnNames = deserializeColumnNames(columnNamesString);
+
+            String headers = String.join(";", columnNames);
+            out.write(headers.getBytes());
+            out.write("\n".getBytes());
+
+            controlInterfaceBoardList.forEach(data -> {
+                String mac = data.getInterfaceBoard().getMac();
+                InfoBoardInStockByFileRecord dataFile = new InfoBoardInStockByFileRecord(mac);
+
+                try {
+                    mapper.writer(schema).writeValue(out, dataFile);
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
+            });
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    @Override
+    public ByteArrayInputStream getFileBoardsAssociated(Boolean validated, Long receptionOrderId) {
+        List<InterfaceBoardDTO> interfaceBoardList;
+
+        if (validated) {
+            interfaceBoardList = interfaceBoardService.getInterfaceBoardByReceptionOrderIdAndIsValidated(receptionOrderId, validated);
+        } else {
+            interfaceBoardList = interfaceBoardService.getInterfaceBoardByReceptionOrderId(receptionOrderId);
+        }
+
+        final CsvMapper mapper = new CsvMapper();
+        final CsvSchema schema = mapper.schemaFor(InfoBoardAssociatedOrderReceptionByFileRecord.class);
+        schema.withColumnSeparator(';');
+        schema.usesHeader();
+
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try {
+            String columnNamesString = schema.getColumnDesc();
+            List<String> columnNames = deserializeColumnNames(columnNamesString);
+
+            String headers = String.join(";", columnNames);
+            out.write(headers.getBytes());
+            out.write("\n".getBytes());
+
+            interfaceBoardList.forEach(data -> {
+                InfoBoardAssociatedOrderReceptionByFileRecord dataFile = new InfoBoardAssociatedOrderReceptionByFileRecord(
+                    data.getMac(),
+                    translateIsValidated(data.getIsValidated())
+                );
+                try {
+                    mapper.writer(schema).writeValue(out, dataFile);
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
+            });
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
+        return new ByteArrayInputStream(out.toByteArray());
     }
 }
