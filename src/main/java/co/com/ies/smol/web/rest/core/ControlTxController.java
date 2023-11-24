@@ -373,4 +373,35 @@ public class ControlTxController {
 
         return ResponseEntity.ok(controlTxService.getDetailReceptionOrder(receptionOrderId));
     }
+
+    @GetMapping("/download/file/boards-in-sotck/")
+    public ResponseEntity<Resource> downloadBoardsInStock() {
+        log.info("REST request to downloadBoardsInStock");
+
+        final ByteArrayInputStream fileInMemory = controlTxService.getFileTheBoardsInStock();
+        final InputStreamResource fileInputStream = new InputStreamResource(fileInMemory);
+
+        final HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment;");
+        headers.set(HttpHeaders.CONTENT_TYPE, "text/csv;charset=UTF-8");
+
+        return new ResponseEntity<>(fileInputStream, headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/download/file/associated-boards/reception-order/{validated}/{receptionOrderId}")
+    public ResponseEntity<Resource> downloadAssociatedBoardsReceptionOrder(
+        @PathVariable Boolean validated,
+        @PathVariable Long receptionOrderId
+    ) {
+        log.info("REST request to downloadBoardsInStock");
+
+        final ByteArrayInputStream fileInMemory = controlTxService.getFileBoardsAssociated(validated, receptionOrderId);
+        final InputStreamResource fileInputStream = new InputStreamResource(fileInMemory);
+
+        final HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment;");
+        headers.set(HttpHeaders.CONTENT_TYPE, "text/csv;charset=UTF-8");
+
+        return new ResponseEntity<>(fileInputStream, headers, HttpStatus.OK);
+    }
 }
