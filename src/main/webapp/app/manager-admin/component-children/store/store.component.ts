@@ -39,6 +39,7 @@ export class ManagerStoreComponent implements OnInit {
   public totalOrderAmount?: number;
   public totalAmountReceived?: number;
   detailReceptionOrder?: string = '';
+  isValidated: boolean = false;
 
   ngOnInit(): void {
     this.load();
@@ -105,6 +106,7 @@ export class ManagerStoreComponent implements OnInit {
   }
 
   public showTxAssociatedToReceptionOrder(receptionOrderId: number): void {
+    this.isValidated = false;
     this.orderReceptionSelected = receptionOrderId;
     this.detailReceptionOrder = 'Asociadas';
     this.loadMac(false);
@@ -112,6 +114,7 @@ export class ManagerStoreComponent implements OnInit {
   }
 
   public showTxValidatedToReceptionOrder(receptionOrderId: number): void {
+    this.isValidated = true;
     this.orderReceptionSelected = receptionOrderId;
     this.detailReceptionOrder = 'Validadas';
     this.loadMac(true);
@@ -202,5 +205,25 @@ export class ManagerStoreComponent implements OnInit {
     setTimeout(() => {
       this.errorMsg = '';
     }, showTime);
+  }
+
+  public downloadAssociatedBoardsReceptionOrder(): void {
+    this.service.downloadAssociatedBoardsReceptionOrder(this.isValidated, this.orderReceptionSelected!).subscribe({
+      next: (result: HttpResponse<Blob>) => {
+        const bodyResponse = result.body as Blob;
+
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(bodyResponse);
+        link.download = 'Tarjetas.csv';
+        link.click();
+
+        URL.revokeObjectURL(link.href);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        console.log(error.error.detail);
+        alert('Error al descargar el archivo');
+      },
+    });
   }
 }
