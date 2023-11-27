@@ -66,7 +66,5 @@ public interface ControlTxService {
 
     OrderReceptionDetailRecord getDetailReceptionOrder(Long receptionOrderId);
 
-    ByteArrayInputStream getFileTheBoardsInStock();
-
     ByteArrayInputStream getFileBoardsAssociated(Boolean validated, Long receptionOrderId);
 }

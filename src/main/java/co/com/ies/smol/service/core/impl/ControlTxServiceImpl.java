@@ -721,46 +721,10 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     }
 
     @Override
-    public ByteArrayInputStream getFileTheBoardsInStock() {
-        List<ControlInterfaceBoardDTO> controlInterfaceBoardList = controlInterfaceBoardService.getInfoBoardsAvailable();
-
-        final CsvMapper mapper = new CsvMapper();
-        final CsvSchema schema = mapper.schemaFor(InfoBoardInStockByFileRecord.class);
-        schema.withColumnSeparator(';');
-        schema.usesHeader();
-
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-        try {
-            String columnNamesString = schema.getColumnDesc();
-            List<String> columnNames = deserializeColumnNames(columnNamesString);
-
-            String headers = String.join(";", columnNames);
-            out.write(headers.getBytes());
-            out.write("\n".getBytes());
-
-            controlInterfaceBoardList.forEach(data -> {
-                String mac = data.getInterfaceBoard().getMac();
-                InfoBoardInStockByFileRecord dataFile = new InfoBoardInStockByFileRecord(mac);
-
-                try {
-                    mapper.writer(schema).writeValue(out, dataFile);
-                } catch (IOException e) {
-                    log.error(e.getMessage());
-                }
-            });
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-
-        return new ByteArrayInputStream(out.toByteArray());
-    }
-
-    @Override
     public ByteArrayInputStream getFileBoardsAssociated(Boolean validated, Long receptionOrderId) {
         List<InterfaceBoardDTO> interfaceBoardList;
 
-        if (validated) {
+        if (validated.booleanValue()) {
             interfaceBoardList = interfaceBoardService.getInterfaceBoardByReceptionOrderIdAndIsValidated(receptionOrderId, validated);
         } else {
             interfaceBoardList = interfaceBoardService.getInterfaceBoardByReceptionOrderId(receptionOrderId);
