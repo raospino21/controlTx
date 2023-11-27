@@ -60,4 +60,7 @@ export class StoreService {
       observe: 'response',
     });
   }
+  downloadBoardsInStock(): Observable<HttpResponse<Blob>> {
+    return this.http.get(`${this.resourceUrl}/download/file/boards-in-sotck/`, { observe: 'response', responseType: 'blob' });
+  }
 }

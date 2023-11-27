@@ -66,4 +66,6 @@ public interface ControlTxService {
     BoardDetailsInSotckRecord getBoardDetailsInSotck();
 
     OrderReceptionDetailRecord getDetailReceptionOrder(Long receptionOrderId);
+
+    ByteArrayInputStream getFileTheBoardsInStock();
 }
