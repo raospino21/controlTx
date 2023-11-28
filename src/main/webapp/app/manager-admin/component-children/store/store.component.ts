@@ -80,7 +80,7 @@ export class ManagerStoreComponent implements OnInit {
   }
 
   public showReceptionOrder(receptionOrderId: number, orderIesSelected: number) {
-    this.orderIesSelected = ' Orden de Recepción vinculada a la orden ies: ' + orderIesSelected;
+    this.orderIesSelected = '' + orderIesSelected;
     this.receptionOrderListSelected = this.purchaseOrderComplete!.find(
       item => item.purchaseOrder!.id === receptionOrderId
     )?.receptionOrderList;

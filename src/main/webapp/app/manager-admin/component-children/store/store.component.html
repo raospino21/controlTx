@@ -107,8 +107,10 @@
   <ngb-panel id="panel3">
     <ng-template ngbPanelTitle> Ordenes de Recepción </ng-template>
     <ng-template ngbPanelContent>
-      <div>
-        <strong>{{ orderIesSelected }}</strong>
+      <div class="col fw-bold">
+        <strong
+          >Orden de Recepción vinculada a la orden ies: <span class="text-danger">{{ orderIesSelected }}</span>
+        </strong>
       </div>
       <div class="px-6" *ngIf="receptionOrderListSelected!.length === 0">
         <span>No hay ordenes de compras asociadas</span>
@@ -209,9 +211,9 @@
   <ngb-panel id="panel4">
     <ng-template ngbPanelTitle> Tarjetas </ng-template>
     <ng-template ngbPanelContent>
-      <div>
+      <div class="col fw-bold">
         <strong *ngIf="detailReceptionOrder != ''">{{ detailReceptionOrder }}</strong> &nbsp;
-        <strong *ngIf="detailReceptionOrder != ''">{{ InterfaceBoardTotalItems }}</strong> &nbsp;
+        <strong class="text-danger" *ngIf="detailReceptionOrder != ''">{{ InterfaceBoardTotalItems }}</strong> &nbsp;
         <button
           *ngIf="detailReceptionOrder != ''"
           type="submit"
