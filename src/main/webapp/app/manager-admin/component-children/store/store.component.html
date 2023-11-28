@@ -105,10 +105,11 @@
   </ngb-panel>
 
   <ngb-panel id="panel3">
-    <ng-template ngbPanelTitle>
-      Ordenes de Recepción&nbsp; <strong>{{ orderIesSelected }}</strong>
-    </ng-template>
+    <ng-template ngbPanelTitle> Ordenes de Recepción </ng-template>
     <ng-template ngbPanelContent>
+      <div>
+        <strong>{{ orderIesSelected }}</strong>
+      </div>
       <div class="px-6" *ngIf="receptionOrderListSelected!.length === 0">
         <span>No hay ordenes de compras asociadas</span>
       </div>
@@ -206,21 +207,22 @@
   </ngb-panel>
 
   <ngb-panel id="panel4">
-    <ng-template ngbPanelTitle>
-      Tarjetas &nbsp; <strong *ngIf="detailReceptionOrder != ''">{{ detailReceptionOrder }}</strong> &nbsp;
-      <strong *ngIf="detailReceptionOrder != ''">{{ InterfaceBoardTotalItems }}</strong> &nbsp;
-      <button
-        *ngIf="detailReceptionOrder != ''"
-        type="submit"
-        (click)="downloadAssociatedBoardsReceptionOrder()"
-        class="btn btn-primary btn-sm"
-        data-cy="entityDetailsButton"
-      >
-        <fa-icon *ngIf="InterfaceBoardTotalItems > 0" icon="download"></fa-icon>
-        <span class="d-none d-md-inline" *ngIf="InterfaceBoardTotalItems > 0">Descargar</span>
-      </button>
-    </ng-template>
+    <ng-template ngbPanelTitle> Tarjetas </ng-template>
     <ng-template ngbPanelContent>
+      <div>
+        <strong *ngIf="detailReceptionOrder != ''">{{ detailReceptionOrder }}</strong> &nbsp;
+        <strong *ngIf="detailReceptionOrder != ''">{{ InterfaceBoardTotalItems }}</strong> &nbsp;
+        <button
+          *ngIf="detailReceptionOrder != ''"
+          type="submit"
+          (click)="downloadAssociatedBoardsReceptionOrder()"
+          class="btn btn-primary btn-sm"
+          data-cy="entityDetailsButton"
+        >
+          <fa-icon *ngIf="InterfaceBoardTotalItems > 0" icon="download"></fa-icon>
+          <span class="d-none d-md-inline" *ngIf="InterfaceBoardTotalItems > 0">Descargar</span>
+        </button>
+      </div>
       <div class="table-responsive table-entities" id="entities" *ngIf="interfaceBoards && interfaceBoards.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
           <thead>

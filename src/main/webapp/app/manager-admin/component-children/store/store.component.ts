@@ -80,7 +80,7 @@ export class ManagerStoreComponent implements OnInit {
   }
 
   public showReceptionOrder(receptionOrderId: number, orderIesSelected: number) {
-    this.orderIesSelected = ' vinculada a la orden ies: ' + orderIesSelected;
+    this.orderIesSelected = ' Orden de Recepción vinculada a la orden ies: ' + orderIesSelected;
     this.receptionOrderListSelected = this.purchaseOrderComplete!.find(
       item => item.purchaseOrder!.id === receptionOrderId
     )?.receptionOrderList;
@@ -108,7 +108,7 @@ export class ManagerStoreComponent implements OnInit {
   public showTxAssociatedToReceptionOrder(receptionOrderId: number): void {
     this.isValidated = false;
     this.orderReceptionSelected = receptionOrderId;
-    this.detailReceptionOrder = 'Asociadas';
+    this.detailReceptionOrder = 'Cantidad de Tarjetas Asociadas:';
     this.loadMac(false);
     this.expandPanel4();
   }
@@ -116,7 +116,7 @@ export class ManagerStoreComponent implements OnInit {
   public showTxValidatedToReceptionOrder(receptionOrderId: number): void {
     this.isValidated = true;
     this.orderReceptionSelected = receptionOrderId;
-    this.detailReceptionOrder = 'Validadas';
+    this.detailReceptionOrder = 'Cantidad de Tarjetas Validadas:';
     this.loadMac(true);
     this.expandPanel4();
   }
