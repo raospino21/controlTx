@@ -97,7 +97,16 @@
     </form>
   </ng-template>
 
-  <jhi-alert></jhi-alert>
+  <div class="mt-5 mx-5" *ngIf="errorMsg !== ''">
+    <ngb-alert [type]="typeAlertErrorMsg">
+      <strong
+        [ngClass]="{ 'text-dark': typeAlertErrorMsg === 'warning' || typeAlertErrorMsg === 'success' || typeAlertErrorMsg === 'danger' }"
+        class="h5"
+      >
+        {{ errorMsg }}
+      </strong>
+    </ngb-alert>
+  </div>
 
   <jhi-filter [filters]="filters"></jhi-filter>
 

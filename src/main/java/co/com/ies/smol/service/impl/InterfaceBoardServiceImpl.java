@@ -1,10 +1,12 @@
 package co.com.ies.smol.service.impl;
 
+import co.com.ies.smol.domain.ControlInterfaceBoard;
 import co.com.ies.smol.domain.InterfaceBoard;
 import co.com.ies.smol.repository.InterfaceBoardRepository;
 import co.com.ies.smol.service.InterfaceBoardService;
 import co.com.ies.smol.service.dto.InterfaceBoardDTO;
 import co.com.ies.smol.service.mapper.InterfaceBoardMapper;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -35,8 +37,12 @@ public class InterfaceBoardServiceImpl implements InterfaceBoardService {
     @Override
     public InterfaceBoardDTO save(InterfaceBoardDTO interfaceBoardDTO) {
         log.debug("Request to save InterfaceBoard : {}", interfaceBoardDTO);
-        InterfaceBoard interfaceBoard = interfaceBoardMapper.toEntity(interfaceBoardDTO);
-        interfaceBoard = interfaceBoardRepository.save(interfaceBoard);
+
+        String mac = interfaceBoardDTO.getMac();
+        Long receptionOrderId = interfaceBoardDTO.getReceptionOrder().getId();
+
+        InterfaceBoard interfaceBoard = interfaceBoardRepository.nativeSave(mac, receptionOrderId);
+
         return interfaceBoardMapper.toDto(interfaceBoard);
     }
 

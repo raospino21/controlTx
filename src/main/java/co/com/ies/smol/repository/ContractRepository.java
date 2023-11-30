@@ -1,8 +1,10 @@
 package co.com.ies.smol.repository;
 
+import co.com.ies.smol.domain.Brand;
 import co.com.ies.smol.domain.Contract;
 import co.com.ies.smol.domain.Operator;
 import co.com.ies.smol.domain.enumeration.ContractType;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -56,4 +58,18 @@ public interface ContractRepository extends JpaRepository<Contract, Long>, JpaSp
         value = "select  c.*  from contract c inner join \"operator\" o on o.id = c.operator_id WHERE LOWER(o.company_name) LIKE LOWER(CONCAT('%', :operatorName, '%'))"
     )
     List<Contract> getContractByOperatorName(String operatorName);
+
+    @Query(
+        nativeQuery = true,
+        value = "INSERT INTO contract(id, reference, \"type\", amount_interface_board, start_time, finish_time, operator_id)\n" +
+        "VALUES((select max(id) + 1 from contract), :reference, :type, :amountInterfaceBoard, :startTime, :finishTime, :operatorId) RETURNING *"
+    )
+    Contract nativeSave(
+        String reference,
+        String type,
+        Long amountInterfaceBoard,
+        ZonedDateTime startTime,
+        ZonedDateTime finishTime,
+        Long operatorId
+    );
 }

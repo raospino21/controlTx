@@ -35,8 +35,14 @@ public class ReceptionOrderServiceImpl implements ReceptionOrderService {
     @Override
     public ReceptionOrderDTO save(ReceptionOrderDTO receptionOrderDTO) {
         log.debug("Request to save ReceptionOrder : {}", receptionOrderDTO);
-        ReceptionOrder receptionOrder = receptionOrderMapper.toEntity(receptionOrderDTO);
-        receptionOrder = receptionOrderRepository.save(receptionOrder);
+        ReceptionOrder receptionOrder = receptionOrderRepository.nativeSave(
+            receptionOrderDTO.getProviderLotNumber(),
+            receptionOrderDTO.getAmountReceived(),
+            receptionOrderDTO.getRemission(),
+            receptionOrderDTO.getEntryDate(),
+            receptionOrderDTO.getWarrantyDate(),
+            receptionOrderDTO.getPurchaseOrder().getId()
+        );
         return receptionOrderMapper.toDto(receptionOrder);
     }
 

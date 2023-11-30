@@ -1,5 +1,6 @@
 package co.com.ies.smol.service.impl;
 
+import co.com.ies.smol.domain.Contract;
 import co.com.ies.smol.domain.ControlInterfaceBoard;
 import co.com.ies.smol.domain.InterfaceBoard;
 import co.com.ies.smol.domain.enumeration.Location;
@@ -12,6 +13,7 @@ import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria.LocationFi
 import co.com.ies.smol.service.criteria.ControlInterfaceBoardCriteria.StatusInterfaceBoardFilter;
 import co.com.ies.smol.service.dto.ControlInterfaceBoardDTO;
 import co.com.ies.smol.service.mapper.ControlInterfaceBoardMapper;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -51,8 +53,23 @@ public class ControlInterfaceBoardServiceImpl implements ControlInterfaceBoardSe
     @Override
     public ControlInterfaceBoardDTO save(ControlInterfaceBoardDTO controlInterfaceBoardDTO) {
         log.debug("Request to save ControlInterfaceBoard : {}", controlInterfaceBoardDTO);
-        ControlInterfaceBoard controlInterfaceBoard = controlInterfaceBoardMapper.toEntity(controlInterfaceBoardDTO);
-        controlInterfaceBoard = controlInterfaceBoardRepository.save(controlInterfaceBoard);
+
+        String location = controlInterfaceBoardDTO.getLocation().name();
+        String state = controlInterfaceBoardDTO.getState().name();
+        ZonedDateTime startTime = controlInterfaceBoardDTO.getStartTime();
+        ZonedDateTime finishTime = controlInterfaceBoardDTO.getFinishTime();
+        Long contractId = controlInterfaceBoardDTO.getContract() != null ? controlInterfaceBoardDTO.getContract().getId() : null;
+        Long interfaceBoardId = controlInterfaceBoardDTO.getInterfaceBoard().getId();
+
+        ControlInterfaceBoard controlInterfaceBoard = controlInterfaceBoardRepository.nativeSave(
+            location,
+            state,
+            startTime,
+            finishTime,
+            contractId,
+            interfaceBoardId
+        );
+
         return controlInterfaceBoardMapper.toDto(controlInterfaceBoard);
     }
 
