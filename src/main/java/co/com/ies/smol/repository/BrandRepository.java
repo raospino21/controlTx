@@ -14,5 +14,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BrandRepository extends JpaRepository<Brand, Long>, JpaSpecificationExecutor<Brand> {
     @Query(nativeQuery = true, value = "INSERT INTO brand(id, name) VALUES((select max(id) + 1 from brand), :name) RETURNING *")
-    Brand nativeSave(@Param("name") String name);
+    Brand nativeSave(String name);
 }

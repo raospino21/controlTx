@@ -1,5 +1,6 @@
 package co.com.ies.smol.service.impl;
 
+import co.com.ies.smol.domain.Brand;
 import co.com.ies.smol.domain.Contract;
 import co.com.ies.smol.domain.Operator;
 import co.com.ies.smol.domain.enumeration.ContractType;
@@ -7,6 +8,7 @@ import co.com.ies.smol.repository.ContractRepository;
 import co.com.ies.smol.service.ContractService;
 import co.com.ies.smol.service.dto.ContractDTO;
 import co.com.ies.smol.service.mapper.ContractMapper;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -37,8 +39,15 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public ContractDTO save(ContractDTO contractDTO) {
         log.debug("Request to save Contract : {}", contractDTO);
-        Contract contract = contractMapper.toEntity(contractDTO);
-        contract = contractRepository.save(contract);
+        String reference = contractDTO.getReference();
+        String type = contractDTO.getType().name();
+        Long amountInterfaceBoard = contractDTO.getAmountInterfaceBoard();
+        ZonedDateTime startTime = contractDTO.getStartTime();
+        ZonedDateTime finishTime = contractDTO.getFinishTime();
+        Long operatorId = contractDTO.getOperator().getId();
+
+        Contract contract = contractRepository.nativeSave(reference, type, amountInterfaceBoard, startTime, finishTime, operatorId);
+
         return contractMapper.toDto(contract);
     }
 
