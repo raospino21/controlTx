@@ -1,6 +1,8 @@
 package co.com.ies.smol.repository;
 
+import co.com.ies.smol.domain.Contract;
 import co.com.ies.smol.domain.InterfaceBoard;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -45,4 +47,11 @@ public interface InterfaceBoardRepository extends JpaRepository<InterfaceBoard, 
     List<InterfaceBoard> getByReceptionOrderId(Long receptionOrderId);
 
     List<InterfaceBoard> getByReceptionOrderIdAndIsValidated(Long receptionOrderId, Boolean isValidated);
+
+    @Query(
+        nativeQuery = true,
+        value = "INSERT INTO interface_board (id, serial, reception_order_id, is_validated) \n" +
+        "VALUES((select max(id) + 1 from interface_board), :mac, :receptionOrderId, false) RETURNING *"
+    )
+    InterfaceBoard nativeSave(String mac, Long receptionOrderId);
 }

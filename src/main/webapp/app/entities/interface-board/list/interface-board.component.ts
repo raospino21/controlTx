@@ -125,25 +125,41 @@ export class InterfaceBoardComponent implements OnInit {
       .then((result: { isConfirmed: any }) => {
         if (result.isConfirmed) {
           interfaceBoard.isValidated = true;
-          this.interfaceBoardService.update(interfaceBoard).subscribe({
-            next: () => this.showAlert('success', 'success', 2000, false),
-            error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.title, 4000, false),
-          });
-          const controlInterfaceBoard: NewControlInterfaceBoard = {
-            id: null,
-            location: Location.IES,
-            state: StatusInterfaceBoard.STOCK,
-            startTime: dayjs().subtract(5, 'hour'),
-            interfaceBoard: interfaceBoard,
-            contract: null,
-          };
 
-          this.controlInterfaceBoardService.create(controlInterfaceBoard).subscribe({
-            next: () => this.showAlert('success', 'success', 2000, false),
+          this.updateInterfaceBoard(interfaceBoard).subscribe({
+            next: () => this.onSuccessUpdateInterfaceBoard(interfaceBoard),
             error: (error: HttpErrorResponse) => this.showAlert('danger', error.error.title, 4000, false),
           });
         }
       });
+  }
+
+  private updateInterfaceBoard(interfaceBoard: IInterfaceBoard): Observable<HttpResponse<IInterfaceBoard>> {
+    return this.interfaceBoardService.update(interfaceBoard);
+  }
+
+  private onSuccessUpdateInterfaceBoard(interfaceBoard: IInterfaceBoard): void {
+    const controlInterfaceBoard: NewControlInterfaceBoard = {
+      id: null,
+      location: Location.IES,
+      state: StatusInterfaceBoard.STOCK,
+      startTime: dayjs().subtract(5, 'hour'),
+      interfaceBoard: interfaceBoard,
+      contract: null,
+    };
+
+    this.controlInterfaceBoardService.create(controlInterfaceBoard).subscribe({
+      next: () => this.showAlert('success', 'success', 2000, false),
+      error: (error: HttpErrorResponse) => {
+        interfaceBoard.isValidated = false;
+        const errorMessage = 'Hubo en error en el proceso de activación';
+        this.updateInterfaceBoard(interfaceBoard).subscribe({
+          next: () => console.log(errorMessage),
+          error: (error: HttpErrorResponse) => this.showAlert('danger', errorMessage, 4000, false),
+        });
+        this.showAlert('danger', errorMessage, 3000, false);
+      },
+    });
   }
 
   technicalSupport(): void {
@@ -349,6 +365,8 @@ export class InterfaceBoardComponent implements OnInit {
   }
 
   public showAlert(typeAlertErrorMsg: string, errorMsg: string, showTime: number, closeModal: boolean): void {
+    console.log('- alert ', typeAlertErrorMsg);
+
     this.typeAlertErrorMsg = typeAlertErrorMsg;
     this.errorMsg = errorMsg!;
 
