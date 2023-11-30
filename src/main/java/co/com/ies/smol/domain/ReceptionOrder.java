@@ -19,8 +19,6 @@ public class ReceptionOrder implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "receptionOrderIdSeq")
-    @SequenceGenerator(name = "receptionOrderIdSeq")
     @Column(name = "id")
     private Long id;
 

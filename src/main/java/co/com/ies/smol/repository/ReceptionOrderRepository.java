@@ -1,6 +1,8 @@
 package co.com.ies.smol.repository;
 
+import co.com.ies.smol.domain.PurchaseOrder;
 import co.com.ies.smol.domain.ReceptionOrder;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -46,4 +48,17 @@ public interface ReceptionOrderRepository extends JpaRepository<ReceptionOrder, 
     List<ReceptionOrder> getByIesOrderNumber(Long iesOrderNumber);
 
     List<ReceptionOrder> getByPurchaseOrderId(Long purchaseOrderId);
+
+    @Query(
+        nativeQuery = true,
+        value = "INSERT INTO reception_order (id, provider_lot_number, amount_received, remission, entry_date, warranty_date, purchase_order_id)VALUES((select max(id) + 1 from reception_order), :providerLotNumber, :amountReceived, :remission, :entryDate, :warrantyDate, :purchaseOrder) RETURNING *"
+    )
+    ReceptionOrder nativeSave(
+        @Param("providerLotNumber") Long providerLotNumber,
+        @Param("amountReceived") Long amountReceived,
+        @Param("remission") String remission,
+        @Param("entryDate") ZonedDateTime entryDate,
+        @Param("warrantyDate") ZonedDateTime warrantyDate,
+        @Param("purchaseOrder") Long purchaseOrderId
+    );
 }
