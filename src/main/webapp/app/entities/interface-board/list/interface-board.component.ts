@@ -186,6 +186,9 @@ export class InterfaceBoardComponent implements OnInit {
     this.page = +(page ?? 1);
     const sort = (params.get(SORT) ?? data[DEFAULT_SORT_DATA]).split(',');
     this.predicate = sort[0];
+    if (params.get(SORT) == null) {
+      sort[1] = DESC;
+    }
     this.ascending = sort[1] === ASC;
     this.filters.initializeFromParams(params);
   }
