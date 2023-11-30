@@ -1,8 +1,10 @@
 package co.com.ies.smol.repository;
 
+import co.com.ies.smol.domain.Contract;
 import co.com.ies.smol.domain.ControlInterfaceBoard;
 import co.com.ies.smol.domain.InterfaceBoard;
 import co.com.ies.smol.domain.enumeration.StatusInterfaceBoard;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -128,4 +130,18 @@ public interface ControlInterfaceBoardRepository
         "interface_board_id having COUNT(interface_board_id) = 1) and state = :state and finish_time is null"
     )
     List<ControlInterfaceBoard> getInterfaceBoardNewInStock(@Param("state") String state);
+
+    @Query(
+        nativeQuery = true,
+        value = "INSERT INTO public.control_interface_board (id, location, state, start_time, finish_time, contract_id, interface_board_id) " +
+        "VALUES((select max(id) + 1 from control_interface_board), :location, :state, :startTime, :finishTime, :contractId, :interfaceBoardId) RETURNING *"
+    )
+    ControlInterfaceBoard nativeSave(
+        String location,
+        String state,
+        ZonedDateTime startTime,
+        ZonedDateTime finishTime,
+        Long contractId,
+        Long interfaceBoardId
+    );
 }
