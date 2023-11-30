@@ -34,8 +34,7 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public BrandDTO save(BrandDTO brandDTO) {
         log.debug("Request to save Brand : {}", brandDTO);
-        Brand brand = brandMapper.toEntity(brandDTO);
-        brand = brandRepository.save(brand);
+        Brand brand = brandRepository.nativeSave(brandDTO.getName());
         return brandMapper.toDto(brand);
     }
 
