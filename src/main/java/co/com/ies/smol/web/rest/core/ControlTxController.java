@@ -403,4 +403,11 @@ public class ControlTxController {
 
         return new ResponseEntity<>(fileInputStream, headers, HttpStatus.OK);
     }
+
+    @GetMapping("/purchase-order/general/detail")
+    public ResponseEntity<OrderPurchaseGeneralDetail> getGeneralDetailPurchaseOrder() {
+        log.debug("REST request getGeneralDetailPurchaseOrder");
+
+        return ResponseEntity.ok(controlTxService.getGeneralDetailPurchaseOrder());
+    }
 }

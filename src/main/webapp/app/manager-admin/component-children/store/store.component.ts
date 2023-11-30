@@ -7,6 +7,7 @@ import { IReceptionOrder } from 'app/entities/reception-order/reception-order.mo
 import { NgbAccordion, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ManagerStoreService } from './manager-store.service';
 import { IPurchaseOrderCompleteResponse } from './purchaseorder-complete-response.model';
+import { IOrderPurchaseGeneralDetail } from './ order-purchase-general-detail.model';
 
 @Component({
   selector: 'jhi-manager-store',
@@ -31,13 +32,11 @@ export class ManagerStoreComponent implements OnInit {
 
   pageInterfaceBoard = 1;
   InterfaceBoardTotalItems = 0;
-
+  detailPurchase?: IOrderPurchaseGeneralDetail;
   public errorMsg = '';
   public typeAlertErrorMsg = 'danger';
   public orderIesSelected?: string;
   orderReceptionSelected?: number;
-  public totalOrderAmount?: number;
-  public totalAmountReceived?: number;
   detailReceptionOrder?: string = '';
   isValidated: boolean = false;
 
@@ -54,6 +53,10 @@ export class ManagerStoreComponent implements OnInit {
       next: (res: HttpResponse<IPurchaseOrderCompleteResponse[]>) => this.onSuccess(res.body!, res.headers),
       error: (error: HttpErrorResponse) => this.onError(error),
     });
+    this.service.getGeneralDetailPurchaseOrders().subscribe({
+      next: (res: HttpResponse<IOrderPurchaseGeneralDetail>) => (this.detailPurchase = res.body!),
+      error: (error: HttpErrorResponse) => this.onError(error),
+    });
   }
 
   private onSuccess(response: IPurchaseOrderCompleteResponse[], headers: HttpHeaders): void {
@@ -63,12 +66,6 @@ export class ManagerStoreComponent implements OnInit {
       item.purchaseOrder!.amountReceived = this.calculateTotalAmount(item.receptionOrderList!);
       return item;
     });
-
-    this.totalOrderAmount = this.purchaseOrderComplete.reduce((acumulador, objeto) => acumulador + objeto.purchaseOrder?.orderAmount!, 0);
-    this.totalAmountReceived = this.purchaseOrderComplete.reduce(
-      (acumulador, objeto) => acumulador + objeto.purchaseOrder?.amountReceived!,
-      0
-    );
 
     this.showAlert('success', 'Exito!', 20);
   }
@@ -80,7 +77,7 @@ export class ManagerStoreComponent implements OnInit {
   }
 
   public showReceptionOrder(receptionOrderId: number, orderIesSelected: number) {
-    this.orderIesSelected = ' vinculada a la orden ies: ' + orderIesSelected;
+    this.orderIesSelected = '' + orderIesSelected;
     this.receptionOrderListSelected = this.purchaseOrderComplete!.find(
       item => item.purchaseOrder!.id === receptionOrderId
     )?.receptionOrderList;
@@ -108,7 +105,7 @@ export class ManagerStoreComponent implements OnInit {
   public showTxAssociatedToReceptionOrder(receptionOrderId: number): void {
     this.isValidated = false;
     this.orderReceptionSelected = receptionOrderId;
-    this.detailReceptionOrder = 'Asociadas';
+    this.detailReceptionOrder = 'Cantidad de Tarjetas Asociadas:';
     this.loadMac(false);
     this.expandPanel4();
   }
@@ -116,7 +113,7 @@ export class ManagerStoreComponent implements OnInit {
   public showTxValidatedToReceptionOrder(receptionOrderId: number): void {
     this.isValidated = true;
     this.orderReceptionSelected = receptionOrderId;
-    this.detailReceptionOrder = 'Validadas';
+    this.detailReceptionOrder = 'Cantidad de Tarjetas Validadas:';
     this.loadMac(true);
     this.expandPanel4();
   }

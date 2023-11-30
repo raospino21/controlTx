@@ -34,6 +34,7 @@ import co.com.ies.smol.service.dto.core.InfoBoardByFileRecord;
 import co.com.ies.smol.service.dto.core.InfoBoardInStockByFileRecord;
 import co.com.ies.smol.service.dto.core.InfoBoardToAssignByFileRecord;
 import co.com.ies.smol.service.dto.core.OperatorCompleteInfoResponse;
+import co.com.ies.smol.service.dto.core.OrderPurchaseGeneralDetail;
 import co.com.ies.smol.service.dto.core.OrderReceptionDetailRecord;
 import co.com.ies.smol.service.dto.core.PurchaseOrderCompleteResponse;
 import co.com.ies.smol.service.dto.core.RequestStatusRecord;
@@ -587,6 +588,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     @Override
     public Page<PurchaseOrderCompleteResponse> getAllPurchaseOrdersComplete(Pageable pageable) {
         Page<PurchaseOrderDTO> purchaseOrderPage = purchaseOrderService.findAll(pageable);
+
         List<PurchaseOrderDTO> purchaseOrderList = purchaseOrderPage.getContent();
         List<PurchaseOrderCompleteResponse> response = new ArrayList<>();
 
@@ -797,5 +799,24 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         }
 
         return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    @Override
+    public OrderPurchaseGeneralDetail getGeneralDetailPurchaseOrder() {
+        List<PurchaseOrderDTO> purchaseOrderList = purchaseOrderService.getAllPurchaseOrder();
+        List<ReceptionOrderDTO> receptionOrderList = new ArrayList<>();
+
+        purchaseOrderList.forEach(purchaseOrder ->
+            receptionOrderList.addAll(receptionOrderService.getReceptionOrderByPurchaseOrderId(purchaseOrder.getId()))
+        );
+
+        Integer amountPurchaseOrderTotal = purchaseOrderList.stream().map(PurchaseOrderDTO::getOrderAmount).mapToInt(Long::intValue).sum();
+        Integer amountReceptionOrderTotal = receptionOrderList
+            .stream()
+            .map(ReceptionOrderDTO::getAmountReceived)
+            .mapToInt(Long::intValue)
+            .sum();
+
+        return new OrderPurchaseGeneralDetail(amountPurchaseOrderTotal, amountReceptionOrderTotal);
     }
 }
