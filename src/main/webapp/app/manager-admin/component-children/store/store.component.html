@@ -15,12 +15,18 @@
                   <span jhiTranslate="controTxApp.receptionOrder.amountReceived">Cantidad Recibida</span>
                 </div>
               </th>
+              <th scope="col">
+                <div class="d-flex">
+                  <span>Diferencia</span>
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
             <tr data-cy="entityTable">
-              <td>{{ totalOrderAmount }}</td>
-              <td>{{ totalAmountReceived }}</td>
+              <td>{{ detailPurchase?.amountPurchase }}</td>
+              <td>{{ detailPurchase?.amountReceived }}</td>
+              <td>{{ detailPurchase?.amountPurchase! - detailPurchase?.amountReceived! }}</td>
             </tr>
           </tbody>
         </table>
