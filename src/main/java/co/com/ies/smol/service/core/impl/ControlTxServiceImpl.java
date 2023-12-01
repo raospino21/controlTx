@@ -108,6 +108,7 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
         List<InterfaceBoardDTO> existingInterfaces = new ArrayList<>();
 
         for (String mac : macs) {
+            mac = mac.trim();
             Optional<InterfaceBoardDTO> oInterfaceBoardDTO = interfaceBoardService.getInterfaceBoardByMac(mac);
 
             if (oInterfaceBoardDTO.isPresent()) {
