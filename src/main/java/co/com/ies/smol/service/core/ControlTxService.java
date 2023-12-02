@@ -47,4 +47,5 @@ public interface ControlTxService {
     ByteArrayInputStream getFileTheBoardsInStock();
     ByteArrayInputStream getFileBoardsAssociated(Boolean validated, Long receptionOrderId);
     OrderPurchaseGeneralDetail getGeneralDetailPurchaseOrder();
+    BoardsByBrandGeneralDetail getBoardsByBrandGeneralDetail();
 }

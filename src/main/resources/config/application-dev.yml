@@ -32,9 +32,9 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/smolcentral #controltx
-    username: IESGamesService
-    password: IESGamesService
+    url: jdbc:postgresql://iesapps-prod.cluster-ccz494cib0gr.us-east-2.rds.amazonaws.com:5432/smolpluscentral #controltx
+    username: postgres
+    password: I3s4pps-Pr0d123*.*
     hikari:
       poolName: Hikari
       auto-commit: false

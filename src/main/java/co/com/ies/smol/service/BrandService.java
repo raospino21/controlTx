@@ -1,6 +1,8 @@
 package co.com.ies.smol.service;
 
 import co.com.ies.smol.service.dto.BrandDTO;
+import co.com.ies.smol.service.dto.InterfaceBoardDTO;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,4 +57,5 @@ public interface BrandService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+    List<BrandDTO> findAll();
 }

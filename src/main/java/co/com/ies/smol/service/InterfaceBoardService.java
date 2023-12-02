@@ -65,4 +65,6 @@ public interface InterfaceBoardService {
     List<InterfaceBoardDTO> getInterfaceBoardByReceptionOrderId(Long receptionOrderId);
 
     List<InterfaceBoardDTO> getInterfaceBoardByReceptionOrderIdAndIsValidated(Long receptionOrderId, Boolean isValidated);
+
+    List<InterfaceBoardDTO> findAll();
 }

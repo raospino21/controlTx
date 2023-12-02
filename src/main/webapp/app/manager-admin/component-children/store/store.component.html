@@ -20,6 +20,11 @@
                   <span>Diferencia</span>
                 </div>
               </th>
+              <th scope="col">
+                <div class="d-flex">
+                  <span>Total cantidad tarjetas</span>
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -27,6 +32,7 @@
               <td>{{ detailPurchase?.amountPurchase }}</td>
               <td>{{ detailPurchase?.amountReceived }}</td>
               <td>{{ detailPurchase?.amountPurchase! - detailPurchase?.amountReceived! }}</td>
+              <td>{{ detailPurchase?.amountInterfaceBoardTotal! }}</td>
             </tr>
           </tbody>
         </table>

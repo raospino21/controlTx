@@ -410,4 +410,11 @@ public class ControlTxController {
 
         return ResponseEntity.ok(controlTxService.getGeneralDetailPurchaseOrder());
     }
+
+    @GetMapping("/boards-by-brand/general/detail")
+    public ResponseEntity<BoardsByBrandGeneralDetail> getBoardsByBrandGeneralDetail() {
+        log.debug("REST request getBoardsByBrandGeneralDetail");
+
+        return ResponseEntity.ok(controlTxService.getBoardsByBrandGeneralDetail());
+    }
 }

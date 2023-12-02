@@ -5,6 +5,7 @@ import co.com.ies.smol.repository.BrandRepository;
 import co.com.ies.smol.service.BrandService;
 import co.com.ies.smol.service.dto.BrandDTO;
 import co.com.ies.smol.service.mapper.BrandMapper;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,5 +80,11 @@ public class BrandServiceImpl implements BrandService {
     public void delete(Long id) {
         log.debug("Request to delete Brand : {}", id);
         brandRepository.deleteById(id);
+    }
+
+    @Override
+    public List<BrandDTO> findAll() {
+        log.debug("Request to get all Brands");
+        return brandMapper.toDto(brandRepository.findAll());
     }
 }

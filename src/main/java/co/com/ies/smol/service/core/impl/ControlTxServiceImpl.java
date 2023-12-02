@@ -27,6 +27,7 @@ import co.com.ies.smol.service.dto.ReceptionOrderDTO;
 import co.com.ies.smol.service.dto.core.BoardAssociationResponseDTO;
 import co.com.ies.smol.service.dto.core.BoardDetailsInSotckRecord;
 import co.com.ies.smol.service.dto.core.BoardRegisterDTO;
+import co.com.ies.smol.service.dto.core.BoardsByBrandGeneralDetail;
 import co.com.ies.smol.service.dto.core.BrandCompleteInfoResponse;
 import co.com.ies.smol.service.dto.core.FilterControlInterfaceBoard;
 import co.com.ies.smol.service.dto.core.InfoBoardAssociatedOrderReceptionByFileRecord;
@@ -806,11 +807,12 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     public OrderPurchaseGeneralDetail getGeneralDetailPurchaseOrder() {
         List<PurchaseOrderDTO> purchaseOrderList = purchaseOrderService.getAllPurchaseOrder();
         List<ReceptionOrderDTO> receptionOrderList = new ArrayList<>();
-
+        List<InterfaceBoardDTO> interfaceBoardList = interfaceBoardService.findAll();
         purchaseOrderList.forEach(purchaseOrder ->
             receptionOrderList.addAll(receptionOrderService.getReceptionOrderByPurchaseOrderId(purchaseOrder.getId()))
         );
 
+        Integer amountInterfaceBoardTotal = interfaceBoardList.size();
         Integer amountPurchaseOrderTotal = purchaseOrderList.stream().map(PurchaseOrderDTO::getOrderAmount).mapToInt(Long::intValue).sum();
         Integer amountReceptionOrderTotal = receptionOrderList
             .stream()
@@ -818,6 +820,31 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
             .mapToInt(Long::intValue)
             .sum();
 
-        return new OrderPurchaseGeneralDetail(amountPurchaseOrderTotal, amountReceptionOrderTotal);
+        return new OrderPurchaseGeneralDetail(amountPurchaseOrderTotal, amountReceptionOrderTotal, amountInterfaceBoardTotal);
+    }
+
+    @Override
+    public BoardsByBrandGeneralDetail getBoardsByBrandGeneralDetail() {
+        List<BrandDTO> brandList = brandService.findAll();
+        List<BoardsByBrandGeneralDetail> response = new ArrayList<>();
+
+        brandList.forEach(brand -> {
+            System.out.println(
+                "----------------------------------------------brand-------------------------------------" + brand.getName()
+            );
+            Long totalAmountBoardcontracted = getCountInterfaceBoardByBrand(brand.getName());
+            Long totalAmountBoardAssigned = Long.valueOf(getInterfaceBoardByBrand(brand.getName()).size());
+            System.out.println("-----------------  termino-------------------");
+
+            response.add(new BoardsByBrandGeneralDetail(totalAmountBoardcontracted, totalAmountBoardAssigned));
+            System.out.println(
+                "************************************************ resultado  de la lista ****************************************************************" +
+                response
+            );
+        });
+
+        //Long totalGeneralAmountBoardcontracted = brandList.;
+
+        return null;
     }
 }
