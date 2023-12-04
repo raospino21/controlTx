@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -826,25 +827,33 @@ public class ControlTxServiceImpl extends ControlTxDomainImpl implements Control
     @Override
     public BoardsByBrandGeneralDetail getBoardsByBrandGeneralDetail() {
         List<BrandDTO> brandList = brandService.findAll();
-        List<BoardsByBrandGeneralDetail> response = new ArrayList<>();
+        List<BoardsByBrandGeneralDetail> contractList = new ArrayList<>();
+
+        AtomicLong totalAmountBoardcontracted = new AtomicLong(0L);
+        AtomicLong totalAmountBoardAssigned = new AtomicLong(0L);
 
         brandList.forEach(brand -> {
             System.out.println(
                 "----------------------------------------------brand-------------------------------------" + brand.getName()
             );
-            Long totalAmountBoardcontracted = getCountInterfaceBoardByBrand(brand.getName());
-            Long totalAmountBoardAssigned = Long.valueOf(getInterfaceBoardByBrand(brand.getName()).size());
-            System.out.println("-----------------  termino-------------------");
+            totalAmountBoardcontracted.addAndGet(getCountInterfaceBoardByBrand(brand.getName()));
+            totalAmountBoardAssigned.addAndGet(Long.valueOf(getInterfaceBoardByBrand(brand.getName()).size()));
 
-            response.add(new BoardsByBrandGeneralDetail(totalAmountBoardcontracted, totalAmountBoardAssigned));
             System.out.println(
-                "************************************************ resultado  de la lista ****************************************************************" +
-                response
+                "-----------------  salio-------------------" +
+                "vl1*****" +
+                totalAmountBoardcontracted +
+                "vl2******" +
+                totalAmountBoardAssigned
             );
         });
 
-        //Long totalGeneralAmountBoardcontracted = brandList.;
+        Long totalContractedValue = totalAmountBoardcontracted.get();
+        Long totalAssignedValue = totalAmountBoardAssigned.get();
 
-        return null;
+        System.out.println(
+            "-----------------  final-------------------" + "vl1*****" + totalContractedValue + "vl2******" + totalAssignedValue
+        );
+        return new BoardsByBrandGeneralDetail(totalContractedValue, totalAssignedValue);
     }
 }

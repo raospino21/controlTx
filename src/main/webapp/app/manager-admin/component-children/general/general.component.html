@@ -1,5 +1,35 @@
 <ngb-accordion #acc="ngbAccordion">
-  <ngb-panel id="panel1" title="Marcas">
+  <ngb-panel id="panel1" title="Resumén de Tarjeta Por Marcas">
+    <ng-template ngbPanelContent>
+      <div class="table-responsive table-entities" id="entities">
+        <table class="table table-striped" aria-describedby="page-heading">
+          <thead>
+            <tr>
+              <th scope="col">
+                <div class="d-flex">
+                  <span>Total </span>
+                </div>
+              </th>
+              <th scope="col">
+                <div class="d-flex">
+                  <span jhiTranslate="controTxApp.receptionOrder.amountReceived">Cantidad Recibida</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <!-- <tbody>
+            <tr data-cy="entityTable">
+              <td>{{ detailPurchase?.amountPurchase }}</td>
+              <td>{{ detailPurchase?.amountReceived }}</td>
+              <td>{{ detailPurchase?.amountPurchase! - detailPurchase?.amountReceived! }}</td>
+              <td>{{ detailPurchase?.amountInterfaceBoardTotal! }}</td>
+            </tr>
+          </tbody> -->
+        </table>
+      </div>
+    </ng-template>
+  </ngb-panel>
+  <ngb-panel id="panel2" title="Marcas">
     <ng-template ngbPanelContent>
       <div class="table-responsive table-entities" id="entities" *ngIf="brandsCompleteInfo && brandsCompleteInfo.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
@@ -55,7 +85,7 @@
       </div>
     </ng-template>
   </ngb-panel>
-  <ngb-panel id="panel2" title="Operadores">
+  <ngb-panel id="panel3" title="Operadores">
     <ng-template ngbPanelContent>
       <div class="table-responsive table-entities" id="entities" data-cy="entityTable" *ngIf="operators && operators.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
@@ -108,7 +138,7 @@
       </div>
     </ng-template>
   </ngb-panel>
-  <ngb-panel id="panel3" title="Tarjetas">
+  <ngb-panel id="panel4" title="Tarjetas">
     <ng-template ngbPanelContent>
       <div class="table-responsive table-entities" id="entities" *ngIf="interfaceBoards && interfaceBoards.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
